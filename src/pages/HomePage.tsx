@@ -52,7 +52,7 @@ function BusinessCityPanel() {
       <div className="beam-panel-inner p-6 md:p-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(6,10,8,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
             <Briefcase className="w-5 h-5 turmeric" />
           </div>
           <div>
@@ -70,7 +70,7 @@ function BusinessCityPanel() {
               className={`beam-small ${activeCat === i ? 'ring-1 ring-turmeric-500/40' : ''}`}
             >
               <div className="beam-small-inner p-4 flex items-center gap-3 cursor-pointer">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(6,10,8,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
                   <cat.icon className="w-4 h-4 turmeric" />
                 </div>
                 <div className="text-left min-w-0">
@@ -148,7 +148,7 @@ function RealEstateContent() {
           <p className="sage text-sm py-4">No projects available yet.</p>
         ) : (
           projects.map((p) => (
-            <div key={p.id} className="shrink-0 w-56 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(20,83,45,0.18)', background: 'rgba(6,10,8,0.75)' }}>
+            <div key={p.id} className="shrink-0 w-56 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(20,83,45,0.18)', background: 'rgba(8,24,14,0.75)' }}>
               <div className="h-20 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0A120C, #122016)' }}>
                 <Building2 className="w-8 h-8" style={{ color: 'rgba(20,83,45,0.30)' }} />
               </div>
@@ -233,7 +233,7 @@ function ITContent() {
       {services.map((s, i) => (
         <div key={i} className="beam-small">
           <div className="beam-small-inner p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(6,10,8,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
               <s.icon className="w-4 h-4 turmeric" />
             </div>
             <p className="text-white text-sm font-medium">{s.label}</p>
@@ -275,7 +275,7 @@ function ProbashiSebaPanel() {
       <div className="beam-panel-inner p-6 md:p-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(6,10,8,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
             <Shield className="w-5 h-5 turmeric" />
           </div>
           <div>
@@ -343,7 +343,7 @@ function ExpatRow({
       <div className="beam-small-inner">
         <button onClick={onToggle} className="w-full flex items-center gap-3 p-3.5 text-left">
           <span className="turmeric font-semibold text-sm w-6 text-center shrink-0">{index}</span>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(6,10,8,0.5)', border: '1px solid rgba(20,83,45,0.15)' }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.5)', border: '1px solid rgba(20,83,45,0.15)' }}>
             <Icon className="w-4 h-4 turmeric" />
           </div>
           <div className="flex-1 min-w-0">
@@ -395,7 +395,7 @@ function VaultSection() {
           <div className="beam-panel-inner p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(20,83,45,0.04), transparent 70%)' }} />
             <div className="relative">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: '#060A08', border: '1px solid rgba(20,83,45,0.25)', boxShadow: '0 0 16px rgba(20,83,45,0.08)' }}>
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: '#0B2416', border: '1px solid rgba(20,83,45,0.25)', boxShadow: '0 0 16px rgba(20,83,45,0.08)' }}>
                 <Lock className="w-7 h-7 turmeric" />
               </div>
               <h3 className="turmeric-glow text-xl font-bold mb-2">{t('vaultTitle')}</h3>
@@ -430,8 +430,8 @@ function ChairmanProfile() {
             {/* Chairman Badge */}
             <div className="text-center mb-6">
               <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full" style={{ background: 'linear-gradient(135deg, #EAB308, #FCD34D)', boxShadow: '0 0 16px rgba(234,179,8,0.25)' }}>
-                <Star className="w-3.5 h-3.5" style={{ color: '#060A08' }} fill="#060A08" />
-                <span className="text-xs font-bold tracking-wider" style={{ color: '#060A08' }}>CHAIRMAN</span>
+                <Star className="w-3.5 h-3.5" style={{ color: '#05140B' }} fill="#05140B" />
+                <span className="text-xs font-bold tracking-wider" style={{ color: '#05140B' }}>CHAIRMAN</span>
               </div>
             </div>
 
@@ -458,7 +458,7 @@ function ChairmanProfile() {
               {holdings.map((h, i) => (
                 <div key={i} className="beam-small">
                   <div className="beam-small-inner p-4 text-center">
-                    <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(6,10,8,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+                    <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
                       <Award className="w-5 h-5 turmeric" />
                     </div>
                     <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full mb-2" style={{ background: 'rgba(234,179,8,0.10)', border: '1px solid rgba(234,179,8,0.25)' }}>

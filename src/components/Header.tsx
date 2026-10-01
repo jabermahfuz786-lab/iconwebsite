@@ -52,7 +52,7 @@ export default function Header() {
           scrolled ? 'py-2.5' : 'py-4'
         }`}
         style={{
-          background: scrolled ? 'rgba(6,10,8,0.85)' : 'transparent',
+          background: scrolled ? 'rgba(8,24,14,0.85)' : 'transparent',
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(20,83,45,0.10)' : 'none',
         }}
@@ -60,7 +60,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
           {/* Logo */}
           <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:border-turmeric-500 transition-colors" style={{ background: '#060A08', border: '1px solid rgba(20,83,45,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.4)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:border-turmeric-500 transition-colors" style={{ background: '#0B2416', border: '1px solid rgba(20,83,45,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.4)' }}>
               <Sparkles className="w-4 h-4 turmeric" />
             </div>
             <div className="text-left">
@@ -91,7 +91,7 @@ export default function Header() {
                 <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
               </button>
               {langOpen && (
-                <div className="absolute top-full mt-2 right-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: '#060A08', border: '1px solid rgba(20,83,45,0.20)', borderRadius: '0.75rem', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                <div className="absolute top-full mt-2 right-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: '#0B2416', border: '1px solid rgba(20,83,45,0.20)', borderRadius: '0.75rem', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
                   {languages.map((l) => (
                     <button
                       key={l.code}
@@ -115,7 +115,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'rgba(6,10,8,0.97)', backdropFilter: 'blur(16px)' }}>
+        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'rgba(8,24,14,0.97)', backdropFilter: 'blur(16px)' }}>
           <nav className="flex flex-col items-center gap-5 mt-8">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => { handleNav(item.path); }} className={`nav-link text-lg ${isActive(item.path) ? 'active' : ''}`}>

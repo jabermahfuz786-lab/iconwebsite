@@ -11,12 +11,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-8 relative z-10" style={{ background: 'rgba(6,10,8,0.7)', borderTop: '1px solid rgba(20,83,45,0.08)' }}>
+    <footer className="mt-8 relative z-10" style={{ background: 'rgba(8,24,14,0.7)', borderTop: '1px solid rgba(20,83,45,0.08)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#060A08', border: '1px solid rgba(20,83,45,0.20)' }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#0B2416', border: '1px solid rgba(20,83,45,0.20)' }}>
                 <Sparkles className="w-4 h-4 turmeric" />
               </div>
               <div>

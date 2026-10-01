@@ -435,8 +435,11 @@ function ChairmanProfile() {
               </div>
             </div>
 
-            {/* Names */}
-            <div className="text-center mb-4">
+            {/* Portrait and names */}
+            <div className="text-center mb-5">
+              <div className="chairman-portrait mx-auto mb-5">
+                <img src="/IMG_5713.png" alt="Mufti Mahfuzur Rahman Jaber" />
+              </div>
               <h3 className="turmeric-glow text-xl md:text-2xl font-bold mb-1">Mufti Mahfuzur Rahman Jaber</h3>
               <p className="text-white/80 text-base font-medium" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>মুফতী মাহফুজুর রহমান জাবের</p>
             </div>

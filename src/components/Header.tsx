@@ -28,58 +28,48 @@ export default function Header() {
 
   const navItems = [
     { label: t('home'), path: '/' },
-    { label: t('businessCity'), path: '/#business' },
-    { label: t('expatServices'), path: '/#expat' },
     { label: t('investorLogin'), path: '/investor-login' },
     { label: t('admin'), path: '/admin' },
   ];
 
-  const languages: { code: Language; label: string; flag: string }[] = [
-    { code: 'bn', label: 'বাংলা', flag: 'BN' },
-    { code: 'en', label: 'English', flag: 'EN' },
-    { code: 'ar', label: 'العربية', flag: 'AR' },
+  const languages: { code: Language; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'bn', label: 'বাংলা' },
+    { code: 'ar', label: 'العربية' },
   ];
 
   const isActive = (path: string) => {
     if (path === '/') return route === '/' || route === '';
-    if (path.startsWith('/#')) return true;
-    return route.startsWith(path.replace('/#', ''));
+    return route.startsWith(path);
   };
 
-  const handleNav = (path: string) => {
-    if (path.startsWith('/#')) {
-      const anchor = path.slice(2);
-      if (route !== '/' && route !== '') {
-        navigate('/');
-        setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' }), 100);
-      } else {
-        document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      navigate(path);
-    }
-  };
+  const handleNav = (path: string) => navigate(path);
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-          scrolled
-            ? 'bg-matte-900/85 backdrop-blur-xl border-b border-green-500/10 py-2.5'
-            : 'bg-transparent py-4'
+          scrolled ? 'py-2.5' : 'py-4'
         }`}
+        style={{
+          background: scrolled ? 'rgba(6,10,8,0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(16px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(20,83,45,0.10)' : 'none',
+        }}
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
+          {/* Logo */}
           <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:border-green-400 transition-colors" style={{ background: '#0D0F12', border: '1px solid rgba(0,255,102,0.22)', boxShadow: 'inset 0 1px 2px rgba(0,255,102,0.05), 0 2px 6px rgba(0,0,0,0.4)' }}>
-              <Sparkles className="w-4 h-4 neon-text" />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:border-turmeric-500 transition-colors" style={{ background: '#060A08', border: '1px solid rgba(20,83,45,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.4)' }}>
+              <Sparkles className="w-4 h-4 turmeric" />
             </div>
             <div className="text-left">
-              <div className="font-serif text-lg text-white leading-none tracking-wide">{t('brandName')}</div>
-              <div className="text-[0.55rem] tracking-[0.2em] uppercase sage-text">{t('brandTagline')}</div>
+              <div className="font-sans text-lg font-extrabold turmeric leading-none tracking-tight">{t('brandName')}</div>
+              <div className="sage text-[0.55rem] tracking-[0.15em] uppercase">{t('brandTagline')}</div>
             </div>
           </button>
 
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-7">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => handleNav(item.path)} className={`nav-link ${isActive(item.path) ? 'active' : ''}`}>
@@ -88,25 +78,26 @@ export default function Header() {
             ))}
           </nav>
 
+          {/* Right side */}
           <div className="flex items-center gap-3">
+            {/* Language Switcher */}
             <div ref={langRef} className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 transition-colors text-sm sage-text hover:text-green-400"
+                className="flex items-center gap-1.5 transition-colors text-sm sage hover:text-turmeric"
               >
                 <Globe className="w-4 h-4" />
-                <span className="font-medium">{lang.toUpperCase()}</span>
+                <span className="font-medium">{languages.find((l) => l.code === lang)?.label || 'EN'}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
               </button>
               {langOpen && (
-                <div className="absolute top-full mt-2 right-0 py-2 min-w-[130px] animate-fade-in z-50" style={{ background: '#0D0F12', border: '1px solid rgba(0,255,102,0.18)', borderRadius: '0.75rem', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                <div className="absolute top-full mt-2 right-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: '#060A08', border: '1px solid rgba(20,83,45,0.20)', borderRadius: '0.75rem', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
                   {languages.map((l) => (
                     <button
                       key={l.code}
                       onClick={() => { setLang(l.code); setLangOpen(false); }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-3 ${lang === l.code ? 'neon-text' : 'sage-text hover:text-green-400'}`}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${lang === l.code ? 'turmeric' : 'sage hover:text-turmeric'}`}
                     >
-                      <span className="font-mono text-xs opacity-50 w-6">{l.flag}</span>
                       {l.label}
                     </button>
                   ))}
@@ -114,15 +105,17 @@ export default function Header() {
               )}
             </div>
 
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden" style={{ color: 'rgba(184,255,217,0.6)' }}>
+            {/* Mobile menu */}
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden sage">
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 backdrop-blur-xl pt-16 animate-fade-in" style={{ background: 'rgba(8,10,12,0.97)' }}>
+        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'rgba(6,10,8,0.97)', backdropFilter: 'blur(16px)' }}>
           <nav className="flex flex-col items-center gap-5 mt-8">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => { handleNav(item.path); }} className={`nav-link text-lg ${isActive(item.path) ? 'active' : ''}`}>

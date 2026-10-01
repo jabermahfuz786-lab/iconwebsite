@@ -68,8 +68,8 @@ export default function AdminPage() {
       <div className="pt-24 pb-20 min-h-screen flex items-center animate-fade-in">
         <div className="max-w-md mx-auto px-4 w-full">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-full border border-green-400/25 flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-7 h-7 text-green-400" />
+            <div className="w-16 h-16 rounded-full border border-yellow-500/25 flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-7 h-7 text-yellow-500" />
             </div>
             <h1 className="font-serif text-3xl text-white mb-2">{t('adminLogin')}</h1>
             <div className="section-divider" />
@@ -109,7 +109,7 @@ export default function AdminPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-green-400/15 mb-6 overflow-x-auto no-scrollbar">
+        <div className="flex gap-1 border-b border-yellow-500/15 mb-6 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setTab('projects')}
             className={`tab-btn flex items-center gap-2 ${tab === 'projects' ? 'active' : ''}`}
@@ -149,12 +149,12 @@ export default function AdminPage() {
                           p.status_badge === 'upcoming' ? 'badge-blue' :
                           p.status_badge === 'sold_out' ? 'badge-red' : 'badge-green'
                         } text-[0.6rem]`}>{p.status_badge}</span>
-                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-green-400" /> : <EyeOff className="w-3.5 h-3.5 text-white/35" />}
+                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-yellow-500" /> : <EyeOff className="w-3.5 h-3.5 text-white/35" />}
                       </div>
                       <p className="text-white/45 text-sm">{p.city}, {p.country} · {p.category} · {p.available_units}/{p.total_units} units</p>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-green-400/20 text-green-400 hover:bg-green-400/10 transition-all">
+                      <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/10 transition-all">
                         <Pencil className="w-4 h-4" />
                       </button>
                     </div>
@@ -188,7 +188,7 @@ export default function AdminPage() {
               <div className="neon-card h-64 skeleton" />
             ) : investors.length === 0 ? (
               <div className="neon-card p-8 text-center">
-                <Users className="w-12 h-12 text-green-400/40 mx-auto mb-3" />
+                <Users className="w-12 h-12 text-yellow-500/40 mx-auto mb-3" />
                 <p className="text-white/45">No investors visible. Investor management requires service-role access.</p>
                 <p className="text-white/35 text-xs mt-2">Use the Supabase dashboard or an edge function to manage investors.</p>
               </div>
@@ -283,7 +283,7 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
       <div className="neon-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-2xl text-white">{project ? t('editProject') : t('addProject')}</h2>
-          <button onClick={onClose} className="text-white/45 hover:text-green-400"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="text-white/45 hover:text-yellow-500"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -419,7 +419,7 @@ function InvestorForm({ onClose, onSaved }: { onClose: () => void; onSaved: () =
       <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-2xl text-white">Add Investor</h2>
-          <button onClick={onClose} className="text-white/45 hover:text-green-400"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="text-white/45 hover:text-yellow-500"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (

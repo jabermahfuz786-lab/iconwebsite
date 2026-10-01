@@ -1,10 +1,50 @@
 import { useState, useEffect } from 'react';
-import { Lock, Building, Users, Plus, Pencil, Trash2, X, Save, Eye, EyeOff, AlertCircle, UserPlus } from 'lucide-react';
+import { Lock, Building, Users, Plus, Pencil, Trash2, X, Save, Eye, EyeOff, AlertCircle, UserPlus, Link2, DollarSign } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { supabase } from '@/lib/supabase';
-import type { Project, Investor, ProjectCategory, PropertyType, ConstructionStatus, PaymentType, EngagementType, Currency, StatusBadge } from '@/types';
+import type { Project, Investor, Investment, ProjectCategory, PropertyType, ConstructionStatus, PaymentType, EngagementType, Currency, StatusBadge } from '@/types';
 
-type Tab = 'projects' | 'investors';
+type Tab = 'projects' | 'investors' | 'investments';
+
+const ADMIN_PASSWORD = 'myicon-admin-2024';
+const EDGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api`;
+
+async function adminFetch(resource: string, options: RequestInit = {}) {
+  const body = options.body ? JSON.parse(options.body as string) : {};
+  const res = await fetch(`${EDGE_URL}/${resource}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      ...options.headers,
+    },
+    body: JSON.stringify({ ...body, _admin_password: ADMIN_PASSWORD }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function adminGet(resource: string) {
+  const res = await fetch(`${EDGE_URL}/${resource}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      'X-Admin-Password': ADMIN_PASSWORD,
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+interface AdminInvestment extends Investment {
+  investors?: { investor_code: string; full_name: string; email: string };
+}
 
 export default function AdminPage() {
   const { t } = useApp();
@@ -13,15 +53,13 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
   const [investors, setInvestors] = useState<Investor[]>([]);
+  const [investments, setInvestments] = useState<AdminInvestment[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showInvestorForm, setShowInvestorForm] = useState(false);
+  const [showInvestmentForm, setShowInvestmentForm] = useState(false);
   const [error, setError] = useState('');
-
-  // Check for admin session (using service role is not possible from client,
-  // so we use a simple admin password check against env)
-  const ADMIN_PASSWORD = 'myicon-admin-2024';
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,21 +79,18 @@ export default function AdminPage() {
 
   const loadData = async () => {
     setLoading(true);
-    // Projects - use service role via RPC or direct query with anon key
-    // Since admin uses anon key, we can read public projects
-    const { data: projs } = await supabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false });
-    setProjects((projs as Project[]) || []);
-
-    // Investors - can't read with anon key (RLS), so this will be empty
-    // In production, this would use an edge function with service role
-    const { data: invs } = await supabase
-      .from('investors')
-      .select('*')
-      .order('created_at', { ascending: false });
-    setInvestors((invs as Investor[]) || []);
+    try {
+      const [projRes, invRes, invsRes] = await Promise.all([
+        adminGet('projects'),
+        adminGet('investors'),
+        adminGet('investments'),
+      ]);
+      setProjects(projRes.projects || []);
+      setInvestors(invRes.investors || []);
+      setInvestments(invsRes.investments || []);
+    } catch (err) {
+      setError(String(err));
+    }
     setLoading(false);
   };
 
@@ -108,6 +143,13 @@ export default function AdminPage() {
           <h1 className="font-serif text-3xl md:text-4xl text-white">{t('adminPanel')}</h1>
         </div>
 
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-red-400 text-sm">
+            <AlertCircle className="w-4 h-4" /> {error}
+            <button onClick={() => setError('')} className="ml-auto text-red-400/50 hover:text-red-400"><X className="w-4 h-4" /></button>
+          </div>
+        )}
+
         {/* Tabs */}
         <div className="flex gap-1 border-b border-yellow-500/15 mb-6 overflow-x-auto no-scrollbar">
           <button
@@ -121,6 +163,12 @@ export default function AdminPage() {
             className={`tab-btn flex items-center gap-2 ${tab === 'investors' ? 'active' : ''}`}
           >
             <Users className="w-4 h-4" /> {t('manageInvestors')}
+          </button>
+          <button
+            onClick={() => setTab('investments')}
+            className={`tab-btn flex items-center gap-2 ${tab === 'investments' ? 'active' : ''}`}
+          >
+            <Link2 className="w-4 h-4" /> Assign Investments
           </button>
         </div>
 
@@ -180,8 +228,8 @@ export default function AdminPage() {
                 onClick={() => setShowInvestorForm(true)}
                 className="btn-gold flex items-center gap-2 text-sm"
               >
-                  <UserPlus className="w-4 h-4" /> Add Investor
-                </button>
+                <UserPlus className="w-4 h-4" /> Add Investor
+              </button>
             </div>
 
             {loading ? (
@@ -189,8 +237,7 @@ export default function AdminPage() {
             ) : investors.length === 0 ? (
               <div className="neon-card p-8 text-center">
                 <Users className="w-12 h-12 text-yellow-500/40 mx-auto mb-3" />
-                <p className="text-white/45">No investors visible. Investor management requires service-role access.</p>
-                <p className="text-white/35 text-xs mt-2">Use the Supabase dashboard or an edge function to manage investors.</p>
+                <p className="text-white/45">No investors yet. Create one to get started.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -199,6 +246,11 @@ export default function AdminPage() {
                     <div>
                       <h3 className="text-white font-medium">{inv.full_name}</h3>
                       <p className="text-white/45 text-sm">{inv.investor_code} · {inv.email}</p>
+                      {'user_id' in inv && (inv as Record<string, unknown>).user_id ? (
+                        <span className="badge badge-green text-[0.6rem] mt-1 inline-block">Linked to auth</span>
+                      ) : (
+                        <span className="badge badge-gold text-[0.6rem] mt-1 inline-block">No auth link</span>
+                      )}
                     </div>
                     <span className={`badge ${inv.is_active ? 'badge-green' : 'badge-red'}`}>
                       {inv.is_active ? 'Active' : 'Suspended'}
@@ -210,6 +262,71 @@ export default function AdminPage() {
 
             {showInvestorForm && (
               <InvestorForm onClose={() => setShowInvestorForm(false)} onSaved={() => { setShowInvestorForm(false); loadData(); }} />
+            )}
+          </div>
+        )}
+
+        {tab === 'investments' && (
+          <div>
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setShowInvestmentForm(true)}
+                className="btn-gold flex items-center gap-2 text-sm"
+              >
+                <Link2 className="w-4 h-4" /> Assign Investment
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="neon-card h-64 skeleton" />
+            ) : investments.length === 0 ? (
+              <div className="neon-card p-8 text-center">
+                <Link2 className="w-12 h-12 text-yellow-500/40 mx-auto mb-3" />
+                <p className="text-white/45">No investments assigned yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {investments.map((inv) => (
+                  <div key={inv.id} className="neon-card p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h3 className="text-white font-medium">{inv.project_name}</h3>
+                        <p className="text-white/45 text-sm">
+                          {inv.investors?.full_name} ({inv.investors?.investor_code}) · {inv.investors?.email}
+                        </p>
+                      </div>
+                      <span className={`badge ${inv.status === 'active' ? 'badge-green' : 'badge-gold'}`}>{inv.status}</span>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mt-2">
+                      <div>
+                        <p className="text-white/35 text-xs">Investment</p>
+                        <p className="text-white/70">{inv.currency} {inv.investment_amount.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-white/35 text-xs">Paid</p>
+                        <p className="text-white/70">{inv.currency} {inv.paid_amount.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-white/35 text-xs">Due</p>
+                        <p className="text-white/70">{inv.currency} {inv.due_amount.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-white/35 text-xs">Next Installment</p>
+                        <p className="text-white/70">{inv.next_installment_date || 'N/A'}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {showInvestmentForm && (
+              <InvestmentForm
+                investors={investors}
+                projects={projects}
+                onClose={() => setShowInvestmentForm(false)}
+                onSaved={() => { setShowInvestmentForm(false); loadData(); }}
+              />
             )}
           </div>
         )}
@@ -262,20 +379,15 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
       map_lat: form.map_lat ? parseFloat(String(form.map_lat)) : null,
       map_lng: form.map_lng ? parseFloat(String(form.map_lng)) : null,
     };
+    if (project) payload.id = project.id;
 
-    // Note: This will fail with anon key due to RLS (no public insert policy).
-    // In production, this would go through an edge function with service role.
-    const { error: saveError } = project
-      ? await supabase.from('projects').update(payload).eq('id', project.id)
-      : await supabase.from('projects').insert(payload);
-
-    if (saveError) {
-      setError(`Save failed: ${saveError.message}. Admin writes require service-role access via an edge function.`);
+    try {
+      await adminFetch('projects', { method: 'POST', body: JSON.stringify(payload) });
+      onSaved();
+    } catch (err) {
+      setError(String(err));
       setSaving(false);
-      return;
     }
-
-    onSaved();
   };
 
   return (
@@ -380,38 +492,26 @@ function InvestorForm({ onClose, onSaved }: { onClose: () => void; onSaved: () =
     setSaving(true);
     setError('');
 
-    // Create auth user
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-    });
-
-    if (authError) {
-      setError(`Auth error: ${authError.message}`);
+    try {
+      await adminFetch('investors', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          investor_code: form.investor_code,
+          full_name: form.full_name,
+          phone: form.phone,
+          country: form.country,
+          nominee_name: form.nominee_name,
+          nominee_relation: form.nominee_relation,
+          nominee_phone: form.nominee_phone,
+        }),
+      });
+      onSaved();
+    } catch (err) {
+      setError(String(err));
       setSaving(false);
-      return;
     }
-
-    // Create investor record (will fail with anon key due to RLS)
-    const { error: invError } = await supabase.from('investors').insert({
-      email: form.email,
-      investor_code: form.investor_code,
-      full_name: form.full_name,
-      phone: form.phone,
-      country: form.country,
-      nominee_name: form.nominee_name,
-      nominee_relation: form.nominee_relation,
-      nominee_phone: form.nominee_phone,
-      is_active: true,
-    });
-
-    if (invError) {
-      setError(`Investor record creation failed: ${invError.message}. Auth user created. Use service-role edge function for full management.`);
-      setSaving(false);
-      return;
-    }
-
-    onSaved();
   };
 
   return (
@@ -444,6 +544,158 @@ function InvestorForm({ onClose, onSaved }: { onClose: () => void; onSaved: () =
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={saving} className="btn-gold flex-1 flex items-center justify-center gap-2 disabled:opacity-50">
               <Save className="w-4 h-4" /> {saving ? t('loading') : 'Create Investor'}
+            </button>
+            <button type="button" onClick={onClose} className="btn-outline-gold">{t('cancel')}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function InvestmentForm({ investors, projects, onClose, onSaved }: {
+  investors: Investor[];
+  projects: Project[];
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const { t } = useApp();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    investor_id: '',
+    project_id: '',
+    project_name: '',
+    investment_amount: 0,
+    paid_amount: 0,
+    due_amount: 0,
+    currency: 'USD' as Currency,
+    next_installment_date: '',
+    next_installment_amount: 0,
+    profit_distributed: 0,
+    agreement_url: '',
+    status: 'active',
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+
+    if (!form.investor_id) {
+      setError('Please select an investor.');
+      setSaving(false);
+      return;
+    }
+
+    // If a project is selected, auto-fill project_name
+    const selectedProject = projects.find((p) => p.id === form.project_id);
+    const projectName = selectedProject ? selectedProject.name : form.project_name;
+
+    if (!projectName) {
+      setError('Please select a project or enter a project name.');
+      setSaving(false);
+      return;
+    }
+
+    try {
+      await adminFetch('investments', {
+        method: 'POST',
+        body: JSON.stringify({
+          investor_id: form.investor_id,
+          project_id: form.project_id || null,
+          project_name: projectName,
+          investment_amount: Number(form.investment_amount),
+          paid_amount: Number(form.paid_amount),
+          due_amount: Number(form.due_amount),
+          currency: form.currency,
+          next_installment_date: form.next_installment_date || null,
+          next_installment_amount: Number(form.next_installment_amount) || null,
+          profit_distributed: Number(form.profit_distributed) || 0,
+          agreement_url: form.agreement_url || null,
+          status: form.status,
+        }),
+      });
+      onSaved();
+    } catch (err) {
+      setError(String(err));
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+      <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-serif text-2xl text-white flex items-center gap-2">
+            <Link2 className="w-5 h-5 text-yellow-500" /> Assign Investment
+          </h2>
+          <button onClick={onClose} className="text-white/45 hover:text-yellow-500"><X className="w-5 h-5" /></button>
+        </div>
+
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-start gap-2 text-red-400 text-sm">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" /> {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Investor selector */}
+          <div>
+            <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">Select Investor</label>
+            <select
+              value={form.investor_id}
+              onChange={(e) => setForm({ ...form, investor_id: e.target.value })}
+              required
+              className="input-luxury text-sm"
+            >
+              <option value="">— Choose an investor —</option>
+              {investors.map((inv) => (
+                <option key={inv.id} value={inv.id}>
+                  {inv.full_name} ({inv.investor_code}) — {inv.email}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Project selector */}
+          <div>
+            <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">Select Project (optional)</label>
+            <select
+              value={form.project_id}
+              onChange={(e) => setForm({ ...form, project_id: e.target.value })}
+              className="input-luxury text-sm"
+            >
+              <option value="">— Custom project name —</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>{p.name} ({p.city}, {p.country})</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Project name (shown when no project selected) */}
+          {!form.project_id && (
+            <Field label="Project Name" value={form.project_name} onChange={(v) => setForm({ ...form, project_name: v })} required />
+          )}
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Investment Amount" type="number" value={String(form.investment_amount)} onChange={(v) => setForm({ ...form, investment_amount: Number(v) })} />
+            <SelectField label="Currency" value={form.currency} onChange={(v) => setForm({ ...form, currency: v as Currency })}
+              options={[{value:'SAR',label:'SAR'},{value:'OMR',label:'OMR'},{value:'BDT',label:'BDT'},{value:'USD',label:'USD'}]} />
+            <Field label="Paid Amount" type="number" value={String(form.paid_amount)} onChange={(v) => setForm({ ...form, paid_amount: Number(v) })} />
+            <Field label="Due Amount" type="number" value={String(form.due_amount)} onChange={(v) => setForm({ ...form, due_amount: Number(v) })} />
+            <Field label="Next Installment Date" type="date" value={form.next_installment_date} onChange={(v) => setForm({ ...form, next_installment_date: v })} />
+            <Field label="Next Installment Amount" type="number" value={String(form.next_installment_amount)} onChange={(v) => setForm({ ...form, next_installment_amount: Number(v) })} />
+            <Field label="Profit Distributed" type="number" value={String(form.profit_distributed)} onChange={(v) => setForm({ ...form, profit_distributed: Number(v) })} />
+            <SelectField label="Status" value={form.status} onChange={(v) => setForm({ ...form, status: v })}
+              options={[{value:'active',label:'Active'},{value:'completed',label:'Completed'},{value:'pending',label:'Pending'}]} />
+          </div>
+
+          <Field label="Agreement URL" value={form.agreement_url} onChange={(v) => setForm({ ...form, agreement_url: v })} />
+
+          <div className="flex gap-3 pt-2">
+            <button type="submit" disabled={saving} className="btn-gold flex-1 flex items-center justify-center gap-2 disabled:opacity-50">
+              <Save className="w-4 h-4" /> {saving ? t('loading') : 'Assign Investment'}
             </button>
             <button type="button" onClick={onClose} className="btn-outline-gold">{t('cancel')}</button>
           </div>

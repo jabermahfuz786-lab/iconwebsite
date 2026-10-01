@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  ChevronDown, ChevronRight, Upload, Send, CheckCircle, AlertCircle,
+  ChevronDown, ChevronRight, ChevronUp,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Lock, Sparkles,
   ArrowRight, DollarSign, Briefcase, Globe, Star, Award,
 } from 'lucide-react';
@@ -13,14 +13,16 @@ export default function HomePage() {
 
   return (
     <div className="animate-fade-in min-h-screen">
-      {/* Dual-Column Master Layout (at the top) */}
-      <section className="pt-24 px-4 pb-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* LEFT: Business City */}
-          <BusinessCityPanel />
+      {/* Hero Banner */}
+      <HeroBanner />
 
-          {/* RIGHT: Probashi Seba */}
-          <ProbashiSebaPanel />
+      {/* Achievements */}
+      <AchievementsSection />
+
+      {/* Business City */}
+      <section id="dual-columns" className="pt-8 px-4 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <BusinessCityPanel />
         </div>
       </section>
 
@@ -30,6 +32,123 @@ export default function HomePage() {
       {/* Chairman Profile (at the absolute bottom) */}
       <ChairmanProfile />
     </div>
+  );
+}
+
+// ============================================================
+// ACHIEVEMENTS
+// ============================================================
+function AchievementsSection() {
+  const { t } = useApp();
+  const [showAll, setShowAll] = useState(false);
+  const achievements = [
+    { icon: Building2, value: '100+', label: t('ach1') },
+    { icon: DollarSign, value: '3000+', label: t('ach2') },
+    { icon: Briefcase, value: '9', label: t('ach3') },
+    { icon: Award, value: '30+', label: t('ach4') },
+    { icon: Globe, value: '100+', label: t('ach5') },
+    { icon: Star, value: '', label: t('ach6') },
+    { icon: Sparkles, value: '', label: t('ach7') },
+    { icon: Globe, value: '3', label: t('ach9') },
+    { icon: Briefcase, value: '15+', label: t('ach12') },
+    { icon: FileText, value: '1K+', label: t('ach13') },
+  ];
+  const visible = showAll ? achievements : achievements.slice(0, 4);
+
+  return (
+    <section className="px-4 py-10">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-6">
+          <h2 className="turmeric-glow text-2xl font-bold tracking-tight">{t('achievementsTitle')}</h2>
+          <p className="sage text-sm mt-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>{t('achievementsTitleBn')}</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {visible.map((a, i) => (
+            <div key={i} className="beam-small animate-fade-in">
+              <div className="beam-small-inner p-5 text-center">
+                <div className="w-11 h-11 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+                  <a.icon className="w-5 h-5 turmeric" />
+                </div>
+                <p className="turmeric-glow text-2xl font-extrabold mb-1">{a.value}</p>
+                <p className="text-white/70 text-xs leading-snug">{a.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        {achievements.length > 4 && (
+          <div className="text-center mt-5">
+            <button onClick={() => setShowAll(!showAll)} className="btn-outline inline-flex items-center gap-2">
+              {showAll ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              {showAll ? t('showLess') : t('readMore')}
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// HERO BANNER
+// ============================================================
+function HeroBanner() {
+  const { t } = useApp();
+
+  const scrollToBusinessCity = () => {
+    document.getElementById('dual-columns')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/makkah-window-hero.webp"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(5,20,11,0.55) 0%, rgba(5,20,11,0.75) 60%, #05140B 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(20,83,45,0.10), transparent 70%)' }} />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 pt-28 pb-16 text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 animate-fade-in" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(234,179,8,0.25)', backdropFilter: 'blur(12px)' }}>
+          <Sparkles className="w-3.5 h-3.5 turmeric" />
+          <span className="turmeric text-xs font-semibold tracking-wider">{t('heroBadge')}</span>
+        </div>
+
+        {/* Title */}
+        <h1 className="font-sans text-5xl md:text-7xl font-extrabold turmeric-glow mb-3 tracking-tight leading-none">
+          {t('heroTitle')}
+        </h1>
+        <p className="sage text-lg md:text-xl mb-6" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
+          {t('heroTitleBn')}
+        </p>
+
+        {/* Divider */}
+        <div className="section-divider mb-6" />
+
+        {/* Subtitle */}
+        <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+          {t('heroSubtitle')}
+        </p>
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button onClick={scrollToBusinessCity} className="btn-gold inline-flex items-center gap-2">
+            <Briefcase className="w-4 h-4" /> {t('heroCta1')}
+          </button>
+        </div>
+
+        {/* Scroll hint */}
+        <div className="mt-12 flex flex-col items-center gap-1 sage">
+          <span className="text-[0.65rem] tracking-[0.2em] uppercase">Scroll</span>
+          <ChevronDown className="w-4 h-4 animate-bounce" />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -49,7 +168,12 @@ function BusinessCityPanel() {
 
   return (
     <div className="beam-panel">
-      <div className="beam-panel-inner p-6 md:p-8">
+      <div className="beam-panel-inner p-6 md:p-8 relative overflow-hidden">
+        {/* Background image — Madinah Clock Tower through glass, handshake */}
+        <div className="absolute inset-0 z-0 opacity-[0.12]">
+          <img src="/business-city-bg.webp" alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
@@ -92,6 +216,7 @@ function BusinessCityPanel() {
         {activeCat === null && (
           <div className="text-center py-8 sage text-sm">Select a category to explore</div>
         )}
+        </div>
       </div>
     </div>
   );
@@ -241,144 +366,6 @@ function ITContent() {
         </div>
       ))}
       <button onClick={() => supabase.from('business_inquiries').insert({ inquiry_type: 'it_services' })} className="btn-gold">{t('itCta')}</button>
-    </div>
-  );
-}
-
-// ============================================================
-// RIGHT COLUMN: PROBASHI SEBA
-// ============================================================
-function ProbashiSebaPanel() {
-  const { t } = useApp();
-  const [expanded, setExpanded] = useState<number | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState<number | null>(null);
-
-  const services = [
-    { key: 's1', icon: FileText },
-    { key: 's2', icon: Shield },
-    { key: 's3', icon: FileText },
-    { key: 's4', icon: FileText },
-    { key: 's5', icon: AlertCircle },
-    { key: 's6', icon: Shield },
-    { key: 's7', icon: Lock },
-    { key: 's8', icon: AlertCircle },
-    { key: 's9', icon: Plane },
-    { key: 's10', icon: FileText },
-    { key: 's11', icon: DollarSign },
-  ];
-
-  const bnNumerals = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১'];
-
-  return (
-    <div className="beam-panel">
-      <div className="beam-panel-inner p-6 md:p-8">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
-            <Shield className="w-5 h-5 turmeric" />
-          </div>
-          <div>
-            <h2 className="turmeric-glow text-xl font-bold tracking-tight">PROBASHI SEBA</h2>
-            <p className="sage text-xs">প্রবাসী সেবা</p>
-          </div>
-        </div>
-
-        {/* 11 Service Rows */}
-        <div className="space-y-2.5">
-          {services.map((service, i) => (
-            <ExpatRow
-              key={i}
-              index={bnNumerals[i]}
-              title={t(service.key as any)}
-              desc={t(`${service.key}d` as any)}
-              icon={service.icon}
-              isExpanded={expanded === i}
-              onToggle={() => setExpanded(expanded === i ? null : i)}
-              submitting={submitting}
-              submitted={submitted === i}
-              onSubmit={async (description, name, phone) => {
-                setSubmitting(true);
-                await supabase.from('expat_service_requests').insert({
-                  service_type: t(service.key as any), description, contact_name: name, contact_phone: phone,
-                });
-                setSubmitting(false);
-                setSubmitted(i);
-                setTimeout(() => { setSubmitted(null); setExpanded(null); }, 3500);
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ExpatRow({
-  index, title, desc, icon: Icon, isExpanded, onToggle, submitting, submitted, onSubmit,
-}: {
-  index: string;
-  title: string;
-  desc: string;
-  icon: React.ElementType;
-  isExpanded: boolean;
-  onToggle: () => void;
-  submitting: boolean;
-  submitted: boolean;
-  onSubmit: (desc: string, name: string, phone: string) => Promise<void>;
-}) {
-  const { t } = useApp();
-  const [description, setDescription] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(description, name, phone);
-    setDescription(''); setName(''); setPhone('');
-  };
-
-  return (
-    <div className={`beam-small ${isExpanded ? 'ring-1 ring-turmeric-500/30' : ''}`}>
-      <div className="beam-small-inner">
-        <button onClick={onToggle} className="w-full flex items-center gap-3 p-3.5 text-left">
-          <span className="turmeric font-semibold text-sm w-6 text-center shrink-0">{index}</span>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.5)', border: '1px solid rgba(20,83,45,0.15)' }}>
-            <Icon className="w-4 h-4 turmeric" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-white text-sm font-medium leading-tight truncate">{title}</h3>
-            <p className="sage text-[0.65rem] truncate">{desc}</p>
-          </div>
-          <ChevronDown className={`w-4 h-4 turmeric shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-        </button>
-
-        {isExpanded && (
-          <div className="expand-content px-3.5 pb-3.5">
-            {submitted ? (
-              <div className="flex items-center gap-2 p-3 rounded-lg text-sm" style={{ background: 'rgba(20,83,45,0.10)', border: '1px solid rgba(20,83,45,0.20)', color: '#4ade80' }}>
-                <CheckCircle className="w-4 h-4 shrink-0" /> {t('submitted')}
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-2.5 pt-1">
-                <div className="grid grid-cols-2 gap-2.5">
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('yourName')} required className="input-luxury text-sm" />
-                  <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t('yourPhone')} required className="input-luxury text-sm" />
-                </div>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('problemDesc')} required rows={2} className="input-luxury text-sm resize-none" />
-                <label className="flex items-center gap-2 sage text-xs cursor-pointer hover:text-turmeric transition-colors">
-                  <Upload className="w-3.5 h-3.5" /> {t('uploadDoc')}
-                  <input type="file" className="hidden" />
-                </label>
-                <button type="submit" disabled={submitting} className="btn-gold w-full flex items-center justify-center gap-2 disabled:opacity-50">
-                  <Send className="w-3.5 h-3.5" />
-                  {submitting ? t('loading') : t('submitToCare')}
-                </button>
-              </form>
-            )}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

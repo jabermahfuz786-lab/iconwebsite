@@ -13,6 +13,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-export const WHATSAPP_NUMBER = '+966500000000';
+export const WHATSAPP_NUMBER = '+96872724934';
 export const whatsappLink = (message: string) =>
   `https://wa.me/${WHATSAPP_NUMBER.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;

@@ -5,9 +5,9 @@ export default function Footer() {
   const { t, navigate } = useApp();
 
   const offices = [
-    { name: 'Makkah Office', address: 'Makkah, Saudi Arabia', phone: '+966 50 000 0000' },
-    { name: 'Oman Office', address: 'Muscat, Oman', phone: '+968 00 000 000' },
-    { name: 'Bangladesh Office', address: 'Dhaka, Bangladesh', phone: '+880 00 000 00000' },
+    { name: 'Corporate Office', address: 'Alsafa Tower, Lift14 Office A72, Aziziyah, Makkah, Saudi Arabia', phone: '+966 53 400 7456' },
+    { name: 'Oman Office', address: 'Sahalnoot, 153, Salalah, Oman', phone: '+968 7272 4934' },
+    { name: 'Bangladesh Office', address: 'H2, Block G, South Banasree, Dhaka, Bangladesh', phone: '+880 1736 5560 32' },
   ];
 
   return (

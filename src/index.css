@@ -96,7 +96,7 @@ body::before {
   background: rgba(8, 24, 14, 0.82);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  height: 100%;
+  min-height: 100%;
 }
 
 @keyframes beamSpin {
@@ -323,7 +323,7 @@ select.input-luxury option { background: #0B2416; color: #FFFFFF; }
 .expand-content { animation: expand 0.3s ease-out forwards; }
 @keyframes expand {
   0% { opacity: 0; max-height: 0; }
-  100% { opacity: 1; max-height: 600px; }
+  100% { opacity: 1; max-height: 2000px; }
 }
 
 /* WhatsApp Float */

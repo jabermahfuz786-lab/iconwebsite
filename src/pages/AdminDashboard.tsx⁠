@@ -1,0 +1,118 @@
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
+
+export default function AdminDashboard() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+
+  // আইকন অডিওমানের সার্ভিস বা প্রোডাক্ট লোড করা
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    const { data, error } = await supabase.from('products').select('*');
+    if (!error && data) setProducts(data);
+  };
+
+  // ডিরেক্ট ইন্টারফেস থেকে নতুন প্রোডাক্ট/অডিও সরঞ্জাম যুক্ত করা
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title) return;
+
+    const { error } = await supabase.from('products').insert([
+      { title, category, price, description }
+    ]);
+
+    if (!error) {
+      setTitle('');
+      setCategory('');
+      setPrice('');
+      setDescription('');
+      fetchProducts();
+    }
+  };
+
+  return (
+    <div style={{ backgroundColor: '#0B132B', color: '#fff', minHeight: '100vh', padding: '30px', fontFamily: 'sans-serif' }}>
+      <header style={{ borderBottom: '2px solid #FFC300', paddingBottom: '15px', marginBottom: '30px' }}>
+        <h1 style={{ color: '#FFC300', margin: 0 }}>Icon Audioman - Admin Panel</h1>
+        <p style={{ color: '#8D99AE', marginTop: '5px' }}>ইন্টারফেস থেকে সরাসরি ওয়েবসাইট অ্যাডমিন কন্ট্রোল</p>
+      </header>
+      
+      {/* নতুন আইটেম বা কনটেন্ট যোগ করার ফর্ম */}
+      <div style={{ background: '#1C2541', padding: '25px', borderRadius: '10px', marginBottom: '40px' }}>
+        <h2 style={{ color: '#FFC300', marginTop: 0 }}>নতুন প্রোডাক্ট/সার্ভিস যুক্ত করুন</h2>
+        <form onSubmit={handleAddProduct}>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>টাইটেল / নাম:</label>
+            <input 
+              type="text" 
+              placeholder="যেমন: Professional Audio Interface" 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: 'none', background: '#0B132B', color: '#fff' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '5px' }}>ক্যাটাগরি:</label>
+              <input 
+                type="text" 
+                placeholder="যেমন: Sound System / Microphones" 
+                value={category} 
+                onChange={(e) => setCategory(e.target.value)}
+                style={{ width: '100%', padding: '12px', borderRadius: '5px', border: 'none', background: '#0B132B', color: '#fff' }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '5px' }}>মূল্য (Price):</label>
+              <input 
+                type="text" 
+                placeholder="যেমন: $150 / ৳১৫,০০০" 
+                value={price} 
+                onChange={(e) => setPrice(e.target.value)}
+                style={{ width: '100%', padding: '12px', borderRadius: '5px', border: 'none', background: '#0B132B', color: '#fff' }}
+              />
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>বিবরণ (Description):</label>
+            <textarea 
+              placeholder="প্রোডাক্ট বা সার্ভিস সম্পর্কে বিস্তারিত লিখুন..." 
+              value={description} 
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              style={{ width: '100%', padding: '12px', borderRadius: '5px', border: 'none', background: '#0B132B', color: '#fff' }}
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            style={{ backgroundColor: '#FFC300', color: '#0B132B', padding: '12px 25px', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' }}
+          >
+            সেভ ও প্রকাশ করুন
+          </button>
+        </form>
+      </div>
+
+      {/* বর্তমান তালিকা */}
+      <h2>বর্তমান আইটেমসমূহ</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        {products.map((item) => (
+          <div key={item.id} style={{ background: '#1C2541', padding: '20px', borderRadius: '8px', borderLeft: '4px solid #FFC300' }}>
+            <h3 style={{ color: '#FFC300', marginTop: 0 }}>{item.title}</h3>
+            <p><strong>ক্যাটাগরি:</strong> {item.category}</p>
+            <p><strong>দাম:</strong> {item.price}</p>
+            <p style={{ color: '#C5C6C7' }}>{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

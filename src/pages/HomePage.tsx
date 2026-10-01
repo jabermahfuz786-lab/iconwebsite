@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import {
   ChevronDown, ChevronRight, Upload, Send, CheckCircle, AlertCircle,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Lock, Sparkles,
-  ArrowRight, DollarSign, Briefcase, Globe,
+  ArrowRight, DollarSign, Briefcase, Globe, Star, Award,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { supabase, whatsappLink } from '@/lib/supabase';
@@ -13,35 +13,22 @@ export default function HomePage() {
 
   return (
     <div className="animate-fade-in min-h-screen">
-      {/* Chairman Profile */}
-      <section className="pt-24 pb-8 px-4">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="w-20 h-20 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(6,10,8,0.85)', border: '1px solid rgba(20,83,45,0.30)', boxShadow: '0 0 20px rgba(20,83,45,0.10), 0 4px 24px rgba(0,0,0,0.4)' }}>
-            <Sparkles className="w-9 h-9 turmeric" />
-          </div>
-          <h1 className="font-sans text-3xl md:text-5xl font-extrabold tracking-tight mb-1 turmeric-glow">{t('brandName')}</h1>
-          <p className="sage text-sm mb-3">{t('brandTagline')}</p>
-          <div className="section-divider mb-4" />
-          <div className="max-w-md mx-auto">
-            <p className="turmeric text-sm font-semibold mb-0.5">{t('chairmanTitle')}: {t('chairmanName')}</p>
-            <p className="text-white/70 text-sm leading-relaxed">{t('chairmanMessage')}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Dual-Column Master Layout */}
-      <section className="px-4 pb-16">
+      {/* Dual-Column Master Layout (at the top) */}
+      <section className="pt-24 px-4 pb-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT: Business City */}
           <BusinessCityPanel />
 
-          {/* RIGHT: Expat Helpline */}
-          <ExpatHelplinePanel />
+          {/* RIGHT: Probashi Seba */}
+          <ProbashiSebaPanel />
         </div>
       </section>
 
       {/* Investment Portal */}
       <VaultSection />
+
+      {/* Chairman Profile (at the absolute bottom) */}
+      <ChairmanProfile />
     </div>
   );
 }
@@ -259,9 +246,9 @@ function ITContent() {
 }
 
 // ============================================================
-// RIGHT COLUMN: EXPAT HELPLINE
+// RIGHT COLUMN: PROBASHI SEBA
 // ============================================================
-function ExpatHelplinePanel() {
+function ProbashiSebaPanel() {
   const { t } = useApp();
   const [expanded, setExpanded] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -292,7 +279,7 @@ function ExpatHelplinePanel() {
             <Shield className="w-5 h-5 turmeric" />
           </div>
           <div>
-            <h2 className="turmeric-glow text-xl font-bold tracking-tight">{t('expatServices')}</h2>
+            <h2 className="turmeric-glow text-xl font-bold tracking-tight">PROBASHI SEBA</h2>
             <p className="sage text-xs">প্রবাসী সেবা</p>
           </div>
         </div>
@@ -402,7 +389,7 @@ function ExpatRow({
 function VaultSection() {
   const { t, navigate } = useApp();
   return (
-    <section className="px-4 pb-16">
+    <section className="px-4 pb-8">
       <div className="max-w-3xl mx-auto">
         <div className="beam-panel">
           <div className="beam-panel-inner p-8 text-center relative overflow-hidden">
@@ -416,6 +403,72 @@ function VaultSection() {
               <button onClick={() => navigate('/investor-login')} className="btn-dark inline-flex items-center gap-2">
                 <Lock className="w-4 h-4" /> {t('signIn')}
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================
+// CHAIRMAN PROFILE (at the absolute bottom)
+// ============================================================
+function ChairmanProfile() {
+  const subTags = ['Businessman', 'Motivational Speaker', 'Columnist'];
+  const holdings = [
+    { name: 'ICON SAUDI ARABIA', region: 'Saudi Arabia' },
+    { name: 'ICON OMAN', region: 'Oman' },
+    { name: 'ICON BANGLADESH', region: 'Bangladesh' },
+  ];
+
+  return (
+    <section className="px-4 pb-16">
+      <div className="max-w-3xl mx-auto">
+        <div className="beam-panel">
+          <div className="beam-panel-inner p-8 md:p-10">
+            {/* Chairman Badge */}
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full" style={{ background: 'linear-gradient(135deg, #EAB308, #FCD34D)', boxShadow: '0 0 16px rgba(234,179,8,0.25)' }}>
+                <Star className="w-3.5 h-3.5" style={{ color: '#060A08' }} fill="#060A08" />
+                <span className="text-xs font-bold tracking-wider" style={{ color: '#060A08' }}>CHAIRMAN</span>
+              </div>
+            </div>
+
+            {/* Names */}
+            <div className="text-center mb-4">
+              <h3 className="turmeric-glow text-xl md:text-2xl font-bold mb-1">Mufti Mahfuzur Rahman Jaber</h3>
+              <p className="text-white/80 text-base font-medium" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>মুফতী মাহফুজুর রহমান জাবের</p>
+            </div>
+
+            {/* Sub-Tags */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+              {subTags.map((tag, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  {i > 0 && <Star className="w-2.5 h-2.5 turmeric" fill="#EAB308" />}
+                  <span className="badge badge-gold">{tag}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="section-divider mb-8" />
+
+            {/* Official Holdings Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {holdings.map((h, i) => (
+                <div key={i} className="beam-small">
+                  <div className="beam-small-inner p-4 text-center">
+                    <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(6,10,8,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+                      <Award className="w-5 h-5 turmeric" />
+                    </div>
+                    <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full mb-2" style={{ background: 'rgba(234,179,8,0.10)', border: '1px solid rgba(234,179,8,0.25)' }}>
+                      <span className="turmeric text-[0.6rem] font-bold tracking-wider">CHAIRMAN</span>
+                    </div>
+                    <h4 className="text-white text-sm font-semibold">{h.name}</h4>
+                    <p className="sage text-[0.65rem] mt-0.5">{h.region}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

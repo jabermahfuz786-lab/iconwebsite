@@ -65,18 +65,18 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled
-            ? 'bg-espresso-800/80 backdrop-blur-xl border-b border-amber-400/20 py-2.5'
+            ? 'bg-matte-900/85 backdrop-blur-xl border-b border-green-500/10 py-2.5'
             : 'bg-transparent py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
           <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-espresso-700 border border-amber-400/30 flex items-center justify-center group-hover:border-amber-300 transition-colors" style={{ boxShadow: 'inset 0 1px 2px rgba(230, 161, 92, 0.1), 0 2px 6px rgba(0,0,0,0.2)' }}>
-              <Sparkles className="w-4 h-4 text-amber-300" />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:border-green-400 transition-colors" style={{ background: '#0D0F12', border: '1px solid rgba(0,255,102,0.22)', boxShadow: 'inset 0 1px 2px rgba(0,255,102,0.05), 0 2px 6px rgba(0,0,0,0.4)' }}>
+              <Sparkles className="w-4 h-4 neon-text" />
             </div>
             <div className="text-left">
-              <div className="font-serif text-lg text-cream-50 leading-none tracking-wide">{t('brandName')}</div>
-              <div className="text-[0.55rem] text-amber-300/60 tracking-[0.2em] uppercase">{t('brandTagline')}</div>
+              <div className="font-serif text-lg text-white leading-none tracking-wide">{t('brandName')}</div>
+              <div className="text-[0.55rem] tracking-[0.2em] uppercase sage-text">{t('brandTagline')}</div>
             </div>
           </button>
 
@@ -92,21 +92,19 @@ export default function Header() {
             <div ref={langRef} className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 text-cream-50/70 hover:text-amber-300 transition-colors text-sm"
+                className="flex items-center gap-1.5 transition-colors text-sm sage-text hover:text-green-400"
               >
                 <Globe className="w-4 h-4" />
                 <span className="font-medium">{lang.toUpperCase()}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
               </button>
               {langOpen && (
-                <div className="absolute top-full mt-2 right-0 smoke-card py-2 min-w-[130px] animate-fade-in z-50">
+                <div className="absolute top-full mt-2 right-0 py-2 min-w-[130px] animate-fade-in z-50" style={{ background: '#0D0F12', border: '1px solid rgba(0,255,102,0.18)', borderRadius: '0.75rem', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
                   {languages.map((l) => (
                     <button
                       key={l.code}
                       onClick={() => { setLang(l.code); setLangOpen(false); }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-3 ${
-                        lang === l.code ? 'text-amber-300 bg-amber-300/10' : 'text-cream-50/60 hover:text-amber-300 hover:bg-amber-300/5'
-                      }`}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors flex items-center gap-3 ${lang === l.code ? 'neon-text' : 'sage-text hover:text-green-400'}`}
                     >
                       <span className="font-mono text-xs opacity-50 w-6">{l.flag}</span>
                       {l.label}
@@ -116,7 +114,7 @@ export default function Header() {
               )}
             </div>
 
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-cream-50/80">
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden" style={{ color: 'rgba(184,255,217,0.6)' }}>
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
@@ -124,7 +122,7 @@ export default function Header() {
       </header>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 bg-espresso-800/95 backdrop-blur-xl pt-16 animate-fade-in">
+        <div className="fixed inset-0 z-30 backdrop-blur-xl pt-16 animate-fade-in" style={{ background: 'rgba(8,10,12,0.97)' }}>
           <nav className="flex flex-col items-center gap-5 mt-8">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => { handleNav(item.path); }} className={`nav-link text-lg ${isActive(item.path) ? 'active' : ''}`}>

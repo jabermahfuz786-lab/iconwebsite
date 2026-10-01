@@ -68,13 +68,13 @@ export default function AdminPage() {
       <div className="pt-24 pb-20 min-h-screen flex items-center animate-fade-in">
         <div className="max-w-md mx-auto px-4 w-full">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-full border border-amber-400/30 flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-7 h-7 text-amber-300" />
+            <div className="w-16 h-16 rounded-full border border-green-400/25 flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-7 h-7 text-green-400" />
             </div>
-            <h1 className="font-serif text-3xl text-cream-50 mb-2">{t('adminLogin')}</h1>
+            <h1 className="font-serif text-3xl text-white mb-2">{t('adminLogin')}</h1>
             <div className="section-divider" />
           </div>
-          <div className="smoke-card p-8">
+          <div className="neon-card p-8">
             {error && (
               <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-red-400 text-sm">
                 <AlertCircle className="w-4 h-4" /> {error}
@@ -92,7 +92,7 @@ export default function AdminPage() {
               />
               <button type="submit" className="btn-gold w-full">{t('signIn')}</button>
             </form>
-            <p className="text-center text-cream-50/40 text-xs mt-4">
+            <p className="text-center text-white/35 text-xs mt-4">
               Authorized personnel only. All actions are logged.
             </p>
           </div>
@@ -105,11 +105,11 @@ export default function AdminPage() {
     <div className="pt-24 pb-20 animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="font-serif text-3xl md:text-4xl text-cream-50">{t('adminPanel')}</h1>
+          <h1 className="font-serif text-3xl md:text-4xl text-white">{t('adminPanel')}</h1>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-amber-400/20 mb-6 overflow-x-auto no-scrollbar">
+        <div className="flex gap-1 border-b border-green-400/15 mb-6 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setTab('projects')}
             className={`tab-btn flex items-center gap-2 ${tab === 'projects' ? 'active' : ''}`}
@@ -136,25 +136,25 @@ export default function AdminPage() {
             </div>
 
             {loading ? (
-              <div className="smoke-card h-64 skeleton" />
+              <div className="neon-card h-64 skeleton" />
             ) : (
               <div className="space-y-3">
                 {projects.map((p) => (
-                  <div key={p.id} className="smoke-card p-4 flex items-center justify-between">
+                  <div key={p.id} className="neon-card p-4 flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
-                        <h3 className="text-cream-50 font-medium">{p.name}</h3>
+                        <h3 className="text-white font-medium">{p.name}</h3>
                         <span className={`badge ${
                           p.status_badge === 'available' ? 'badge-gold' :
                           p.status_badge === 'upcoming' ? 'badge-blue' :
                           p.status_badge === 'sold_out' ? 'badge-red' : 'badge-green'
                         } text-[0.6rem]`}>{p.status_badge}</span>
-                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-green-400" /> : <EyeOff className="w-3.5 h-3.5 text-cream-50/40" />}
+                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-green-400" /> : <EyeOff className="w-3.5 h-3.5 text-white/35" />}
                       </div>
-                      <p className="text-cream-50/50 text-sm">{p.city}, {p.country} · {p.category} · {p.available_units}/{p.total_units} units</p>
+                      <p className="text-white/45 text-sm">{p.city}, {p.country} · {p.category} · {p.available_units}/{p.total_units} units</p>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-amber-400/25 text-amber-300 hover:bg-amber-300/10 transition-all">
+                      <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-green-400/20 text-green-400 hover:bg-green-400/10 transition-all">
                         <Pencil className="w-4 h-4" />
                       </button>
                     </div>
@@ -185,20 +185,20 @@ export default function AdminPage() {
             </div>
 
             {loading ? (
-              <div className="smoke-card h-64 skeleton" />
+              <div className="neon-card h-64 skeleton" />
             ) : investors.length === 0 ? (
-              <div className="smoke-card p-8 text-center">
-                <Users className="w-12 h-12 text-amber-400/40 mx-auto mb-3" />
-                <p className="text-cream-50/50">No investors visible. Investor management requires service-role access.</p>
-                <p className="text-cream-50/40 text-xs mt-2">Use the Supabase dashboard or an edge function to manage investors.</p>
+              <div className="neon-card p-8 text-center">
+                <Users className="w-12 h-12 text-green-400/40 mx-auto mb-3" />
+                <p className="text-white/45">No investors visible. Investor management requires service-role access.</p>
+                <p className="text-white/35 text-xs mt-2">Use the Supabase dashboard or an edge function to manage investors.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {investors.map((inv) => (
-                  <div key={inv.id} className="smoke-card p-4 flex items-center justify-between">
+                  <div key={inv.id} className="neon-card p-4 flex items-center justify-between">
                     <div>
-                      <h3 className="text-cream-50 font-medium">{inv.full_name}</h3>
-                      <p className="text-cream-50/50 text-sm">{inv.investor_code} · {inv.email}</p>
+                      <h3 className="text-white font-medium">{inv.full_name}</h3>
+                      <p className="text-white/45 text-sm">{inv.investor_code} · {inv.email}</p>
                     </div>
                     <span className={`badge ${inv.is_active ? 'badge-green' : 'badge-red'}`}>
                       {inv.is_active ? 'Active' : 'Suspended'}
@@ -279,11 +279,11 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-espresso-800/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-      <div className="smoke-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+      <div className="neon-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-serif text-2xl text-cream-50">{project ? t('editProject') : t('addProject')}</h2>
-          <button onClick={onClose} className="text-cream-50/50 hover:text-amber-300"><X className="w-5 h-5" /></button>
+          <h2 className="font-serif text-2xl text-white">{project ? t('editProject') : t('addProject')}</h2>
+          <button onClick={onClose} className="text-white/45 hover:text-green-400"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -324,24 +324,24 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
           </div>
 
           <div>
-            <label className="block text-cream-50/50 text-xs mb-1.5 uppercase tracking-wider">Description</label>
+            <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">Description</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="input-luxury" />
           </div>
           <div>
-            <label className="block text-cream-50/50 text-xs mb-1.5 uppercase tracking-wider">Ownership Info</label>
+            <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">Ownership Info</label>
             <input type="text" value={form.ownership_info} onChange={(e) => setForm({ ...form, ownership_info: e.target.value })} className="input-luxury" />
           </div>
           <div>
-            <label className="block text-cream-50/50 text-xs mb-1.5 uppercase tracking-wider">Installment Plan</label>
+            <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">Installment Plan</label>
             <input type="text" value={form.installment_plan} onChange={(e) => setForm({ ...form, installment_plan: e.target.value })} className="input-luxury" />
           </div>
 
           <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2 text-cream-50/60 text-sm cursor-pointer">
+            <label className="flex items-center gap-2 text-white/55 text-sm cursor-pointer">
               <input type="checkbox" checked={form.is_public} onChange={(e) => setForm({ ...form, is_public: e.target.checked })} className="accent-gold-600" />
               {t('isPublic')}
             </label>
-            <label className="flex items-center gap-2 text-cream-50/60 text-sm cursor-pointer">
+            <label className="flex items-center gap-2 text-white/55 text-sm cursor-pointer">
               <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} className="accent-gold-600" />
               Featured
             </label>
@@ -415,11 +415,11 @@ function InvestorForm({ onClose, onSaved }: { onClose: () => void; onSaved: () =
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-espresso-800/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-      <div className="smoke-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+      <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-serif text-2xl text-cream-50">Add Investor</h2>
-          <button onClick={onClose} className="text-cream-50/50 hover:text-amber-300"><X className="w-5 h-5" /></button>
+          <h2 className="font-serif text-2xl text-white">Add Investor</h2>
+          <button onClick={onClose} className="text-white/45 hover:text-green-400"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -462,7 +462,7 @@ function Field({ label, value, onChange, type = 'text', required }: {
 }) {
   return (
     <div>
-      <label className="block text-cream-50/50 text-xs mb-1.5 uppercase tracking-wider">{label}</label>
+      <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">{label}</label>
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} className="input-luxury text-sm" />
     </div>
   );
@@ -476,7 +476,7 @@ function SelectField({ label, value, onChange, options }: {
 }) {
   return (
     <div>
-      <label className="block text-cream-50/50 text-xs mb-1.5 uppercase tracking-wider">{label}</label>
+      <label className="block text-white/45 text-xs mb-1.5 uppercase tracking-wider">{label}</label>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="input-luxury text-sm">
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>

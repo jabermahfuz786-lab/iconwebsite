@@ -4,32 +4,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        espresso: {
-          900: '#0A0604',
-          800: '#120A06',
-          700: '#1E110B',
-          600: '#2A1810',
-          500: '#3A2418',
+        matte: {
+          950: '#040506',
+          900: '#080A0C',
+          800: '#0D0F12',
+          700: '#0F1215',
+          600: '#141A1E',
         },
-        amber: {
-          50: '#FFF8F0',
-          100: '#F5D5A0',
-          200: '#F5D5A0',
-          300: '#E6A15C',
-          400: '#D4A373',
-          500: '#C08B5B',
-          600: '#A6724A',
-          700: '#855A38',
-          800: '#634228',
-          900: '#412A18',
+        jet: {
+          900: '#08090B',
+          800: '#0D0F12',
+          700: '#121619',
+          600: '#1A1F23',
+          500: '#222826',
         },
-        rose: {
-          gold: '#D4A373',
+        neon: {
+          50: '#F0FFF4',
+          100: '#E0FFEC',
+          200: '#B8FFD9',
+          300: '#39FF14',
+          400: '#00FF66',
+          500: '#22CC10',
+          600: '#1AA80D',
+          700: '#13840A',
+          800: '#0D6006',
+          900: '#084004',
         },
-        cream: {
-          50: '#FDFBFA',
-          100: '#F5E6D3',
-          200: '#E8D5C0',
+        mint: {
+          50: '#F0FFF4',
+          100: '#E0FFEC',
+          200: '#B8FFD9',
         },
       },
       fontFamily: {
@@ -43,8 +47,8 @@ export default {
         'slide-up': 'slideUp 0.4s ease-out',
         'expand': 'expand 0.3s ease-out',
         'shimmer': 'shimmer 3s linear infinite',
-        'warm-pulse': 'warmPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'warm-drift': 'warmDrift 25s ease-in-out infinite alternate',
+        'neon-pulse': 'neonPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'neon-drift': 'neonDrift 25s ease-in-out infinite alternate',
       },
       keyframes: {
         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
@@ -60,9 +64,9 @@ export default {
           '0%': { backgroundPosition: '-200% center' },
           '100%': { backgroundPosition: '200% center' },
         },
-        warmPulse: {
-          '0%, 100%': { boxShadow: '0 0 8px rgba(230, 161, 92, 0.3), 0 0 16px rgba(230, 161, 92, 0.15)' },
-          '50%': { boxShadow: '0 0 15px rgba(230, 161, 92, 0.5), 0 0 30px rgba(230, 161, 92, 0.25)' },
+        neonPulse: {
+          '0%, 100%': { boxShadow: '0 0 8px rgba(57, 255, 20, 0.3), 0 0 16px rgba(57, 255, 20, 0.15)' },
+          '50%': { boxShadow: '0 0 15px rgba(57, 255, 20, 0.5), 0 0 30px rgba(57, 255, 20, 0.25)' },
         },
       },
     },

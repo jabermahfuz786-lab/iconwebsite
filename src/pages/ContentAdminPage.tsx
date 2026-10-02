@@ -140,10 +140,10 @@ export default function ContentAdminPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: '#FFC300' }}>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: '#9A7820' }}>
               Content Manager
             </h1>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            <p className="text-sm mt-1" style={{ color: 'rgba(42,37,32,0.45)' }}>
               Add, edit, and delete items from the content table.
             </p>
           </div>
@@ -167,7 +167,7 @@ export default function ContentAdminPage() {
 
         {/* Search */}
         <div className="ca-search-wrap mb-6">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,195,0,0.5)' }} />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(184,144,58,0.5)' }} />
           <input
             type="text"
             value={search}
@@ -182,8 +182,8 @@ export default function ContentAdminPage() {
           <div className="ca-card h-48 skeleton" />
         ) : filtered.length === 0 ? (
           <div className="ca-card p-10 text-center">
-            <ImageIcon className="w-12 h-12 mx-auto mb-3" style={{ color: 'rgba(255,195,0,0.3)' }} />
-            <p style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <ImageIcon className="w-12 h-12 mx-auto mb-3" style={{ color: 'rgba(184,144,58,0.3)' }} />
+            <p style={{ color: 'rgba(42,37,32,0.4)' }}>
               {search ? 'No items match your search.' : 'No items yet. Click "Add Item" to create one.'}
             </p>
           </div>
@@ -192,21 +192,21 @@ export default function ContentAdminPage() {
             {filtered.map((item) => (
               <div key={item.id} className="ca-card overflow-hidden flex flex-col">
                 {/* Image */}
-                <div className="h-40 flex items-center justify-center shrink-0" style={{ background: '#0F1A35' }}>
+                <div className="h-40 flex items-center justify-center shrink-0" style={{ background: '#E8E2D8' }}>
                   {item.image_url ? (
                     <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
                   ) : (
-                    <ImageIcon className="w-10 h-10" style={{ color: 'rgba(255,195,0,0.2)' }} />
+                    <ImageIcon className="w-10 h-10" style={{ color: 'rgba(184,144,58,0.2)' }} />
                   )}
                 </div>
 
                 {/* Body */}
                 <div className="p-4 flex flex-col flex-1">
-                  <h3 className="font-semibold text-base mb-1" style={{ color: '#FFFFFF' }}>
+                  <h3 className="font-semibold text-base mb-1" style={{ color: '#2A2520' }}>
                     {item.title}
                   </h3>
                   {item.description && (
-                    <p className="text-xs leading-relaxed mb-3 line-clamp-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <p className="text-xs leading-relaxed mb-3 line-clamp-2" style={{ color: 'rgba(42,37,32,0.5)' }}>
                       {item.description}
                     </p>
                   )}
@@ -243,10 +243,10 @@ export default function ContentAdminPage() {
 
       {/* Add/Edit Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in" style={{ background: 'rgba(184, 144, 58, 0.85)', backdropFilter: 'blur(4px)' }}>
           <div className="ca-modal w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold" style={{ color: '#FFC300' }}>
+              <h2 className="text-xl font-bold" style={{ color: '#9A7820' }}>
                 {editingId ? 'Edit Item' : 'Add New Item'}
               </h2>
               <button onClick={closeForm} className="ca-close-btn">
@@ -301,7 +301,7 @@ export default function ContentAdminPage() {
                   placeholder="https://example.com/image.jpg"
                 />
                 {form.image_url && (
-                  <div className="mt-2 h-28 rounded-lg overflow-hidden" style={{ background: '#0F1A35' }}>
+                  <div className="mt-2 h-28 rounded-lg overflow-hidden" style={{ background: '#E8E2D8' }}>
                     <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 )}

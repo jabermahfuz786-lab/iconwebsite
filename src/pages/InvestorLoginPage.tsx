@@ -44,17 +44,17 @@ export default function InvestorLoginPage() {
     <div className="pt-24 pb-20 min-h-screen flex items-center animate-fade-in">
       <div className="max-w-md mx-auto px-4 w-full">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#1A120B', border: '1px solid rgba(212,160,23,0.25)', boxShadow: '0 4px 20px rgba(0,0,0,0.4), 0 0 18px rgba(234,179,8,0.12)' }}>
-            <Lock className="w-7 h-7 text-yellow-500" />
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(250,247,241,0.8)', border: '1px solid rgba(184,144,58,0.25)', boxShadow: '0 4px 20px rgba(184,144,58,0.08), 0 0 18px rgba(184,144,58,0.06)' }}>
+            <Lock className="w-7 h-7" style={{ color: '#B8903A' }} />
           </div>
-          <h1 className="font-serif text-4xl text-white mb-2 tracking-wide">{t('investorLoginTitle')}</h1>
+          <h1 className="font-serif text-4xl mb-2 tracking-wide" style={{ color: '#2A2520' }}>{t('investorLoginTitle')}</h1>
           <div className="section-divider mb-2" />
-          <p className="text-white/45 text-sm">{t('investorLoginSubtitle')}</p>
+          <p className="text-sm" style={{ color: 'rgba(42,37,32,0.5)' }}>{t('investorLoginSubtitle')}</p>
         </div>
 
         <div className="neon-card p-8">
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-red-400 text-sm">
+            <div className="mb-4 p-3 rounded-lg flex items-center gap-2 text-sm" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.25)', color: '#c0392b' }}>
               <AlertCircle className="w-4 h-4 shrink-0" />
               {error}
             </div>
@@ -62,9 +62,9 @@ export default function InvestorLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-white/55 text-xs mb-1.5 uppercase tracking-wider">{t('investorId')}</label>
+              <label className="block text-xs mb-1.5 uppercase tracking-wider" style={{ color: 'rgba(42,37,32,0.55)' }}>{t('investorId')}</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500/50" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(184,144,58,0.5)' }} />
                 <input
                   type="email"
                   value={email}
@@ -77,9 +77,9 @@ export default function InvestorLoginPage() {
             </div>
 
             <div>
-              <label className="block text-white/55 text-xs mb-1.5 uppercase tracking-wider">{t('password')}</label>
+              <label className="block text-xs mb-1.5 uppercase tracking-wider" style={{ color: 'rgba(42,37,32,0.55)' }}>{t('password')}</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500/50" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'rgba(184,144,58,0.5)' }} />
                 <input
                   type="password"
                   value={password}
@@ -105,7 +105,7 @@ export default function InvestorLoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-white/35 text-xs mt-6">
+        <p className="text-center text-xs mt-6" style={{ color: 'rgba(42,37,32,0.35)' }}>
           Authorized access only. Contact your account manager for credentials.
         </p>
       </div>

@@ -28,7 +28,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback((key: TranslationKey): string => {
-    return translations[lang][key] || translations.en[key] || key;
+    return (translations[lang] as Partial<Record<TranslationKey, string>>)[key] || translations.en[key] || key;
   }, [lang]);
 
   const navigate = useCallback((r: string) => {

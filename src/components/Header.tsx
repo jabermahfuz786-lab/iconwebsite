@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Globe, ChevronDown, Sparkles } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, Lock } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import type { Language } from '@/types';
 
@@ -50,49 +50,28 @@ export default function Header() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-          scrolled ? 'py-2.5' : 'py-4'
+          scrolled ? 'py-2' : 'py-3'
         }`}
         style={{
-          background: scrolled ? 'rgba(18,12,7,0.85)' : 'transparent',
+          background: scrolled ? 'rgba(247,243,235,0.92)' : 'transparent',
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(212,160,23,0.10)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(184,144,58,0.35)' : 'none',
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
-          {/* Logo */}
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center group-hover:border-turmeric-500 transition-colors" style={{ background: '#1A120B', border: '1px solid rgba(212,160,23,0.25)', boxShadow: '0 2px 6px rgba(0,0,0,0.4)' }}>
-              <Sparkles className="w-4 h-4 turmeric" />
-            </div>
-            <div className="text-left">
-              <div className="font-sans text-lg font-extrabold turmeric leading-none tracking-tight">{t('brandName')}</div>
-              <div className="sage text-[0.55rem] tracking-[0.15em] uppercase">{t('brandTagline')}</div>
-            </div>
-          </button>
-
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-7">
-            {navItems.map((item) => (
-              <button key={item.path} onClick={() => handleNav(item.path)} className={`nav-link ${isActive(item.path) ? 'active' : ''}`}>
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          {/* Right side */}
-          <div className="flex items-center gap-3">
-            {/* Language Switcher */}
-            <div ref={langRef} className="relative">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8">
+          <div className="flex items-center justify-between">
+            {/* Left: Language Switcher */}
+            <div ref={langRef} className="relative z-10 flex-1">
               <button
                 onClick={() => setLangOpen(!langOpen)}
                 className="flex items-center gap-1.5 transition-colors text-sm sage hover:text-turmeric"
               >
                 <Globe className="w-4 h-4" />
-                <span className="font-medium">{languages.find((l) => l.code === lang)?.label || 'EN'}</span>
+                <span className="font-medium hidden sm:inline">{languages.find((l) => l.code === lang)?.label || 'EN'}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
               </button>
               {langOpen && (
-                <div className="absolute top-full mt-2 right-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: '#1A120B', border: '1px solid rgba(212,160,23,0.20)', borderRadius: '0.75rem', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                <div className="absolute top-full mt-2 left-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: 'rgba(250,247,241,0.95)', backdropFilter: 'blur(16px)', border: '1px solid rgba(184,144,58,0.35)', borderRadius: '16px', boxShadow: '0 8px 30px rgba(184,144,58,0.08), 0 0 20px rgba(212,175,55,0.10)' }}>
                   {languages.map((l) => (
                     <button
                       key={l.code}
@@ -106,17 +85,29 @@ export default function Header() {
               )}
             </div>
 
-            {/* Mobile menu */}
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden sage">
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            {/* Right: Desktop Nav + VIP Access + Mobile menu */}
+            <div className="flex-1 flex items-center justify-end gap-5">
+              <nav className="hidden lg:flex items-center gap-6">
+                {navItems.map((item) => (
+                  <button key={item.path} onClick={() => handleNav(item.path)} className={`nav-link ${isActive(item.path) ? 'active' : ''}`}>
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+              <button onClick={() => navigate('/investor-login')} className="hidden lg:inline-flex btn-outline text-xs items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5" /> VIP Access
+              </button>
+              <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden sage">
+                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'rgba(18,12,7,0.97)', backdropFilter: 'blur(16px)' }}>
+        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'rgba(247,243,235,0.97)', backdropFilter: 'blur(16px)' }}>
           <nav className="flex flex-col items-center gap-5 mt-8">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => { handleNav(item.path); }} className={`nav-link text-lg ${isActive(item.path) ? 'active' : ''}`}>

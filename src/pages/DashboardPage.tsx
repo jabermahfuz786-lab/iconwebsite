@@ -144,8 +144,8 @@ export default function DashboardPage() {
   if (!investor) {
     return (
       <div className="pt-24 pb-20 text-center">
-        <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-        <p className="text-white/45 text-lg mb-4">Investor profile not found. Please contact your account manager.</p>
+        <AlertCircle className="w-12 h-12 text-[#9A7820] mx-auto mb-4" />
+        <p className="text-[#2A2520]/45 text-lg mb-4">Investor profile not found. Please contact your account manager.</p>
         <button onClick={handleSignOut} className="btn-outline-gold">{t('signOut')}</button>
       </div>
     );
@@ -162,8 +162,8 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-serif text-3xl md:text-4xl text-white mb-1">{t('dashboard')}</h1>
-            <p className="text-white/45 text-sm">{t('profileOverview')}</p>
+            <h1 className="font-serif text-3xl md:text-4xl text-[#2A2520] mb-1">{t('dashboard')}</h1>
+            <p className="text-[#2A2520]/45 text-sm">{t('profileOverview')}</p>
           </div>
           <button onClick={handleSignOut} className="btn-outline-gold flex items-center gap-2 text-sm">
             <LogOut className="w-4 h-4" /> {t('signOut')}
@@ -174,28 +174,28 @@ export default function DashboardPage() {
         <div className="neon-card p-6 mb-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="w-16 h-16 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center shrink-0">
-              <User className="w-8 h-8 text-yellow-500" />
+              <User className="w-8 h-8 text-[#9A7820]" />
             </div>
             <div className="flex-1">
-              <h2 className="font-serif text-2xl text-white">{investor.full_name}</h2>
+              <h2 className="font-serif text-2xl text-[#2A2520]">{investor.full_name}</h2>
               <div className="flex flex-wrap gap-4 mt-2 text-sm">
-                <div className="flex items-center gap-2 text-white/55">
-                  <span className="text-white/35">{t('investorCode')}:</span>
-                  <span className="text-yellow-500 font-mono">{investor.investor_code}</span>
+                <div className="flex items-center gap-2 text-[#2A2520]/55">
+                  <span className="text-[#2A2520]/35">{t('investorCode')}:</span>
+                  <span className="text-[#9A7820] font-mono">{investor.investor_code}</span>
                 </div>
-                <div className="flex items-center gap-2 text-white/55">
-                  <span className="text-white/35">Email:</span>
+                <div className="flex items-center gap-2 text-[#2A2520]/55">
+                  <span className="text-[#2A2520]/35">Email:</span>
                   <span>{investor.email}</span>
                 </div>
                 {investor.phone && (
-                  <div className="flex items-center gap-2 text-white/55">
-                    <span className="text-white/35">Phone:</span>
+                  <div className="flex items-center gap-2 text-[#2A2520]/55">
+                    <span className="text-[#2A2520]/35">Phone:</span>
                     <span dir="ltr">{investor.phone}</span>
                   </div>
                 )}
                 {investor.country && (
-                  <div className="flex items-center gap-2 text-white/55">
-                    <span className="text-white/35">{t('country')}:</span>
+                  <div className="flex items-center gap-2 text-[#2A2520]/55">
+                    <span className="text-[#2A2520]/35">{t('country')}:</span>
                     <span>{investor.country}</span>
                   </div>
                 )}
@@ -222,9 +222,9 @@ export default function DashboardPage() {
           {/* Left: Investments */}
           <div className="lg:col-span-2 space-y-6">
             <div className="neon-card p-6">
-              <h3 className="font-serif text-xl text-white mb-4">{t('projectAllocation')}</h3>
+              <h3 className="font-serif text-xl text-[#2A2520] mb-4">{t('projectAllocation')}</h3>
               {investments.length === 0 ? (
-                <p className="text-white/35 text-sm">{t('noInvestments')}</p>
+                <p className="text-[#2A2520]/35 text-sm">{t('noInvestments')}</p>
               ) : (
                 <div className="space-y-4">
                   {investments.map((inv) => {
@@ -232,28 +232,28 @@ export default function DashboardPage() {
                     return (
                       <div key={inv.id} className="p-4 rounded-lg bg-yellow-500/5 border border-yellow-500/10">
                         <div className="flex items-center justify-between mb-3">
-                          <h4 className="text-white font-medium">{inv.project_name}</h4>
+                          <h4 className="text-[#2A2520] font-medium">{inv.project_name}</h4>
                           <span className={`badge ${inv.status === 'active' ? 'badge-green' : 'badge-gold'}`}>{inv.status}</span>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                           <div>
-                            <p className="text-white/35 text-xs">{t('investmentAmount')}</p>
-                            <p className="text-white/70">{formatPrice(inv.investment_amount, inv.currency)}</p>
+                            <p className="text-[#2A2520]/35 text-xs">{t('investmentAmount')}</p>
+                            <p className="text-[#2A2520]/70">{formatPrice(inv.investment_amount, inv.currency)}</p>
                           </div>
                           <div>
-                            <p className="text-white/35 text-xs">{t('paidAmount')}</p>
-                            <p className="text-white/70">{formatPrice(inv.paid_amount, inv.currency)}</p>
+                            <p className="text-[#2A2520]/35 text-xs">{t('paidAmount')}</p>
+                            <p className="text-[#2A2520]/70">{formatPrice(inv.paid_amount, inv.currency)}</p>
                           </div>
                           <div>
-                            <p className="text-white/35 text-xs">{t('dueAmount')}</p>
-                            <p className="text-white/70">{formatPrice(inv.due_amount, inv.currency)}</p>
+                            <p className="text-[#2A2520]/35 text-xs">{t('dueAmount')}</p>
+                            <p className="text-[#2A2520]/70">{formatPrice(inv.due_amount, inv.currency)}</p>
                           </div>
                           <div>
-                            <p className="text-white/35 text-xs">{t('nextInstallment')}</p>
-                            <p className="text-white/70">
+                            <p className="text-[#2A2520]/35 text-xs">{t('nextInstallment')}</p>
+                            <p className="text-[#2A2520]/70">
                               {inv.next_installment_date ? new Date(inv.next_installment_date).toLocaleDateString() : 'N/A'}
                               {days !== null && days > 0 && (
-                                <span className="text-yellow-500 text-xs ml-1">({days} {t('days')})</span>
+                                <span className="text-[#9A7820] text-xs ml-1">({days} {t('days')})</span>
                               )}
                             </p>
                           </div>
@@ -262,8 +262,8 @@ export default function DashboardPage() {
                         {/* Construction Progress */}
                         <div className="mt-3">
                           <div className="flex items-center justify-between text-xs mb-1">
-                            <span className="text-white/35">{t('constructionProgress')}</span>
-                            <span className="text-yellow-500">Check project page</span>
+                            <span className="text-[#2A2520]/35">{t('constructionProgress')}</span>
+                            <span className="text-[#9A7820]">Check project page</span>
                           </div>
                           <div className="progress-bar">
                             <div className="progress-bar-fill" style={{ width: '50%' }} />
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                             href={inv.agreement_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 mt-3 text-yellow-500 hover:text-yellow-500 text-xs"
+                            className="inline-flex items-center gap-2 mt-3 text-[#9A7820] hover:text-[#9A7820] text-xs"
                           >
                             <FileText className="w-3.5 h-3.5" /> {t('agreementPdf')}
                           </a>
@@ -291,8 +291,8 @@ export default function DashboardPage() {
             {/* Documents */}
             {documents.length > 0 && (
               <div className="neon-card p-6">
-                <h3 className="font-serif text-xl text-white mb-4 flex items-center gap-2">
-                  <Receipt className="w-5 h-5 text-yellow-500" /> {t('digitalReceipts')}
+                <h3 className="font-serif text-xl text-[#2A2520] mb-4 flex items-center gap-2">
+                  <Receipt className="w-5 h-5 text-[#9A7820]" /> {t('digitalReceipts')}
                 </h3>
                 <div className="space-y-2">
                   {documents.map((doc) => (
@@ -303,10 +303,10 @@ export default function DashboardPage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/10 hover:border-yellow-500/20 transition-all"
                     >
-                      <Download className="w-4 h-4 text-yellow-500" />
+                      <Download className="w-4 h-4 text-[#9A7820]" />
                       <div className="flex-1">
-                        <p className="text-white/70 text-sm">{doc.title}</p>
-                        <p className="text-white/35 text-xs capitalize">{doc.document_type}</p>
+                        <p className="text-[#2A2520]/70 text-sm">{doc.title}</p>
+                        <p className="text-[#2A2520]/35 text-xs capitalize">{doc.document_type}</p>
                       </div>
                     </a>
                   ))}
@@ -320,24 +320,24 @@ export default function DashboardPage() {
             {/* Nominee */}
             {investor.nominee_name && (
               <div className="neon-card p-6">
-                <h3 className="font-serif text-xl text-white mb-4 flex items-center gap-2">
-                  <UserCheck className="w-5 h-5 text-yellow-500" /> {t('nomineeInfo')}
+                <h3 className="font-serif text-xl text-[#2A2520] mb-4 flex items-center gap-2">
+                  <UserCheck className="w-5 h-5 text-[#9A7820]" /> {t('nomineeInfo')}
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-white/35">Name:</span>
-                    <span className="text-white/70">{investor.nominee_name}</span>
+                    <span className="text-[#2A2520]/35">Name:</span>
+                    <span className="text-[#2A2520]/70">{investor.nominee_name}</span>
                   </div>
                   {investor.nominee_relation && (
                     <div className="flex justify-between">
-                      <span className="text-white/35">Relation:</span>
-                      <span className="text-white/70">{investor.nominee_relation}</span>
+                      <span className="text-[#2A2520]/35">Relation:</span>
+                      <span className="text-[#2A2520]/70">{investor.nominee_relation}</span>
                     </div>
                   )}
                   {investor.nominee_phone && (
                     <div className="flex justify-between">
-                      <span className="text-white/35">Phone:</span>
-                      <span className="text-white/70" dir="ltr">{investor.nominee_phone}</span>
+                      <span className="text-[#2A2520]/35">Phone:</span>
+                      <span className="text-[#2A2520]/70" dir="ltr">{investor.nominee_phone}</span>
                     </div>
                   )}
                 </div>
@@ -346,18 +346,18 @@ export default function DashboardPage() {
 
             {/* Notices */}
             <div className="neon-card p-6">
-              <h3 className="font-serif text-xl text-white mb-4 flex items-center gap-2">
-                <Bell className="w-5 h-5 text-yellow-500" /> {t('noticeBoard')}
+              <h3 className="font-serif text-xl text-[#2A2520] mb-4 flex items-center gap-2">
+                <Bell className="w-5 h-5 text-[#9A7820]" /> {t('noticeBoard')}
               </h3>
               {notices.length === 0 ? (
-                <p className="text-white/35 text-sm">No notices at this time.</p>
+                <p className="text-[#2A2520]/35 text-sm">No notices at this time.</p>
               ) : (
                 <div className="space-y-3">
                   {notices.map((notice) => (
                     <div key={notice.id} className="p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/10">
-                      <p className="text-white text-sm font-medium">{notice.title}</p>
-                      <p className="text-white/45 text-xs mt-1">{notice.body}</p>
-                      <p className="text-white/35 text-xs mt-1">
+                      <p className="text-[#2A2520] text-sm font-medium">{notice.title}</p>
+                      <p className="text-[#2A2520]/45 text-xs mt-1">{notice.body}</p>
+                      <p className="text-[#2A2520]/35 text-xs mt-1">
                         {new Date(notice.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -368,11 +368,11 @@ export default function DashboardPage() {
 
             {/* Meeting Request */}
             <div className="neon-card p-6">
-              <h3 className="font-serif text-xl text-white mb-4 flex items-center gap-2">
-                <CalendarPlus className="w-5 h-5 text-yellow-500" /> {t('requestMeeting')}
+              <h3 className="font-serif text-xl text-[#2A2520] mb-4 flex items-center gap-2">
+                <CalendarPlus className="w-5 h-5 text-[#9A7820]" /> {t('requestMeeting')}
               </h3>
               {meetingSuccess && (
-                <div className="mb-3 p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-yellow-500 text-sm">
+                <div className="mb-3 p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-[#9A7820] text-sm">
                   {t('meetingRequested')}
                 </div>
               )}
@@ -423,8 +423,8 @@ export default function DashboardPage() {
                 <div className="mt-4 space-y-2">
                   {meetings.map((m) => (
                     <div key={m.id} className="flex items-center gap-2 text-xs p-2 rounded bg-yellow-500/5">
-                      <Clock className="w-3 h-3 text-yellow-500" />
-                      <span className="text-white/55">{m.requested_date} at {m.requested_time}</span>
+                      <Clock className="w-3 h-3 text-[#9A7820]" />
+                      <span className="text-[#2A2520]/55">{m.requested_date} at {m.requested_time}</span>
                       <span className={`badge ${m.status === 'pending' ? 'badge-gold' : 'badge-green'} text-[0.6rem] ml-auto`}>{m.status}</span>
                     </div>
                   ))}
@@ -442,10 +442,10 @@ function StatCard({ icon: Icon, label, value }: { icon: React.ElementType; label
   return (
     <div className="neon-card p-5">
       <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center mb-2">
-        <Icon className="w-5 h-5 text-yellow-500" />
+        <Icon className="w-5 h-5 text-[#9A7820]" />
       </div>
-      <p className="text-white/35 text-xs uppercase tracking-wider">{label}</p>
-      <p className="text-white font-serif text-xl mt-1">{value}</p>
+      <p className="text-[#2A2520]/35 text-xs uppercase tracking-wider">{label}</p>
+      <p className="text-[#2A2520] font-serif text-xl mt-1">{value}</p>
     </div>
   );
 }

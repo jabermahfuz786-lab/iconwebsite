@@ -5,21 +5,22 @@ export default {
     extend: {
       colors: {
         coffee: {
-          950: '#0D0805',
-          900: '#120C07',
-          800: '#1A120B',
-          700: '#2A1E13',
-          600: '#3D2B1A',
+          950: '#0E0E0E',
+          900: '#121212',
+          800: '#181818',
+          700: '#1E1E1E',
+          600: '#2A2A2A',
         },
         turmeric: {
-          500: '#EAB308',
-          400: '#FCD34D',
-          600: '#CA8A04',
-          raw: '#D4A017',
+          500: '#D4AF37',
+          400: '#F5E6B3',
+          600: '#B8903A',
+          raw: '#C8AE72',
         },
       },
       fontFamily: {
         sans: ['"Inter"', '"Hind Siliguri"', 'system-ui', 'sans-serif'],
+        serif: ['"Cinzel"', 'Georgia', 'serif'],
         bengali: ['"Hind Siliguri"', 'sans-serif'],
         arabic: ['"Amiri"', 'serif'],
       },

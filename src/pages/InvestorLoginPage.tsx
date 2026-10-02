@@ -44,7 +44,7 @@ export default function InvestorLoginPage() {
     <div className="pt-24 pb-20 min-h-screen flex items-center animate-fade-in">
       <div className="max-w-md mx-auto px-4 w-full">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-black/80 flex items-center justify-center mx-auto mb-4" style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 2px rgba(57, 255, 20, 0.1), 0 0 15px rgba(57, 255, 20, 0.1)' }}>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: '#1A120B', border: '1px solid rgba(212,160,23,0.25)', boxShadow: '0 4px 20px rgba(0,0,0,0.4), 0 0 18px rgba(234,179,8,0.12)' }}>
             <Lock className="w-7 h-7 text-yellow-500" />
           </div>
           <h1 className="font-serif text-4xl text-white mb-2 tracking-wide">{t('investorLoginTitle')}</h1>

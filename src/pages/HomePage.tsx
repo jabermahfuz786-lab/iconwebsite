@@ -40,7 +40,6 @@ export default function HomePage() {
 // ============================================================
 function AchievementsSection() {
   const { t } = useApp();
-  const [showAll, setShowAll] = useState(false);
   const achievements = [
     { icon: Building2, value: '100+', label: t('ach1') },
     { icon: DollarSign, value: '3000+', label: t('ach2') },
@@ -53,36 +52,27 @@ function AchievementsSection() {
     { icon: Briefcase, value: '15+', label: t('ach12') },
     { icon: FileText, value: '1K+', label: t('ach13') },
   ];
-  const visible = showAll ? achievements : achievements.slice(0, 4);
 
   return (
     <section className="px-4 py-10">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-6">
-          <h2 className="turmeric-glow text-2xl font-bold tracking-tight">{t('achievementsTitle')}</h2>
-          <p className="sage text-sm mt-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>{t('achievementsTitleBn')}</p>
+        <div className="text-center mb-5">
+          <h2 className="turmeric-glow text-xl font-bold tracking-tight">{t('achievementsTitle')}</h2>
+          <p className="sage text-xs mt-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>{t('achievementsTitleBn')}</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {visible.map((a, i) => (
+        <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-2.5">
+          {achievements.map((a, i) => (
             <div key={i} className="beam-small animate-fade-in">
-              <div className="beam-small-inner p-5 text-center">
-                <div className="w-11 h-11 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
-                  <a.icon className="w-5 h-5 turmeric" />
+              <div className="beam-small-inner p-3 text-center">
+                <div className="w-8 h-8 rounded-lg mx-auto mb-2 flex items-center justify-center" style={{ background: 'rgba(18,12,7,0.6)', border: '1px solid rgba(212,160,23,0.20)' }}>
+                  <a.icon className="w-4 h-4 turmeric" />
                 </div>
-                <p className="turmeric-glow text-2xl font-extrabold mb-1">{a.value}</p>
-                <p className="text-white/70 text-xs leading-snug">{a.label}</p>
+                <p className="turmeric-glow text-lg font-extrabold mb-0.5 leading-none">{a.value}</p>
+                <p className="text-white/60 text-[0.6rem] leading-tight">{a.label}</p>
               </div>
             </div>
           ))}
         </div>
-        {achievements.length > 4 && (
-          <div className="text-center mt-5">
-            <button onClick={() => setShowAll(!showAll)} className="btn-outline inline-flex items-center gap-2">
-              {showAll ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              {showAll ? t('showLess') : t('readMore')}
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );
@@ -93,6 +83,17 @@ function AchievementsSection() {
 // ============================================================
 function HeroBanner() {
   const { t } = useApp();
+  const slides = [
+    { url: 'https://images.pexels.com/photos/26436662/pexels-photo-26436662.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600', alt: 'Kaaba at night' },
+    { url: 'https://images.pexels.com/photos/33169789/pexels-photo-33169789.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600', alt: 'Madinah Prophet Mosque' },
+    { url: 'https://images.pexels.com/photos/29824327/pexels-photo-29824327.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600', alt: 'Modern building project' },
+  ];
+  const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5000);
+    return () => clearInterval(id);
+  }, [slides.length]);
 
   const scrollToBusinessCity = () => {
     document.getElementById('dual-columns')?.scrollIntoView({ behavior: 'smooth' });
@@ -100,21 +101,40 @@ function HeroBanner() {
 
   return (
     <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden">
-      {/* Background image with overlay */}
+      {/* Slideshow background */}
       <div className="absolute inset-0 z-0">
-        <img
-          src="/makkah-window-hero.webp"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(5,20,11,0.55) 0%, rgba(5,20,11,0.75) 60%, #05140B 100%)' }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(20,83,45,0.10), transparent 70%)' }} />
+        {slides.map((s, i) => (
+          <div
+            key={i}
+            className="absolute inset-0 transition-opacity duration-1000"
+            style={{ opacity: i === slide ? 1 : 0 }}
+          >
+            <img src={s.url} alt={s.alt} className="w-full h-full object-cover" />
+          </div>
+        ))}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(13,8,5,0.50) 0%, rgba(13,8,5,0.72) 60%, #0D0805 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(234,179,8,0.08), transparent 70%)' }} />
+      </div>
+
+      {/* Slide dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setSlide(i)}
+            className="h-1.5 rounded-full transition-all"
+            style={{
+              width: i === slide ? 28 : 8,
+              background: i === slide ? '#EAB308' : 'rgba(255,255,255,0.25)',
+            }}
+          />
+        ))}
       </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 pt-28 pb-16 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 animate-fade-in" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(234,179,8,0.25)', backdropFilter: 'blur(12px)' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 animate-fade-in" style={{ background: 'rgba(18,12,7,0.7)', border: '1px solid rgba(234,179,8,0.25)', backdropFilter: 'blur(12px)' }}>
           <Sparkles className="w-3.5 h-3.5 turmeric" />
           <span className="turmeric text-xs font-semibold tracking-wider">{t('heroBadge')}</span>
         </div>
@@ -167,41 +187,41 @@ function BusinessCityPanel() {
   ];
 
   return (
-    <div className="beam-panel">
-      <div className="beam-panel-inner p-6 md:p-8 relative overflow-hidden">
+    <div className="biz-panel">
+      <div className="biz-panel-inner p-6 md:p-8 relative overflow-hidden">
         {/* Background image — Madinah Clock Tower through glass, handshake */}
-        <div className="absolute inset-0 z-0 opacity-[0.12]">
-          <img src="/business-city-bg.webp" alt="" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 z-0 opacity-[0.14]">
+          <img src="/business-city-bg.webp" alt="" className="w-full h-full object-cover" style={{ filter: 'sepia(0.3) hue-rotate(-10deg)' }} />
         </div>
         <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.7)', border: '1px solid rgba(20,83,45,0.25)' }}>
-            <Briefcase className="w-5 h-5 turmeric" />
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(18,12,7,0.7)', border: '1px solid rgba(20,184,166,0.30)' }}>
+            <Briefcase className="w-5 h-5 biz-accent" />
           </div>
           <div>
-            <h2 className="turmeric-glow text-xl font-bold tracking-tight">{t('businessCity')}</h2>
+            <h2 className="biz-glow text-xl font-bold tracking-tight">{t('businessCity')}</h2>
             <p className="sage text-xs">বিজনেস সিটি</p>
           </div>
         </div>
 
-        {/* Category Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        {/* Category Grid — larger cards */}
+        <div className="grid grid-cols-2 gap-5 mb-5">
           {categories.map((cat, i) => (
             <button
               key={i}
               onClick={() => setActiveCat(activeCat === i ? null : i)}
-              className={`beam-small ${activeCat === i ? 'ring-1 ring-turmeric-500/40' : ''}`}
+              className={`biz-card ${activeCat === i ? 'biz-card-active' : ''}`}
             >
-              <div className="beam-small-inner p-4 flex items-center gap-3 cursor-pointer">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
-                  <cat.icon className="w-4 h-4 turmeric" />
+              <div className="biz-card-inner p-6 flex flex-col items-center gap-4 cursor-pointer text-center">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'rgba(18,12,7,0.6)', border: '1px solid rgba(20,184,166,0.20)' }}>
+                  <cat.icon className="w-7 h-7 biz-accent" />
                 </div>
-                <div className="text-left min-w-0">
-                  <p className="text-white text-sm font-semibold truncate">{cat.label}</p>
-                  <p className="sage text-[0.65rem] truncate">{cat.labelBn}</p>
+                <div className="min-w-0">
+                  <p className="text-white text-base font-semibold truncate">{cat.label}</p>
+                  <p className="sage text-[0.7rem] truncate mt-0.5">{cat.labelBn}</p>
                 </div>
-                <ChevronRight className={`w-4 h-4 turmeric shrink-0 transition-transform ${activeCat === i ? 'rotate-90' : ''}`} />
+                <ChevronRight className={`w-5 h-5 biz-accent shrink-0 transition-transform ${activeCat === i ? 'rotate-90' : ''}`} />
               </div>
             </button>
           ))}
@@ -273,9 +293,9 @@ function RealEstateContent() {
           <p className="sage text-sm py-4">No projects available yet.</p>
         ) : (
           projects.map((p) => (
-            <div key={p.id} className="shrink-0 w-56 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(20,83,45,0.18)', background: 'rgba(8,24,14,0.75)' }}>
-              <div className="h-20 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0A120C, #122016)' }}>
-                <Building2 className="w-8 h-8" style={{ color: 'rgba(20,83,45,0.30)' }} />
+            <div key={p.id} className="shrink-0 w-56 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,160,23,0.18)', background: 'rgba(18,12,7,0.75)' }}>
+              <div className="h-20 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #1A120B, #2A1E13)' }}>
+                <Building2 className="w-8 h-8" style={{ color: 'rgba(212,160,23,0.30)' }} />
               </div>
               <div className="p-3">
                 <h4 className="text-white text-xs font-semibold mb-1 truncate">{p.name}</h4>
@@ -358,7 +378,7 @@ function ITContent() {
       {services.map((s, i) => (
         <div key={i} className="beam-small">
           <div className="beam-small-inner p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(18,12,7,0.6)', border: '1px solid rgba(212,160,23,0.20)' }}>
               <s.icon className="w-4 h-4 turmeric" />
             </div>
             <p className="text-white text-sm font-medium">{s.label}</p>
@@ -380,9 +400,9 @@ function VaultSection() {
       <div className="max-w-3xl mx-auto">
         <div className="beam-panel">
           <div className="beam-panel-inner p-8 text-center relative overflow-hidden">
-            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(20,83,45,0.04), transparent 70%)' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(212,160,23,0.04), transparent 70%)' }} />
             <div className="relative">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: '#0B2416', border: '1px solid rgba(20,83,45,0.25)', boxShadow: '0 0 16px rgba(20,83,45,0.08)' }}>
+              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: '#1A120B', border: '1px solid rgba(212,160,23,0.25)', boxShadow: '0 0 16px rgba(212,160,23,0.08)' }}>
                 <Lock className="w-7 h-7 turmeric" />
               </div>
               <h3 className="turmeric-glow text-xl font-bold mb-2">{t('vaultTitle')}</h3>
@@ -417,8 +437,8 @@ function ChairmanProfile() {
             {/* Chairman Badge */}
             <div className="text-center mb-6">
               <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full" style={{ background: 'linear-gradient(135deg, #EAB308, #FCD34D)', boxShadow: '0 0 16px rgba(234,179,8,0.25)' }}>
-                <Star className="w-3.5 h-3.5" style={{ color: '#05140B' }} fill="#05140B" />
-                <span className="text-xs font-bold tracking-wider" style={{ color: '#05140B' }}>CHAIRMAN</span>
+                <Star className="w-3.5 h-3.5" style={{ color: '#1A120B' }} fill="#1A120B" />
+                <span className="text-xs font-bold tracking-wider" style={{ color: '#1A120B' }}>CHAIRMAN</span>
               </div>
             </div>
 
@@ -448,7 +468,7 @@ function ChairmanProfile() {
               {holdings.map((h, i) => (
                 <div key={i} className="beam-small">
                   <div className="beam-small-inner p-4 text-center">
-                    <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(8,24,14,0.6)', border: '1px solid rgba(20,83,45,0.20)' }}>
+                    <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(18,12,7,0.6)', border: '1px solid rgba(212,160,23,0.20)' }}>
                       <Award className="w-5 h-5 turmeric" />
                     </div>
                     <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full mb-2" style={{ background: 'rgba(234,179,8,0.10)', border: '1px solid rgba(234,179,8,0.25)' }}>

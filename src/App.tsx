@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage';
 import InvestorLoginPage from '@/pages/InvestorLoginPage';
 import DashboardPage from '@/pages/DashboardPage';
 import AdminPage from '@/pages/AdminPage';
+import ContentAdminPage from '@/pages/ContentAdminPage';
 
 function Router() {
   const { route } = useApp();
@@ -15,6 +16,7 @@ function Router() {
     if (route === '/investor-login') return <InvestorLoginPage />;
     if (route === '/dashboard') return <DashboardPage />;
     if (route === '/admin') return <AdminPage />;
+    if (route === '/admin/content') return <ContentAdminPage />;
     return <HomePage />;
   };
 

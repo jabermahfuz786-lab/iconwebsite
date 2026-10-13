@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm run build --legacy-peer-deps",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": [
+    "iad1"
+  ],
+  "env": {
+    "NEXT_PUBLIC_N8N_WEBHOOK_URL": "https://n8n-rfve.srv2028389.hstgr.cloud/webhook/website-listings",
+    "NEXT_PUBLIC_APP_NAME": "ICON Real Estate",
+    "NODE_ENV": "production"
+  }
+}

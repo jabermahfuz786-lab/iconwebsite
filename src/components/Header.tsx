@@ -53,7 +53,7 @@ export default function Header() {
           scrolled ? 'py-2' : 'py-3'
         }`}
         style={{
-          background: scrolled ? 'rgba(247,243,235,0.92)' : 'transparent',
+          background: scrolled ? 'linear-gradient(180deg, rgba(6,20,18,0.92), rgba(8,28,25,0.86))' : 'transparent',
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(184,144,58,0.35)' : 'none',
         }}
@@ -107,7 +107,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'rgba(247,243,235,0.97)', backdropFilter: 'blur(16px)' }}>
+        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'linear-gradient(180deg, rgba(6,20,18,0.97), rgba(8,28,25,0.95))', backdropFilter: 'blur(16px)' }}>
           <nav className="flex flex-col items-center gap-5 mt-8">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => { handleNav(item.path); }} className={`nav-link text-lg ${isActive(item.path) ? 'active' : ''}`}>

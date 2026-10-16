@@ -261,73 +261,93 @@ const BUSINESS_CITY_TREE: BizNode[] = [
   },
 ];
 
-function BizTile({ node, big, active, onClick }: { node: BizNode; big: boolean; active: boolean; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className={`business-city-card biz-card ${active ? 'biz-card-active' : ''}`}>
-      <div
-        className="biz-card-inner relative overflow-hidden cursor-pointer"
-        style={{ borderRadius: '20px', minHeight: big ? '260px' : '150px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 0 }}
-      >
-        <div className="absolute inset-0 z-0">
-          {node.img ? (
-            <img src={node.img} alt={node.label} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
-          )}
+type BizSize = 'big' | 'small' | 'header';
+
+function bizName(n: BizNode, lang: string) {
+  return lang === 'bn' ? n.labelBn : n.label;
+}
+
+function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode; size: BizSize; active?: boolean; lang: string; onClick?: () => void }) {
+  const minH = size === 'big' ? 260 : size === 'header' ? 150 : 128;
+  const titleSize = size === 'big' ? '18px' : size === 'header' ? '20px' : '13px';
+  const iconBox = size === 'small' ? 'w-7 h-7' : 'w-9 h-9';
+  const inner = (
+    <div className="biz-card-inner relative overflow-hidden" style={{ borderRadius: '18px', minHeight: `${minH}px`, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <div className="absolute inset-0 z-0">
+        {node.img ? (
+          <img src={node.img} alt="" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
+        )}
+      </div>
+      <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
+      <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.6rem' }}>
+        <div className={`${iconBox} rounded-xl flex items-center justify-center mb-1`} style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A', boxShadow: '0 0 12px rgba(255,214,10,0.3)' }}>
+          <node.icon className={size === 'small' ? 'w-3.5 h-3.5' : 'w-4 h-4'} style={{ color: '#FFD60A' }} />
         </div>
-        <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
-        <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.75rem' }}>
+        <p className="text-white font-bold leading-tight" style={{ fontSize: titleSize, fontWeight: 700 }}>
+          {bizName(node, lang)}
+        </p>
+        {onClick && (
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center mb-1.5"
-            style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A', boxShadow: '0 0 12px rgba(255,214,10,0.3)' }}
-          >
-            <node.icon className="w-4 h-4" style={{ color: '#FFD60A' }} />
-          </div>
-          <p className="text-white font-bold leading-tight mb-0.5" style={{ fontSize: big ? '18px' : '15px', fontWeight: 700 }}>
-            {node.label}
-          </p>
-          <p className="text-white/60 text-[0.62rem] mb-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
-            {node.labelBn}
-          </p>
-          <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform ${active ? 'rotate-90' : ''}`}
-            style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A', boxShadow: '0 0 8px rgba(255,214,10,0.2)' }}
+            className={`w-6 h-6 rounded-full flex items-center justify-center mt-1.5 transition-transform ${active ? 'rotate-90' : ''}`}
+            style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A' }}
           >
             <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
           </div>
-        </div>
+        )}
       </div>
+    </div>
+  );
+  if (!onClick) return <div className="business-city-card biz-card">{inner}</div>;
+  return (
+    <button onClick={onClick} className={`business-city-card biz-card w-full text-left ${active ? 'biz-card-active' : ''}`} style={{ padding: 0 }}>
+      {inner}
     </button>
   );
 }
 
+const BACK_LABEL: Record<string, string> = { en: 'Back', bn: 'পেছনে', ar: 'رجوع' };
+
 function BusinessCityPanel() {
-  const { t } = useApp();
-  // path = the folders we have gone into; selected = the open item inside the current folder
+  const { t, lang } = useApp();
+  // path: folders opened so far (the last one is the heading shown on top)
+  // leafKey: a child item whose details are open in their own panel
   const [path, setPath] = useState<BizNode[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [leafKey, setLeafKey] = useState<string | null>(null);
 
-  const folder = path.length ? path[path.length - 1] : null;
-  const level: BizNode[] = folder ? folder.children ?? [] : BUSINESS_CITY_TREE;
-  const selNode = selected ? level.find((n) => n.key === selected) ?? null : null;
-  const contentRender = selNode?.render ?? folder?.render ?? null;
-  const isTop = path.length === 0;
-
-  const openNode = (node: BizNode) => {
-    if (node.children && node.children.length > 0) {
-      setPath([...path, node]);
-      setSelected(null);
-    } else {
-      setSelected(node.key);
-    }
-  };
+  const header = path.length ? path[path.length - 1] : null;
+  const parentList: BizNode[] = path.length >= 2 ? path[path.length - 2].children ?? [] : BUSINESS_CITY_TREE;
+  const childList: BizNode[] = header ? header.children ?? [] : [];
+  const leaf = leafKey ? childList.find((n) => n.key === leafKey) ?? null : null;
+  const siblings = header ? parentList.filter((n) => n.key !== header.key) : [];
+  const crumbs = path.map((p) => bizName(p, lang));
 
   const goBack = () => {
-    if (selected) setSelected(null);
+    if (leaf) setLeafKey(null);
     else setPath(path.slice(0, -1));
   };
 
-  const crumbs = [...path.map((p) => p.labelBn), ...(selNode ? [selNode.labelBn] : [])];
+  const openChild = (child: BizNode) => {
+    if (child.children && child.children.length > 0) {
+      setPath([...path, child]);
+      setLeafKey(null);
+    } else {
+      setLeafKey(child.key);
+    }
+  };
+
+  const openSibling = (node: BizNode) => {
+    setPath([...path.slice(0, -1), node]);
+    setLeafKey(null);
+  };
+
+  const contentPanel = (title: string, render?: () => ReactNode) => (
+    <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.35)', boxShadow: '0 0 18px rgba(255,214,10,0.12)' }}>
+      <p className="biz-accent text-sm font-bold mb-3">{title}</p>
+      {render ? render() : null}
+    </div>
+  );
 
   return (
     <div className="biz-panel">
@@ -342,36 +362,59 @@ function BusinessCityPanel() {
               <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,214,10,0.35)' }}>
                 <Briefcase className="w-4 h-4 biz-accent" />
               </div>
-              <div>
-                <h2 className="biz-glow text-xl font-bold tracking-tight lux-serif">{t('businessCity')}</h2>
+              <h2 className="biz-glow text-xl font-bold tracking-tight lux-serif">{t('businessCity')}</h2>
+            </div>
+          </div>
+
+          {!header ? (
+            <div className="grid grid-cols-2 gap-2.5 md:gap-3">
+              {BUSINESS_CITY_TREE.map((node) => (
+                <BizTile key={node.key} node={node} size="big" lang={lang} onClick={() => openSibling(node)} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <button onClick={goBack} className="btn-outline text-sm px-3 py-1.5">← {BACK_LABEL[lang] ?? BACK_LABEL.en}</button>
+                <p className="sage text-xs">{crumbs.join(' › ')}{leaf ? ` › ${bizName(leaf, lang)}` : ''}</p>
               </div>
-            </div>
-          </div>
 
-          {!isTop && (
-            <div className="flex items-center gap-3 mb-4 flex-wrap">
-              <button onClick={goBack} className="btn-outline text-sm px-3 py-1.5">← পেছনে</button>
-              <p className="sage text-xs">{crumbs.join(' › ')}</p>
+              <BizTile node={header} size="header" lang={lang} />
+
+              {header.render && !leaf && contentPanel(bizName(header, lang), header.render)}
+
+              {childList.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {childList.map((child) => (
+                    <BizTile
+                      key={child.key}
+                      node={child}
+                      size="small"
+                      lang={lang}
+                      active={leaf?.key === child.key}
+                      onClick={() => openChild(child)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {leaf && contentPanel(bizName(leaf, lang), leaf.render)}
+
+              {siblings.length > 0 && (
+                <div className={`grid grid-cols-2 gap-2.5 md:gap-3 ${path.length === 1 ? 'mt-3' : 'mt-1'}`}>
+                  {siblings.map((node) => (
+                    <BizTile
+                      key={node.key}
+                      node={node}
+                      size={path.length === 1 ? 'big' : 'small'}
+                      lang={lang}
+                      onClick={() => openSibling(node)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
-
-          {contentRender && (
-            <div key={selNode?.key ?? folder?.key} className="animate-fade-in mb-5">
-              {contentRender()}
-            </div>
-          )}
-
-          <div className={`grid grid-cols-2 ${level.length === 3 ? 'md:grid-cols-3' : ''} gap-2.5 md:gap-3`}>
-            {level.map((node) => (
-              <BizTile
-                key={node.key}
-                node={node}
-                big={isTop}
-                active={selected === node.key}
-                onClick={() => openNode(node)}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>

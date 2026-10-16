@@ -71,7 +71,7 @@ export default function Header() {
                 <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
               </button>
               {langOpen && (
-                <div className="absolute top-full mt-2 left-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: 'rgba(250,247,241,0.95)', backdropFilter: 'blur(16px)', border: '1px solid rgba(184,144,58,0.35)', borderRadius: '16px', boxShadow: '0 8px 30px rgba(184,144,58,0.08), 0 0 20px rgba(212,175,55,0.10)' }}>
+                <div className="absolute top-full mt-2 left-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: 'linear-gradient(180deg, rgba(8,28,25,0.97), rgba(6,20,18,0.97))', backdropFilter: 'blur(16px)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '16px', boxShadow: '0 8px 30px rgba(184,144,58,0.08), 0 0 20px rgba(212,175,55,0.10)' }}>
                   {languages.map((l) => (
                     <button
                       key={l.code}

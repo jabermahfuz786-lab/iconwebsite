@@ -165,12 +165,6 @@ function HeroBanner() {
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 pt-24 pb-10 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(250,247,241,0.85)', border: '1px solid rgba(255,214,10,0.4)', backdropFilter: 'blur(12px)' }}>
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#FFD60A' }} />
-          <span className="text-xs font-semibold tracking-wider" style={{ color: '#FFD60A' }}>{t('heroBadge')}</span>
-        </div>
-
         {/* Title */}
         <h1 className="lux-serif text-4xl md:text-6xl font-black mb-2 tracking-tight leading-none turmeric-glow" style={{ textShadow: '0 0 30px rgba(255,214,10,0.15), 0 0 60px rgba(255,214,10,0.08)' }}>
           {t('heroTitle')}
@@ -178,6 +172,12 @@ function HeroBanner() {
         <p className="text-lg md:text-xl mb-4 font-bold" style={{ fontFamily: 'Hind Siliguri, sans-serif', color: '#FFD60A', textShadow: '0 0 16px rgba(255,214,10,0.10)' }}>
           {t('heroTitleBn')}
         </p>
+
+        {/* Country badge (below the title) */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(11,11,13,0.82)', border: '1px solid #FFD60A', boxShadow: '0 0 14px rgba(255,214,10,0.25)', backdropFilter: 'blur(12px)' }}>
+          <Sparkles className="w-3.5 h-3.5" style={{ color: '#FFD60A' }} />
+          <span className="text-xs font-semibold tracking-wider" style={{ color: '#FFD60A' }}>{t('heroBadge')}</span>
+        </div>
 
         {/* Divider */}
         <div className="section-divider mb-5" />
@@ -432,22 +432,19 @@ function ChairmanProfile() {
 
               <div className="section-divider mb-8" />
 
-              {/* Official Holdings Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Official Holdings: three small cards in one row on every screen */}
+              <div className="grid grid-cols-3 gap-2 md:gap-4">
                 {holdings.map((h, i) => (
-                  <div key={i} className="beam-small">
-                    <div className="beam-small-inner chairman-icon-btn p-4 text-center">
-                      <div className="chairman-icon w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(13,48,38,0.9)', border: '1.5px solid rgba(255,214,10,0.45)' }}>
-                        <Award className="w-5 h-5" style={{ color: '#FFD60A' }} />
+                  <div key={i} className="beam-small min-w-0">
+                    <div className="beam-small-inner chairman-icon-btn p-2 md:p-4 text-center">
+                      <div className="chairman-icon w-7 h-7 md:w-10 md:h-10 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: 'rgba(13,48,38,0.9)', border: '1px solid rgba(255,214,10,0.45)' }}>
+                        <Award className="w-3.5 h-3.5 md:w-5 md:h-5" style={{ color: '#FFD60A' }} />
                       </div>
-                      <div className="chairman-holding-badge inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full mb-2">
-                        <span className="text-[0.6rem] tracking-wider">CHAIRMAN</span>
-                      </div>
-                      <h4 className="lux-body text-sm font-semibold">{h.name}</h4>
-                      <p className="sage text-[0.65rem] mt-0.5">{h.region}</p>
-                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="youtube-btn mt-3 inline-flex">
-                        <Youtube className="w-4 h-4" />
-                        <span>Watch Presentation</span>
+                      <h4 className="lux-body text-[0.6rem] md:text-sm font-semibold leading-tight">{h.name}</h4>
+                      <p className="sage text-[0.55rem] md:text-[0.65rem] mt-0.5">{h.region}</p>
+                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="youtube-btn mt-1.5 inline-flex" style={{ padding: '.2rem .4rem', fontSize: '.55rem', gap: '.25rem' }}>
+                        <Youtube className="w-3 h-3 md:w-4 md:h-4" />
+                        <span>YouTube</span>
                       </a>
                     </div>
                   </div>

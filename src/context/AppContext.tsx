@@ -16,7 +16,7 @@ const AppContext = createContext<AppContextValue | null>(null);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Language>(() => {
     const saved = localStorage.getItem('icon-lang') as Language | null;
-    return saved || 'bn';
+    return saved || 'en';
   });
   const [route, setRoute] = useState<string>(() => window.location.hash.slice(1) || '/');
 

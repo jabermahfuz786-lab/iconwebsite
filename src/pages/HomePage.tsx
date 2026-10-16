@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import {
-  ChevronDown, ChevronRight,
+  ChevronDown, ChevronRight, ArrowLeft,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
   DollarSign, Briefcase, Globe, Star, Award, Crown, Youtube,
   PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical, Sprout, Landmark,
@@ -307,31 +307,56 @@ function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode;
   );
 }
 
+function BizHeader({ node, lang, onBack, open, onToggle }: { node: BizNode; lang: string; onBack: () => void; open?: boolean; onToggle?: () => void }) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(255,214,10,0.6)', boxShadow: '0 0 18px rgba(255,214,10,0.2)' }}>
+      {node.img && <img src={node.img} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.97) 0%, rgba(11,11,13,0.85) 60%, rgba(11,11,13,0.65) 100%)' }} />
+      <div className="relative z-10 flex items-center gap-3 p-3 md:p-4">
+        <button onClick={onBack} aria-label="Back" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
+          <ArrowLeft className="w-4 h-4" style={{ color: '#FFD60A' }} />
+        </button>
+        <button onClick={onBack} className="flex-1 min-w-0 text-left">
+          <p className="text-white font-bold text-base md:text-xl leading-tight truncate">{bizName(node, lang)}</p>
+        </button>
+        {onToggle && (
+          <button onClick={onToggle} aria-label="Toggle" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
+            <ChevronDown className={`w-4 h-4 transition-transform ${open ? '' : '-rotate-90'}`} style={{ color: '#FFD60A' }} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const BACK_LABEL: Record<string, string> = { en: 'Back', bn: 'পেছনে', ar: 'رجوع' };
 
 function BusinessCityPanel() {
   const { t, lang } = useApp();
-  // path: folders opened so far (the last one is the heading shown on top)
-  // leafKey: a child item whose details are open in their own panel
+  // path: folders opened so far (the last one is shown as the heading)
+  // leafKey: an item whose details are open alone
+  // listOpen: whether the heading's sub-folders are shown
   const [path, setPath] = useState<BizNode[]>([]);
   const [leafKey, setLeafKey] = useState<string | null>(null);
+  const [listOpen, setListOpen] = useState(true);
 
   const header = path.length ? path[path.length - 1] : null;
   const parentList: BizNode[] = path.length >= 2 ? path[path.length - 2].children ?? [] : BUSINESS_CITY_TREE;
   const childList: BizNode[] = header ? header.children ?? [] : [];
   const leaf = leafKey ? childList.find((n) => n.key === leafKey) ?? null : null;
   const siblings = header ? parentList.filter((n) => n.key !== header.key) : [];
-  const crumbs = path.map((p) => bizName(p, lang));
 
-  const goBack = () => {
-    if (leaf) setLeafKey(null);
-    else setPath(path.slice(0, -1));
+  const goUp = () => {
+    setLeafKey(null);
+    setListOpen(true);
+    setPath(path.slice(0, -1));
   };
 
   const openChild = (child: BizNode) => {
     if (child.children && child.children.length > 0) {
       setPath([...path, child]);
       setLeafKey(null);
+      setListOpen(true);
     } else {
       setLeafKey(child.key);
     }
@@ -340,14 +365,10 @@ function BusinessCityPanel() {
   const openSibling = (node: BizNode) => {
     setPath([...path.slice(0, -1), node]);
     setLeafKey(null);
+    setListOpen(true);
   };
 
-  const contentPanel = (title: string, render?: () => ReactNode) => (
-    <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.35)', boxShadow: '0 0 18px rgba(255,214,10,0.12)' }}>
-      <p className="biz-accent text-sm font-bold mb-3">{title}</p>
-      {render ? render() : null}
-    </div>
-  );
+  const backLabel = BACK_LABEL[lang] ?? BACK_LABEL.en;
 
   return (
     <div className="biz-panel">
@@ -366,51 +387,66 @@ function BusinessCityPanel() {
             </div>
           </div>
 
-          {!header ? (
+          {!header && (
             <div className="grid grid-cols-2 gap-2.5 md:gap-3">
               {BUSINESS_CITY_TREE.map((node) => (
                 <BizTile key={node.key} node={node} size="big" lang={lang} onClick={() => openSibling(node)} />
               ))}
             </div>
-          ) : (
+          )}
+
+          {header && leaf && (
+            /* Only this item is shown: its heading and its details */
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <button onClick={goBack} className="btn-outline text-sm px-3 py-1.5">← {BACK_LABEL[lang] ?? BACK_LABEL.en}</button>
-                <p className="sage text-xs">{crumbs.join(' › ')}{leaf ? ` › ${bizName(leaf, lang)}` : ''}</p>
+              <BizHeader node={leaf} lang={lang} onBack={() => setLeafKey(null)} />
+              <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' }}>
+                {leaf.render ? leaf.render() : null}
               </div>
+            </div>
+          )}
 
-              <BizTile node={header} size="header" lang={lang} />
+          {header && !leaf && (
+            <div className="flex flex-col gap-3">
+              <BizHeader
+                node={header}
+                lang={lang}
+                onBack={goUp}
+                open={listOpen}
+                onToggle={childList.length > 0 ? () => setListOpen(!listOpen) : undefined}
+              />
 
-              {header.render && !leaf && contentPanel(bizName(header, lang), header.render)}
-
-              {childList.length > 0 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {childList.map((child) => (
-                    <BizTile
-                      key={child.key}
-                      node={child}
-                      size="small"
-                      lang={lang}
-                      active={leaf?.key === child.key}
-                      onClick={() => openChild(child)}
-                    />
-                  ))}
+              {header.render && (
+                <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' }}>
+                  {header.render()}
                 </div>
               )}
 
-              {leaf && contentPanel(bizName(leaf, lang), leaf.render)}
+              {listOpen && childList.length > 0 && (
+                <div
+                  className="rounded-2xl p-2.5 md:p-3"
+                  style={{ background: 'linear-gradient(160deg, rgba(255,214,10,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(11,11,13,0.9) 100%)', border: '1px dashed rgba(255,214,10,0.5)' }}
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    {childList.map((child) => (
+                      <BizTile key={child.key} node={child} size="small" lang={lang} onClick={() => openChild(child)} />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {siblings.length > 0 && (
-                <div className={`grid grid-cols-2 gap-2.5 md:gap-3 ${path.length === 1 ? 'mt-3' : 'mt-1'}`}>
-                  {siblings.map((node) => (
-                    <BizTile
-                      key={node.key}
-                      node={node}
-                      size={path.length === 1 ? 'big' : 'small'}
-                      lang={lang}
-                      onClick={() => openSibling(node)}
-                    />
-                  ))}
+                <div className="mt-6 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div className="grid grid-cols-2 gap-3 md:gap-4 opacity-90">
+                    {siblings.map((node) => (
+                      <BizTile
+                        key={node.key}
+                        node={node}
+                        size={path.length === 1 ? 'big' : 'small'}
+                        lang={lang}
+                        onClick={() => openSibling(node)}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

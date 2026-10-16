@@ -2,6 +2,7 @@ import { useApp } from '@/context/AppContext';
 
 const bn = {
   subtitle: 'ইনভেস্টর ড্যাশবোর্ড',
+  welcome: 'স্বাগতম,',
   logout: 'লগ আউট',
   loading: 'লোড হচ্ছে...',
   loadError: 'তথ্য আনতে সমস্যা হয়েছে। পেজ রিফ্রেশ করুন।',
@@ -91,6 +92,7 @@ const bn = {
 
 const en: Record<keyof typeof bn, string> = {
   subtitle: 'Investor Dashboard',
+  welcome: 'Welcome,',
   logout: 'Log out',
   loading: 'Loading...',
   loadError: 'Could not load data. Please refresh the page.',

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { ShieldCheck, Send, KeyRound, Briefcase } from 'lucide-react';
+import { ShieldCheck, Send, Briefcase } from 'lucide-react';
 import { adminGet, adminPost, checkAdminSession, signInAdmin } from '@/lib/adminApi';
 
 type InvestorRow = { id: string; email: string; investor_code: string; full_name: string };
@@ -15,9 +15,6 @@ export default function AdminPortalPage() {
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
-  const [pinInvestor, setPinInvestor] = useState('');
-  const [pinProject, setPinProject] = useState('');
-  const [pinValue, setPinValue] = useState('');
 
   const [bcProject, setBcProject] = useState('');
   const [bcTitle, setBcTitle] = useState('');
@@ -68,14 +65,6 @@ export default function AdminPortalPage() {
     else setLoginErr(result.message);
   };
 
-  const submitPin = (e: FormEvent) => {
-    e.preventDefault();
-    run(async () => {
-      await adminPost('investor-pin', { investor_id: pinInvestor, investor_project_id: pinProject, pin: pinValue });
-      setPinValue('');
-    }, 'PIN সেট হয়েছে। প্রজেক্টটি ইনভেস্টরের জন্য আবার লক হয়েছে।');
-  };
-
   const submitBroadcast = (e: FormEvent) => {
     e.preventDefault();
     run(async () => {
@@ -123,22 +112,6 @@ export default function AdminPortalPage() {
       {msg && (
         <p className="text-sm mb-4" style={{ color: msg.ok ? '#15803d' : '#c0392b' }}>{msg.text}</p>
       )}
-
-      <section className="neon-card p-6 mb-6">
-        <h3 className="flex items-center gap-2"><KeyRound size={16} /> Set investor PIN for a project</h3>
-        <form onSubmit={submitPin} className="grid gap-3 mt-3">
-          <select className="input-luxury" value={pinInvestor} onChange={(e) => setPinInvestor(e.target.value)} required>
-            <option value="">Select investor</option>
-            {investors.map((i) => <option key={i.id} value={i.id}>{i.investor_code} — {i.full_name}</option>)}
-          </select>
-          <select className="input-luxury" value={pinProject} onChange={(e) => setPinProject(e.target.value)} required>
-            <option value="">Select project</option>
-            {projects.map((p) => <option key={p.id} value={p.id}>{label(p)}</option>)}
-          </select>
-          <input className="input-luxury" type="text" placeholder="PIN (4–12 characters)" value={pinValue} onChange={(e) => setPinValue(e.target.value)} minLength={4} maxLength={12} required />
-          <button type="submit" className="btn-gold">Save PIN</button>
-        </form>
-      </section>
 
       <section className="neon-card p-6 mb-6">
         <h3 className="flex items-center gap-2"><Briefcase size={16} /> Add investment to a portal project</h3>

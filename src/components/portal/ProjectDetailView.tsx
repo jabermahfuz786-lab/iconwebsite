@@ -6,13 +6,12 @@ import { usePortalText, formatMoney } from '@/lib/portalText';
 export default function ProjectDetailView({ projectId, onBack }: { projectId: string; onBack: () => void }) {
   const { t, lang } = usePortalText();
   const [data, setData] = useState<ProjectDetail | null>(null);
-  const [state, setState] = useState<'loading' | 'locked' | 'error' | 'ready'>('loading');
+  const [state, setState] = useState<'loading' | 'error' | 'ready'>('loading');
 
   useEffect(() => {
     (async () => {
       const res = await fetchProjectDetail(projectId);
-      if (res === 'locked') setState('locked');
-      else if (res === 'error') setState('error');
+      if (res === 'error') setState('error');
       else {
         setData(res);
         setState('ready');
@@ -34,7 +33,6 @@ export default function ProjectDetailView({ projectId, onBack }: { projectId: st
       </button>
 
       {state === 'loading' && <p className="portal-small">{t('loading')}</p>}
-      {state === 'locked' && <p className="portal-error">{t('lockedNow')}</p>}
       {state === 'error' && <p className="portal-error">{t('loadError')}</p>}
 
       {state === 'ready' && data && (

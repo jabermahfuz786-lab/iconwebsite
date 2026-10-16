@@ -10,7 +10,6 @@ import {
 import { usePortalText } from '@/lib/portalText';
 import OverviewCards from '@/components/portal/OverviewCards';
 import ProjectCard from '@/components/portal/ProjectCard';
-import PinModal from '@/components/portal/PinModal';
 import ProjectDetailView from '@/components/portal/ProjectDetailView';
 import DividendTable from '@/components/portal/DividendTable';
 
@@ -26,7 +25,6 @@ export default function DashboardPage() {
   const [documents, setDocuments] = useState<InvestmentDocument[]>([]);
   const [notices, setNotices] = useState<InvestorNotice[]>([]);
   const [meetings, setMeetings] = useState<InvestorMeeting[]>([]);
-  const [pinFor, setPinFor] = useState<PortalProject | null>(null);
   const [viewId, setViewId] = useState<string | null>(null);
 
   const [mDate, setMDate] = useState('');
@@ -100,40 +98,25 @@ export default function DashboardPage() {
   return (
     <div className="portal-page">
       <div className="portal-hello">
+        <p className="portal-small">{t('welcome')}</p>
         <h1>{overview.full_name}</h1>
         <span className="portal-pill">{overview.investor_code}</span>
       </div>
 
       <OverviewCards overview={overview} />
 
-      <h2 className="portal-h2">{t('myProjects')}</h2>
+      <h2 className="portal-h2">
+        {t('myProjects')} ({projects.length})
+      </h2>
 
       {viewId ? (
         <ProjectDetailView projectId={viewId} onBack={() => setViewId(null)} />
       ) : (
         <div className="portal-grid">
           {projects.map((p) => (
-            <ProjectCard
-              key={p.id}
-              project={p}
-              onUnlock={() => setPinFor(p)}
-              onView={() => setViewId(p.id)}
-            />
+            <ProjectCard key={p.id} project={p} onView={() => setViewId(p.id)} />
           ))}
         </div>
-      )}
-
-      {pinFor && (
-        <PinModal
-          project={pinFor}
-          onClose={() => setPinFor(null)}
-          onUnlocked={() => {
-            const id = pinFor.id;
-            setPinFor(null);
-            fetchProjects().then(setProjects);
-            setViewId(id);
-          }}
-        />
       )}
 
       {!viewId && (

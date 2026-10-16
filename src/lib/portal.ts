@@ -23,10 +23,10 @@ export type PortalProject = {
   sector_en: string;
   image_url: string | null;
   sort_order: number;
+  status: ProjectStatus | null;
+  progress_percent: number | null;
   my_amount: number;
   my_currency: string | null;
-  has_pin: boolean;
-  is_unlocked: boolean;
 };
 
 export type ProjectUpdate = {
@@ -101,22 +101,8 @@ export async function fetchDividends(): Promise<Dividend[]> {
   return data as Dividend[];
 }
 
-export async function fetchProjectDetail(projectId: string): Promise<ProjectDetail | 'locked' | 'error'> {
+export async function fetchProjectDetail(projectId: string): Promise<ProjectDetail | 'error'> {
   const { data, error } = await supabase.rpc('portal_project_detail', { p_project_id: projectId });
-  if (error) return error.message?.includes('locked') ? 'locked' : 'error';
+  if (error || !data) return 'error';
   return data as ProjectDetail;
-}
-
-export type UnlockResult = 'ok' | 'wrong' | 'locked' | 'no_investment' | 'no_pin' | 'error';
-
-export async function unlockProject(projectId: string, pin: string): Promise<UnlockResult> {
-  const { data, error } = await supabase.rpc('unlock_portal_project', { p_project_id: projectId, p_pin: pin });
-  if (error) {
-    const m = error.message || '';
-    if (m.includes('too_many_attempts')) return 'locked';
-    if (m.includes('no_investment')) return 'no_investment';
-    if (m.includes('pin_not_set')) return 'no_pin';
-    return 'error';
-  }
-  return data ? 'ok' : 'wrong';
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, ChevronDown } from 'lucide-react';
 
 const GALLERY = Array.from({ length: 13 }, (_, i) => `/photos/arab-agro/${String(i + 2).padStart(2, '0')}.jpg`);
 
@@ -17,6 +17,92 @@ const INCOME_ITEMS = [
   'কোরবানির মৌসুমে গরু-বকরির উচ্চমূল্যে বিক্রি এবং গরু-বকরির বাচ্চা বিক্রি।',
   'দুগ্ধজাত পণ্যের খুচরা ও পাইকারি বিক্রি।',
 ];
+
+
+const LIVESTOCK_GALLERY = [
+  '/photos/arab-agro/livestock/l01.jpg',
+  '/photos/arab-agro/livestock/l03.jpg',
+  '/photos/arab-agro/livestock/l05.jpg',
+  '/photos/arab-agro/livestock/l06.jpg',
+  '/photos/arab-agro/livestock/f02.jpg',
+  '/photos/arab-agro/livestock/f09.jpg',
+  '/photos/arab-agro/livestock/f11.jpg',
+  '/photos/arab-agro/livestock/f12.jpg',
+];
+
+const LIVESTOCK_TEXT = [
+  'বিশ্বমানের হালাল খামার বিপ্লব — শুরু করেছি ১০০ গরু ও ৩০০ বকরির খামার দিয়ে। কিন্তু লক্ষ্য আমাদের অনেক বড় — ৫ বছরে ১০০০ গরু এবং ৩০০০ বকরির বিশাল খামার গড়ে তোলা।',
+  'আমরা বিশ্বাস করি, বিশুদ্ধতা, শৃঙ্খলা ও বৈজ্ঞানিক ব্যবস্থাপনায় গড়ে ওঠা একটি খামার শুধু খাদ্য নিরাপত্তাই নয়, বরং একটি অর্থনৈতিক বিপ্লব ঘটাতে পারে।',
+  'আমরা শুধু পশু পালন করছি না, আমরা গড়ে তুলছি হালাল, স্বাস্থ্যসম্মত, আন্তর্জাতিক মানের দুগ্ধ ও কোরবানির পশুর সরবরাহ চেইন। প্রতিটি গরু পায় নিয়মিত ভেটেরিনারি কেয়ারের নজরদারি, প্রতিটি বকরি বড় হয় ভালোবাসা ও পুষ্টি নিয়ে।',
+  'ওমানের বুকে গড়ে তুলছি সর্বাধুনিক স্ট্যান্ডার্ডে প্রস্তুত ফিডিং, ব্রিডিং ও কেয়ার সিস্টেম। প্রতিটি পশু নির্ধারিত সময়, নির্ধারিত ঘাস, এবং ভেট কেয়ার-এ বড় হয়।',
+];
+
+const LIVESTOCK_PLAN = [
+  'গরু: প্রথম ধাপে ১০০ → ৫ বছরে ১০০০',
+  'বকরি: প্রথম ধাপে ৩০০ → ৫ বছরে ৩০০০',
+  'দুধ, গোশত ও বাচ্চা — তিনটি সেক্টরেই আয়',
+  'কোরবানি ও আন্তর্জাতিক মার্কেটের জন্য হালাল পশু সরবরাহ',
+];
+
+const LIVESTOCK_EXPORT = [
+  'আমাদের নিজস্ব দুধ প্রসেসিং ও প্যাকেজিং ফ্যাক্টরি প্রস্তুত, যেখান থেকে তৈরি হবে আরব এগ্রো ব্র্যান্ডেড দুগ্ধজাত পণ্য।',
+  'কোরবানির মৌসুমে নির্ধারিত পশুগুলো কয়েকগুণ দামে বিক্রি হবে ইনশাআল্লাহ।',
+];
+
+function LivestockFarm() {
+  const [open, setOpen] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
+  return (
+    <div>
+      <button onClick={() => setOpen(!open)} className="beam-small w-full text-left">
+        <div className="beam-small-inner p-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="turmeric-glow font-bold lux-serif text-base">গরু ও বকরি খামার</p>
+            <p className="sage text-xs mt-1">১০০ গরু ও ৩০০ বকরি থেকে শুরু · ৫ বছরের লক্ষ্য ১০০০ ও ৩০০০</p>
+          </div>
+          <ChevronDown className={`w-5 h-5 text-yellow-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </div>
+      </button>
+
+      {open && (
+        <div className="animate-fade-in mt-3 space-y-4">
+          <div className="beam-small"><div className="beam-small-inner p-4 space-y-3 text-sm leading-relaxed">
+            {LIVESTOCK_TEXT.map((t, i) => <p key={i} className={i === 0 ? 'lux-body font-semibold' : 'sage'}>{t}</p>)}
+          </div></div>
+
+          <div>
+            <h5 className="turmeric text-sm font-bold mb-2">আমাদের লক্ষ্য ও পরিকল্পনা</h5>
+            <ul className="space-y-2 text-sm lux-body">
+              {LIVESTOCK_PLAN.map((t, i) => <li key={i} className="flex gap-3"><span className="turmeric">●</span><span>{t}</span></li>)}
+            </ul>
+          </div>
+
+          <div>
+            <h5 className="turmeric text-sm font-bold mb-2">রপ্তানি ও ফ্যাক্টরি</h5>
+            <ul className="space-y-2 text-sm lux-body">
+              {LIVESTOCK_EXPORT.map((t, i) => <li key={i} className="flex gap-3"><span className="turmeric">●</span><span>{t}</span></li>)}
+            </ul>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {LIVESTOCK_GALLERY.map((src, i) => (
+              <button key={src} onClick={() => setLightbox(src)} className="rounded-xl overflow-hidden aspect-[4/3] border border-yellow-500/20">
+                <img src={src} alt={`Livestock farm ${i + 1}`} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {lightbox && (
+        <div onClick={() => setLightbox(null)} className="fixed inset-0 z-[80] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out">
+          <img src={lightbox} alt="" className="max-h-[90vh] max-w-full rounded-xl" />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ArabAgroContent() {
   const [lightbox, setLightbox] = useState<string | null>(null);
@@ -43,6 +129,8 @@ export function ArabAgroContent() {
           আমাদের বিশ্বাস, এটাই সেই সময় — যখন ওমানের মাটি থেকে উৎপাদিত হালাল ও গুণগত মানসম্পন্ন কৃষিপণ্য নিয়ে “রপ্তানি বাজারে বিপ্লব” ঘটানো যাবে ইনশাআল্লাহ।
         </p>
       </div></div>
+
+      <LivestockFarm />
 
       <div>
         <h5 className="turmeric text-sm font-bold mb-2">মূল প্রকল্পসমূহ</h5>

@@ -219,7 +219,7 @@ function BusinessCityPanel() {
     { icon: TrendingUp, label: t('catInvestment'), labelBn: t('catInvestmentBn'), img: '/card-investor-sector.webp' },
     { icon: Landmark, label: 'Oman Project', labelBn: 'ওমান প্রজেক্ট', img: '' },
     { icon: Sprout, label: 'Arab Agro', labelBn: 'আরব এগ্রো', img: '/photos/arab-agro/01.jpg' },
-    { icon: Globe, label: 'Deba Bangladesh', labelBn: 'দেবা বাংলাদেশ', img: '' },
+    { icon: Globe, label: 'Bangladesh Project', labelBn: 'বাংলাদেশ প্রজেক্ট', img: '' },
   ];
 
   return (
@@ -322,7 +322,7 @@ function BusinessCityPanel() {
           {activeCat === 5 && <InvestmentContent />}
           {activeCat === 6 && <PendingContent title="Oman Project" />}
           {activeCat === 7 && <ArabAgroContent />}
-          {activeCat === 8 && <PendingContent title="Deba Bangladesh" />}
+          {activeCat === 8 && <PendingContent title="Bangladesh Project" />}
 
           {activeCat === null && (
             <div className="text-center py-8 sage text-sm">Select a category to explore</div>

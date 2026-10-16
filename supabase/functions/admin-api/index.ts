@@ -229,14 +229,13 @@ Deno.serve(async (req: Request) => {
       return jsonResponse({ projects: data });
     }
 
-    // POST /investor-pin — set / reset an investor's PIN for one portal project (re-locks it)
-    if (req.method === "POST" && resource === "investor-pin") {
-      const { investor_id, investor_project_id, pin } = body;
-      if (!investor_id || !investor_project_id || !pin) {
-        return jsonResponse({ error: "Missing investor_id, investor_project_id or pin" }, 400);
+    // POST /project-pin — set / change the PIN of one portal project (shared by its investors, re-locks it)
+    if (req.method === "POST" && resource === "project-pin") {
+      const { investor_project_id, pin } = body;
+      if (!investor_project_id || !pin) {
+        return jsonResponse({ error: "Missing investor_project_id or pin" }, 400);
       }
-      const { error } = await supabase.rpc("admin_set_investor_pin", {
-        p_investor_id: investor_id,
+      const { error } = await supabase.rpc("admin_set_project_pin", {
         p_investor_project_id: investor_project_id,
         p_pin: String(pin),
       });

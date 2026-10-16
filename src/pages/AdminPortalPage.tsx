@@ -15,7 +15,6 @@ export default function AdminPortalPage() {
   const [projects, setProjects] = useState<ProjectRow[]>([]);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
-  const [pinInvestor, setPinInvestor] = useState('');
   const [pinProject, setPinProject] = useState('');
   const [pinValue, setPinValue] = useState('');
 
@@ -71,9 +70,9 @@ export default function AdminPortalPage() {
   const submitPin = (e: FormEvent) => {
     e.preventDefault();
     run(async () => {
-      await adminPost('investor-pin', { investor_id: pinInvestor, investor_project_id: pinProject, pin: pinValue });
+      await adminPost('project-pin', { investor_project_id: pinProject, pin: pinValue });
       setPinValue('');
-    }, 'PIN সেট হয়েছে। প্রজেক্টটি ইনভেস্টরের জন্য আবার লক হয়েছে।');
+    }, 'প্রজেক্টের PIN সেট হয়েছে। এই প্রজেক্ট সবার জন্য আবার লক হয়েছে।');
   };
 
   const submitBroadcast = (e: FormEvent) => {
@@ -125,12 +124,8 @@ export default function AdminPortalPage() {
       )}
 
       <section className="neon-card p-6 mb-6">
-        <h3 className="flex items-center gap-2"><KeyRound size={16} /> Set investor PIN for a project</h3>
+        <h3 className="flex items-center gap-2"><KeyRound size={16} /> Set PIN for a project (shared by all its investors)</h3>
         <form onSubmit={submitPin} className="grid gap-3 mt-3">
-          <select className="input-luxury" value={pinInvestor} onChange={(e) => setPinInvestor(e.target.value)} required>
-            <option value="">Select investor</option>
-            {investors.map((i) => <option key={i.id} value={i.id}>{i.investor_code} — {i.full_name}</option>)}
-          </select>
           <select className="input-luxury" value={pinProject} onChange={(e) => setPinProject(e.target.value)} required>
             <option value="">Select project</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{label(p)}</option>)}

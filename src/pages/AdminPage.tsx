@@ -326,6 +326,7 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     name: project?.name || '',
+    client_name: project?.client_name || '',
     slug: project?.slug || '',
     category: project?.category || 'upcoming' as ProjectCategory,
     country: project?.country || '',
@@ -392,30 +393,34 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Field label={t('projectName')} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-            <Field label="Slug" value={form.slug} onChange={(v) => setForm({ ...form, slug: v })} />
+            <Field label="Client / Customer Name" value={form.client_name} onChange={(v) => setForm({ ...form, client_name: v })} />
+            <SelectField label={t('propertyType')} value={form.property_type} onChange={(v) => setForm({ ...form, property_type: v as PropertyType })}
+              options={[{value:'building',label:'Building'},{value:'flat',label:'Flat'},{value:'land',label:'Land'},{value:'hotel',label:'Hotel'}]} />
             <SelectField label={t('category')} value={form.category} onChange={(v) => setForm({ ...form, category: v as ProjectCategory })}
               options={[{value:'makkah',label:'Makkah'},{value:'madinah',label:'Madinah'},{value:'oman',label:'Oman'},{value:'bangladesh',label:'Bangladesh'},{value:'upcoming',label:'Upcoming'},{value:'completed',label:'Completed'}]} />
+            <Field label="Country" value={form.country} onChange={(v) => setForm({ ...form, country: v })} />
+            <Field label="City" value={form.city} onChange={(v) => setForm({ ...form, city: v })} />
             <SelectField label={t('statusBadge')} value={form.status_badge} onChange={(v) => setForm({ ...form, status_badge: v as StatusBadge })}
               options={[{value:'available',label:'Available'},{value:'upcoming',label:'Upcoming'},{value:'sold_out',label:'Sold Out'},{value:'completed',label:'Completed'}]} />
-            <Field label="Country" value={form.country} onChange={(v) => setForm({ ...form, country: v })} required />
-            <Field label="City" value={form.city} onChange={(v) => setForm({ ...form, city: v })} required />
-            <SelectField label={t('propertyType')} value={form.property_type} onChange={(v) => setForm({ ...form, property_type: v as PropertyType })}
-              options={[{value:'land',label:'Land'},{value:'flat',label:'Flat'},{value:'hotel',label:'Hotel'},{value:'building',label:'Building'}]} />
-            <SelectField label="Construction" value={form.construction_status} onChange={(v) => setForm({ ...form, construction_status: v as ConstructionStatus })}
-              options={[{value:'ready',label:'Ready'},{value:'under_construction',label:'Under Construction'},{value:'upcoming',label:'Upcoming'}]} />
             <Field label="Starting Price" type="number" value={String(form.starting_price)} onChange={(v) => setForm({ ...form, starting_price: Number(v) })} />
             <SelectField label="Currency" value={form.price_currency} onChange={(v) => setForm({ ...form, price_currency: v as Currency })}
               options={[{value:'SAR',label:'SAR'},{value:'OMR',label:'OMR'},{value:'BDT',label:'BDT'},{value:'USD',label:'USD'}]} />
-            <SelectField label="Payment" value={form.payment_type} onChange={(v) => setForm({ ...form, payment_type: v as PaymentType })}
-              options={[{value:'cash',label:'Cash'},{value:'installment',label:'Installment'}]} />
             <SelectField label="Engagement" value={form.engagement_type} onChange={(v) => setForm({ ...form, engagement_type: v as EngagementType })}
               options={[{value:'ownership',label:'Ownership'},{value:'investment',label:'Investment'}]} />
-            <Field label="Available Units" type="number" value={String(form.available_units)} onChange={(v) => setForm({ ...form, available_units: Number(v) })} />
-            <Field label="Total Units" type="number" value={String(form.total_units)} onChange={(v) => setForm({ ...form, total_units: Number(v) })} />
-            <Field label="Construction %" type="number" value={String(form.construction_progress)} onChange={(v) => setForm({ ...form, construction_progress: Number(v) })} />
-            <Field label="Expected Completion" type="date" value={form.expected_completion} onChange={(v) => setForm({ ...form, expected_completion: v })} />
-            <Field label="Land Size" value={form.land_size} onChange={(v) => setForm({ ...form, land_size: v })} />
-            <Field label="Unit Size" value={form.unit_size} onChange={(v) => setForm({ ...form, unit_size: v })} />
+            <Field label={form.property_type === 'hotel' ? 'Total Rooms' : 'Total Units'} type="number" value={String(form.total_units)} onChange={(v) => setForm({ ...form, total_units: Number(v) })} />
+            <Field label={form.property_type === 'hotel' ? 'Available Rooms' : 'Available Units'} type="number" value={String(form.available_units)} onChange={(v) => setForm({ ...form, available_units: Number(v) })} />
+            {form.property_type !== 'hotel' && (
+              <>
+                <SelectField label="Construction" value={form.construction_status} onChange={(v) => setForm({ ...form, construction_status: v as ConstructionStatus })}
+                  options={[{value:'ready',label:'Ready'},{value:'under_construction',label:'Under Construction'},{value:'upcoming',label:'Upcoming'}]} />
+                <Field label="Construction %" type="number" value={String(form.construction_progress)} onChange={(v) => setForm({ ...form, construction_progress: Number(v) })} />
+                <Field label="Expected Completion" type="date" value={form.expected_completion} onChange={(v) => setForm({ ...form, expected_completion: v })} />
+                <SelectField label="Payment" value={form.payment_type} onChange={(v) => setForm({ ...form, payment_type: v as PaymentType })}
+                  options={[{value:'cash',label:'Cash'},{value:'installment',label:'Installment'}]} />
+                <Field label="Land Size" value={form.land_size} onChange={(v) => setForm({ ...form, land_size: v })} />
+                <Field label="Unit Size" value={form.unit_size} onChange={(v) => setForm({ ...form, unit_size: v })} />
+              </>
+            )}
             <Field label="Map Lat" value={String(form.map_lat)} onChange={(v) => setForm({ ...form, map_lat: v })} />
             <Field label="Map Lng" value={String(form.map_lng)} onChange={(v) => setForm({ ...form, map_lng: v })} />
           </div>
@@ -424,14 +429,18 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
             <label className="block text-white text-sm mb-1.5 font-medium">Description</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="input-luxury" />
           </div>
-          <div>
-            <label className="block text-white text-sm mb-1.5 font-medium">Ownership Info</label>
-            <input type="text" value={form.ownership_info} onChange={(e) => setForm({ ...form, ownership_info: e.target.value })} className="input-luxury" />
-          </div>
-          <div>
-            <label className="block text-white text-sm mb-1.5 font-medium">Installment Plan</label>
-            <input type="text" value={form.installment_plan} onChange={(e) => setForm({ ...form, installment_plan: e.target.value })} className="input-luxury" />
-          </div>
+          {form.property_type !== 'hotel' && (
+            <>
+              <div>
+                <label className="block text-white text-sm mb-1.5 font-medium">Ownership Info</label>
+                <input type="text" value={form.ownership_info} onChange={(e) => setForm({ ...form, ownership_info: e.target.value })} className="input-luxury" />
+              </div>
+              <div>
+                <label className="block text-white text-sm mb-1.5 font-medium">Installment Plan</label>
+                <input type="text" value={form.installment_plan} onChange={(e) => setForm({ ...form, installment_plan: e.target.value })} className="input-luxury" />
+              </div>
+            </>
+          )}
 
           <div className="flex items-center gap-6">
             <label className="flex items-center gap-2 text-[#F5E6B8] text-sm cursor-pointer">

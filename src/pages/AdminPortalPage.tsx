@@ -27,9 +27,9 @@ export default function AdminPortalPage() {
   const [invReturn, setInvReturn] = useState('');
 
   const emptyInvestor = {
-    email: '', investor_code: '', full_name: '', phone: '', membership_level: '',
-    father_name: '', mother_name: '', permanent_address: '', nid_pass: '', photo_url: '',
-    nominee_name: '', nominee_father_name: '', nominee_mother_name: '', nominee_pass: '',
+    email: '', investor_code: '', full_name: '', first_name: '', last_name: '', phone: '', membership_level: '',
+    father_name: '', permanent_address: '', nid_pass: '', photo_url: '',
+    nominee_name: '', nominee_father_name: '', nominee_pass: '',
     nominee_address: '', nominee_phone: '', nominee_relation: '',
   };
   const [newInv, setNewInv] = useState<typeof emptyInvestor>(emptyInvestor);
@@ -167,27 +167,28 @@ export default function AdminPortalPage() {
       <section className="neon-card p-6 mb-6">
         <h3 className="flex items-center gap-2"><UserPlus size={16} /> নতুন ইনভেস্টর এন্ট্রি (শুধু অ্যাডমিনের জন্য)</h3>
         <form onSubmit={submitNewInvestor} className="grid gap-3 mt-3">
+          <p className="text-sm opacity-80 mt-2">ইনভেস্টরের তথ্য (পাসপোর্ট অনুযায়ী)</p>
           <div className="grid grid-cols-2 gap-3">
-            {invField('full_name', 'ইনভেস্টরের নাম', true)}
+            {invField('full_name', 'নাম (পুরো নাম)', true)}
+            {invField('first_name', 'ফার্স্ট নেম')}
+            {invField('last_name', 'লাস্ট নেম')}
+            {invField('father_name', 'পিতার নাম')}
+            {invField('nid_pass', 'পাসপোর্ট নম্বর')}
+            {invField('permanent_address', 'ঠিকানা')}
             {invField('investor_code', 'ইনভেস্টর কোড / সিরিয়াল (যেমন S33-01)', true)}
             {invField('email', 'ইমেইল (লগইনের জন্য)', true)}
-            {invField('phone', 'অফিসিয়াল মোবাইল')}
-            {invField('father_name', 'বাবার নাম')}
-            {invField('mother_name', 'মায়ের নাম')}
-            {invField('permanent_address', 'স্থায়ী ঠিকানা')}
-            {invField('nid_pass', 'NID / PASS নম্বর')}
-            {invField('photo_url', 'ছবির লিংক')}
+            {invField('phone', 'মোবাইল')}
             {invField('membership_level', 'সদস্যপদ (যেমন VIP Platinum)')}
+            {invField('photo_url', 'পাসপোর্ট ছবির লিংক')}
           </div>
           <p className="text-sm opacity-80 mt-2">নমিনির তথ্য</p>
           <div className="grid grid-cols-2 gap-3">
             {invField('nominee_name', 'নমিনির নাম')}
             {invField('nominee_relation', 'নমিনির সম্পর্ক')}
-            {invField('nominee_father_name', 'নমিনির বাবার নাম')}
-            {invField('nominee_mother_name', 'নমিনির মায়ের নাম')}
-            {invField('nominee_pass', 'নমিনির PASS নম্বর')}
-            {invField('nominee_phone', 'নমিনির মোবাইল')}
+            {invField('nominee_father_name', 'নমিনির পিতার নাম')}
+            {invField('nominee_pass', 'নমিনির পাসপোর্ট নম্বর')}
             {invField('nominee_address', 'নমিনির ঠিকানা')}
+            {invField('nominee_phone', 'নমিনির মোবাইল')}
           </div>
           <button type="submit" className="btn-gold">ইনভেস্টর সেভ করুন ও পাসওয়ার্ড বানান</button>
         </form>

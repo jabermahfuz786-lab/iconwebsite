@@ -11,6 +11,7 @@ export type StatusBadge = 'available' | 'upcoming' | 'sold_out' | 'completed';
 export interface Project {
   id: string;
   name: string;
+  client_name?: string | null;
   slug: string;
   category: ProjectCategory;
   country: string;
@@ -104,9 +105,19 @@ export interface Investor {
   email: string;
   investor_code: string;
   full_name: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  father_name?: string | null;
+  permanent_address?: string | null;
+  nid_pass?: string | null;
+  photo_url?: string | null;
   phone: string | null;
   country: string | null;
+  membership_level?: string | null;
   nominee_name: string | null;
+  nominee_father_name?: string | null;
+  nominee_pass?: string | null;
+  nominee_address?: string | null;
   nominee_relation: string | null;
   nominee_phone: string | null;
   is_active: boolean;

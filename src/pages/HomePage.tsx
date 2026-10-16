@@ -3,13 +3,14 @@ import {
   ChevronDown, ChevronRight,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
   DollarSign, Briefcase, Globe, Star, Award, Crown, Youtube,
-  PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical,
+  PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical, Sprout, Landmark,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import {
   RealEstateContent, LicenseContent, UmrahContent, ITContent,
   SavingsContent, InvestmentContent,
 } from '@/components/BusinessSections';
+import { ArabAgroContent, PendingContent } from '@/components/AgroProjects';
 
 
 
@@ -203,7 +204,7 @@ function HeroBanner() {
 }
 
 // ============================================================
-// BUSINESS CITY — 6 category cards
+// BUSINESS CITY — 9 category cards
 // ============================================================
 function BusinessCityPanel() {
   const { t } = useApp();
@@ -216,6 +217,9 @@ function BusinessCityPanel() {
     { icon: Code2, label: t('catIT'), labelBn: t('catITBn'), img: '/card-it-sector.webp' },
     { icon: PiggyBank, label: t('catSavings'), labelBn: t('catSavingsBn'), img: '/card-savings-fund.webp' },
     { icon: TrendingUp, label: t('catInvestment'), labelBn: t('catInvestmentBn'), img: '/card-investor-sector.webp' },
+    { icon: Landmark, label: 'Oman Project', labelBn: 'ওমান প্রজেক্ট', img: '' },
+    { icon: Sprout, label: 'Arab Agro', labelBn: 'আরব এগ্রো', img: '/photos/arab-agro/01.jpg' },
+    { icon: Globe, label: 'Deba Bangladesh', labelBn: 'দেবা বাংলাদেশ', img: '' },
   ];
 
   return (
@@ -260,7 +264,11 @@ function BusinessCityPanel() {
                 >
                   {/* Full background image */}
                   <div className="absolute inset-0 z-0">
-                    <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
+                    {cat.img ? (
+                      <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
+                    )}
                   </div>
 
                   {/* Dark gradient overlay on lower portion */}
@@ -312,6 +320,9 @@ function BusinessCityPanel() {
           {activeCat === 3 && <ITContent />}
           {activeCat === 4 && <SavingsContent />}
           {activeCat === 5 && <InvestmentContent />}
+          {activeCat === 6 && <PendingContent title="Oman Project" />}
+          {activeCat === 7 && <ArabAgroContent />}
+          {activeCat === 8 && <PendingContent title="Deba Bangladesh" />}
 
           {activeCat === null && (
             <div className="text-center py-8 sage text-sm">Select a category to explore</div>

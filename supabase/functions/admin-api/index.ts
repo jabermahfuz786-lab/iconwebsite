@@ -3,7 +3,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey, X-Admin-Password",
 };
 
 const ADMIN_PASSWORD = "myicon-admin-2024";
@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
     // Admin auth check
     const authHeader = req.headers.get("Authorization") || "";
     const body = req.method === "POST" || req.method === "PUT" ? await req.json().catch(() => ({})) : {};
-    const adminToken = body._admin_password || authHeader.replace("Bearer ", "");
+    const adminToken = body._admin_password || req.headers.get("X-Admin-Password") || authHeader.replace("Bearer ", "");
     if (adminToken !== ADMIN_PASSWORD) {
       return jsonResponse({ error: "Unauthorized" }, 401);
     }
@@ -76,7 +76,7 @@ Deno.serve(async (req: Request) => {
 
     // POST /investors — create a new investor + auth user
     if (req.method === "POST" && resource === "investors") {
-      const { email, password, investor_code, full_name, phone, country, nominee_name, nominee_relation, nominee_phone } = body;
+      const { email, password, investor_code, full_name, phone, country, nominee_name, nominee_relation, nominee_phone, membership_level } = body;
       if (!email || !password || !investor_code || !full_name) {
         return jsonResponse({ error: "Missing required fields" }, 400);
       }
@@ -101,6 +101,7 @@ Deno.serve(async (req: Request) => {
           nominee_name: nominee_name || null,
           nominee_relation: nominee_relation || null,
           nominee_phone: nominee_phone || null,
+          membership_level: membership_level || null,
           is_active: true,
           user_id: authData.user.id,
         })
@@ -130,6 +131,8 @@ Deno.serve(async (req: Request) => {
         profit_distributed,
         agreement_url,
         status,
+        investor_project_id,
+        expected_return_pct,
       } = body;
 
       if (!investor_id || !project_name) {
@@ -160,6 +163,8 @@ Deno.serve(async (req: Request) => {
           profit_distributed: profit_distributed || 0,
           agreement_url: agreement_url || null,
           status: status || "active",
+          investor_project_id: investor_project_id || null,
+          expected_return_pct: expected_return_pct ?? null,
         })
         .select()
         .single();
@@ -193,6 +198,51 @@ Deno.serve(async (req: Request) => {
         if (error) return jsonResponse({ error: error.message }, 500);
         return jsonResponse({ project: data }, 201);
       }
+    }
+
+    // GET /investor-projects — the 8 portal projects (for admin dropdowns)
+    if (req.method === "GET" && resource === "investor-projects") {
+      const { data, error } = await supabase
+        .from("investor_projects")
+        .select("id, slug, name_bn, name_en, sort_order, status, progress_percent")
+        .order("sort_order");
+      if (error) return jsonResponse({ error: error.message }, 500);
+      return jsonResponse({ projects: data });
+    }
+
+    // POST /investor-pin — set / reset an investor's PIN for one portal project (re-locks it)
+    if (req.method === "POST" && resource === "investor-pin") {
+      const { investor_id, investor_project_id, pin } = body;
+      if (!investor_id || !investor_project_id || !pin) {
+        return jsonResponse({ error: "Missing investor_id, investor_project_id or pin" }, 400);
+      }
+      const { error } = await supabase.rpc("admin_set_investor_pin", {
+        p_investor_id: investor_id,
+        p_investor_project_id: investor_project_id,
+        p_pin: String(pin),
+      });
+      if (error) return jsonResponse({ error: error.message }, 400);
+      return jsonResponse({ ok: true });
+    }
+
+    // POST /broadcast — notice to all investors (investor_project_id null) or to holders of one project
+    if (req.method === "POST" && resource === "broadcast") {
+      const { title, body: message, investor_project_id } = body;
+      if (!title || !message) {
+        return jsonResponse({ error: "Missing title or body" }, 400);
+      }
+      const { data, error } = await supabase
+        .from("investor_notices")
+        .insert({
+          investor_id: null,
+          investor_project_id: investor_project_id || null,
+          title,
+          body: message,
+        })
+        .select()
+        .single();
+      if (error) return jsonResponse({ error: error.message }, 500);
+      return jsonResponse({ notice: data }, 201);
     }
 
     return jsonResponse({ error: "Not found" }, 404);

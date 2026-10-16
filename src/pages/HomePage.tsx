@@ -246,12 +246,7 @@ const BUSINESS_CITY_TREE: BizNode[] = [
   {
     key: 'bd', icon: Globe, label: 'Bangladesh', labelBn: 'বাংলাদেশ', img: '',
     children: [
-      {
-        key: 'bd-tuhfa', icon: Hotel, label: 'TUHFA Collection', labelBn: 'তোহফা কালেকশন', img: '',
-        children: [
-          { key: 'bd-kuakata', icon: Building2, label: 'Kuakata Real Estate', labelBn: 'কুয়াকাটা রিয়েল এস্টেট', img: '', render: pending('Kuakata Real Estate') },
-        ],
-      },
+      { key: 'bd-tuhfa', icon: Hotel, label: 'TUHFA Collection', labelBn: 'তোহফা কালেকশন', img: '', render: pending('TUHFA Collection') },
       { key: 'bd-re', icon: Building2, label: 'Real Estate', labelBn: 'রিয়েল এস্টেট', img: '', render: pending('Real Estate') },
       { key: 'bd-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
     ],
@@ -266,69 +261,73 @@ const BUSINESS_CITY_TREE: BizNode[] = [
   },
 ];
 
-function BizCardGrid({ nodes, big = false }: { nodes: BizNode[]; big?: boolean }) {
-  const [active, setActive] = useState<number | null>(null);
-  const current = active !== null ? nodes[active] : null;
-
+function BizTile({ node, big, active, onClick }: { node: BizNode; big: boolean; active: boolean; onClick: () => void }) {
   return (
-    <div>
-      <div className={`grid grid-cols-2 ${nodes.length === 3 ? 'md:grid-cols-3' : ''} gap-2.5 md:gap-3 mb-4`}>
-        {nodes.map((node, i) => (
-          <button
-            key={node.key}
-            onClick={() => setActive(active === i ? null : i)}
-            className={`business-city-card biz-card ${active === i ? 'biz-card-active' : ''}`}
-          >
-            <div
-              className="biz-card-inner relative overflow-hidden cursor-pointer"
-              style={{ borderRadius: '20px', minHeight: big ? '260px' : '175px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 0 }}
-            >
-              <div className="absolute inset-0 z-0">
-                {node.img ? (
-                  <img src={node.img} alt={node.label} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
-                )}
-              </div>
-              <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
-              <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.75rem' }}>
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center mb-1.5"
-                  style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A', boxShadow: '0 0 12px rgba(255,214,10,0.3)' }}
-                >
-                  <node.icon className="w-4 h-4" style={{ color: '#FFD60A' }} />
-                </div>
-                <p className="text-white font-bold leading-tight mb-0.5" style={{ fontSize: big ? '18px' : '16px', fontWeight: 700 }}>
-                  {node.label}
-                </p>
-                <p className="text-white/60 text-[0.62rem] mb-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
-                  {node.labelBn}
-                </p>
-                <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform ${active === i ? 'rotate-90' : ''}`}
-                  style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A', boxShadow: '0 0 8px rgba(255,214,10,0.2)' }}
-                >
-                  <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
-                </div>
-              </div>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {current && (
-        <div className="animate-fade-in">
-          {current.render && current.render()}
-          {current.children && <div className={current.render ? 'mt-6' : ''}><BizCardGrid nodes={current.children} /></div>}
-          {!current.render && !current.children && <div className="text-center py-8 sage text-sm">Select a category to explore</div>}
+    <button onClick={onClick} className={`business-city-card biz-card ${active ? 'biz-card-active' : ''}`}>
+      <div
+        className="biz-card-inner relative overflow-hidden cursor-pointer"
+        style={{ borderRadius: '20px', minHeight: big ? '260px' : '150px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 0 }}
+      >
+        <div className="absolute inset-0 z-0">
+          {node.img ? (
+            <img src={node.img} alt={node.label} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
+          )}
         </div>
-      )}
-    </div>
+        <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
+        <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.75rem' }}>
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center mb-1.5"
+            style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A', boxShadow: '0 0 12px rgba(255,214,10,0.3)' }}
+          >
+            <node.icon className="w-4 h-4" style={{ color: '#FFD60A' }} />
+          </div>
+          <p className="text-white font-bold leading-tight mb-0.5" style={{ fontSize: big ? '18px' : '15px', fontWeight: 700 }}>
+            {node.label}
+          </p>
+          <p className="text-white/60 text-[0.62rem] mb-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
+            {node.labelBn}
+          </p>
+          <div
+            className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform ${active ? 'rotate-90' : ''}`}
+            style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A', boxShadow: '0 0 8px rgba(255,214,10,0.2)' }}
+          >
+            <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
+          </div>
+        </div>
+      </div>
+    </button>
   );
 }
 
 function BusinessCityPanel() {
   const { t } = useApp();
+  // path = the folders we have gone into; selected = the open item inside the current folder
+  const [path, setPath] = useState<BizNode[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const folder = path.length ? path[path.length - 1] : null;
+  const level: BizNode[] = folder ? folder.children ?? [] : BUSINESS_CITY_TREE;
+  const selNode = selected ? level.find((n) => n.key === selected) ?? null : null;
+  const contentRender = selNode?.render ?? folder?.render ?? null;
+  const isTop = path.length === 0;
+
+  const openNode = (node: BizNode) => {
+    if (node.children && node.children.length > 0) {
+      setPath([...path, node]);
+      setSelected(null);
+    } else {
+      setSelected(node.key);
+    }
+  };
+
+  const goBack = () => {
+    if (selected) setSelected(null);
+    else setPath(path.slice(0, -1));
+  };
+
+  const crumbs = [...path.map((p) => p.labelBn), ...(selNode ? [selNode.labelBn] : [])];
 
   return (
     <div className="biz-panel">
@@ -349,7 +348,30 @@ function BusinessCityPanel() {
             </div>
           </div>
 
-          <BizCardGrid nodes={BUSINESS_CITY_TREE} big />
+          {!isTop && (
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              <button onClick={goBack} className="btn-outline text-sm px-3 py-1.5">← পেছনে</button>
+              <p className="sage text-xs">{crumbs.join(' › ')}</p>
+            </div>
+          )}
+
+          {contentRender && (
+            <div key={selNode?.key ?? folder?.key} className="animate-fade-in mb-5">
+              {contentRender()}
+            </div>
+          )}
+
+          <div className={`grid grid-cols-2 ${level.length === 3 ? 'md:grid-cols-3' : ''} gap-2.5 md:gap-3`}>
+            {level.map((node) => (
+              <BizTile
+                key={node.key}
+                node={node}
+                big={isTop}
+                active={selected === node.key}
+                onClick={() => openNode(node)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

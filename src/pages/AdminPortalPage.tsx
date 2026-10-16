@@ -116,20 +116,25 @@ export default function AdminPortalPage() {
       <section className="neon-card p-6 mb-6">
         <h3 className="flex items-center gap-2"><Briefcase size={16} /> Add investment to a portal project</h3>
         <form onSubmit={submitInvestment} className="grid gap-3 mt-3">
+          <label className="text-sm opacity-80">১. ইনভেস্টর বেছে নিন</label>
           <select className="input-luxury" value={invInvestor} onChange={(e) => setInvInvestor(e.target.value)} required>
             <option value="">Select investor</option>
             {investors.map((i) => <option key={i.id} value={i.id}>{i.investor_code} — {i.full_name}</option>)}
           </select>
+          <label className="text-sm opacity-80">২. কোন প্রজেক্টে বিনিয়োগ</label>
           <select className="input-luxury" value={invProject} onChange={(e) => setInvProject(e.target.value)} required>
             <option value="">Select project</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{label(p)}</option>)}
           </select>
           <div className="grid grid-cols-3 gap-3">
-            <input className="input-luxury" type="number" min="1" step="any" placeholder="Amount" value={invAmount} onChange={(e) => setInvAmount(e.target.value)} required />
+            <label className="text-sm opacity-80">৩. টাকার পরিমাণ</label>
+            <input className="input-luxury" type="number" min="1" step="any" placeholder="যেমন 3300000" value={invAmount} onChange={(e) => setInvAmount(e.target.value)} required />
+            <label className="text-sm opacity-80">৪. কারেন্সি</label>
             <select className="input-luxury" value={invCurrency} onChange={(e) => setInvCurrency(e.target.value)}>
               <option>USD</option><option>SAR</option><option>OMR</option><option>BDT</option>
             </select>
-            <input className="input-luxury" type="number" step="any" placeholder="Expected return % (optional)" value={invReturn} onChange={(e) => setInvReturn(e.target.value)} />
+            <label className="text-sm opacity-80">৫. প্রত্যাশিত রিটার্ন % (না জানলে ফাঁকা রাখুন)</label>
+            <input className="input-luxury" type="number" step="any" placeholder="যেমন 12" value={invReturn} onChange={(e) => setInvReturn(e.target.value)} />
           </div>
           <button type="submit" className="btn-gold">Add investment</button>
         </form>
@@ -138,12 +143,15 @@ export default function AdminPortalPage() {
       <section className="neon-card p-6">
         <h3 className="flex items-center gap-2"><Send size={16} /> Broadcast message to investors</h3>
         <form onSubmit={submitBroadcast} className="grid gap-3 mt-3">
+          <label className="text-sm opacity-80">কাদের কাছে পাঠাবেন</label>
           <select className="input-luxury" value={bcProject} onChange={(e) => setBcProject(e.target.value)}>
             <option value="">All investors (all projects)</option>
             {projects.map((p) => <option key={p.id} value={p.id}>{label(p)} — holders only</option>)}
           </select>
-          <input className="input-luxury" placeholder="Title" value={bcTitle} onChange={(e) => setBcTitle(e.target.value)} required />
-          <textarea className="input-luxury" rows={4} placeholder="Message" value={bcBody} onChange={(e) => setBcBody(e.target.value)} required />
+          <label className="text-sm opacity-80">শিরোনাম</label>
+          <input className="input-luxury" placeholder="যেমন: প্রজেক্ট আপডেট" value={bcTitle} onChange={(e) => setBcTitle(e.target.value)} required />
+          <label className="text-sm opacity-80">বার্তা</label>
+          <textarea className="input-luxury" rows={4} placeholder="এখানে বার্তা লিখুন" value={bcBody} onChange={(e) => setBcBody(e.target.value)} required />
           <button type="submit" className="btn-gold">Send</button>
         </form>
       </section>

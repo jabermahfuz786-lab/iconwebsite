@@ -63,9 +63,9 @@ export default function AdminPortalPage() {
     e.preventDefault();
     setLoginErr('');
     const result = await signInAdmin(email, pw);
-    if (result === 'ok') setAuthed(true);
-    else if (result === 'not_admin') setLoginErr('This account does not have admin access.');
-    else setLoginErr('Email or password is incorrect.');
+    if (result.status === 'ok') setAuthed(true);
+    else if (result.status === 'not_admin') setLoginErr('This account does not have admin access.');
+    else setLoginErr(result.message);
   };
 
   const submitPin = (e: FormEvent) => {

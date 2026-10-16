@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import {
-  ChevronDown, ChevronRight,
+  ChevronDown, ChevronRight, ArrowLeft,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
   DollarSign, Briefcase, Globe, Star, Award, Crown, Youtube,
   PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical, Sprout, Landmark,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import {
   RealEstateContent, LicenseContent, UmrahContent, ITContent,
@@ -164,12 +165,6 @@ function HeroBanner() {
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 pt-24 pb-10 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(250,247,241,0.85)', border: '1px solid rgba(255,214,10,0.4)', backdropFilter: 'blur(12px)' }}>
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#FFD60A' }} />
-          <span className="text-xs font-semibold tracking-wider" style={{ color: '#FFD60A' }}>{t('heroBadge')}</span>
-        </div>
-
         {/* Title */}
         <h1 className="lux-serif text-4xl md:text-6xl font-black mb-2 tracking-tight leading-none turmeric-glow" style={{ textShadow: '0 0 30px rgba(255,214,10,0.15), 0 0 60px rgba(255,214,10,0.08)' }}>
           {t('heroTitle')}
@@ -177,6 +172,12 @@ function HeroBanner() {
         <p className="text-lg md:text-xl mb-4 font-bold" style={{ fontFamily: 'Hind Siliguri, sans-serif', color: '#FFD60A', textShadow: '0 0 16px rgba(255,214,10,0.10)' }}>
           {t('heroTitleBn')}
         </p>
+
+        {/* Country badge (below the title) */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(11,11,13,0.82)', border: '1px solid #FFD60A', boxShadow: '0 0 14px rgba(255,214,10,0.25)', backdropFilter: 'blur(12px)' }}>
+          <Sparkles className="w-3.5 h-3.5" style={{ color: '#FFD60A' }} />
+          <span className="text-xs font-semibold tracking-wider" style={{ color: '#FFD60A' }}>{t('heroBadge')}</span>
+        </div>
 
         {/* Divider */}
         <div className="section-divider mb-5" />
@@ -206,126 +207,249 @@ function HeroBanner() {
 // ============================================================
 // BUSINESS CITY — 9 category cards
 // ============================================================
-function BusinessCityPanel() {
-  const { t } = useApp();
-  const [activeCat, setActiveCat] = useState<number | null>(null);
+type BizNode = {
+  key: string;
+  icon: LucideIcon;
+  label: string;
+  labelBn: string;
+  img?: string;
+  render?: () => ReactNode;
+  children?: BizNode[];
+};
 
-  const categories = [
-    { icon: Building2, label: t('catRealEstate'), labelBn: t('catRealEstateBn'), img: '/card-real-estate.webp' },
-    { icon: Shield, label: t('catLicense'), labelBn: t('catLicenseBn'), img: '/card-investor-license.webp' },
-    { icon: Plane, label: t('catUmrah'), labelBn: t('catUmrahBn'), img: '/card-umrah-b2b.webp' },
-    { icon: Code2, label: t('catIT'), labelBn: t('catITBn'), img: '/card-it-sector.webp' },
-    { icon: PiggyBank, label: t('catSavings'), labelBn: t('catSavingsBn'), img: '/card-savings-fund.webp' },
-    { icon: TrendingUp, label: t('catInvestment'), labelBn: t('catInvestmentBn'), img: '/card-investor-sector.webp' },
-    { icon: Landmark, label: 'Oman Project', labelBn: 'ওমান প্রজেক্ট', img: '' },
-    { icon: Sprout, label: 'Arab Agro', labelBn: 'আরব এগ্রো', img: '/photos/arab-agro/01.jpg' },
-    { icon: Globe, label: 'Bangladesh Project', labelBn: 'বাংলাদেশ প্রজেক্ট', img: '' },
-  ];
+const pending = (title: string) => () => <PendingContent title={title} />;
+
+const BUSINESS_CITY_TREE: BizNode[] = [
+  {
+    key: 'saudi', icon: Building2, label: 'Saudi Arabia', labelBn: 'সৌদি আরবিয়া', img: '/card-real-estate.webp',
+    children: [
+      { key: 'sa-re', icon: Building2, label: 'Real Estate', labelBn: 'রিয়েল এস্টেট', img: '/card-real-estate.webp', render: () => <RealEstateContent /> },
+      { key: 'sa-lic', icon: Shield, label: 'Investor License', labelBn: 'ইনভেস্টর লাইসেন্স', img: '/card-investor-license.webp', render: () => <LicenseContent /> },
+      { key: 'sa-umrah', icon: Plane, label: 'Umrah B2B', labelBn: 'ওমরাহ B2B', img: '/card-umrah-b2b.webp', render: () => <UmrahContent /> },
+      { key: 'sa-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
+    ],
+  },
+  {
+    key: 'oman', icon: Landmark, label: 'Oman', labelBn: 'ওমান', img: '/photos/arab-agro/01.jpg',
+    children: [
+      {
+        key: 'om-re', icon: Building2, label: 'Oman Real Estate', labelBn: 'ওমান রিয়েল এস্টেট', img: '/photos/arab-agro/02.jpg',
+        children: [
+          { key: 'om-s33', icon: Building2, label: 'S33 Project', labelBn: 'S33 প্রজেক্ট', img: '', render: pending('S33 Project') },
+        ],
+      },
+      { key: 'om-agro', icon: Sprout, label: 'Arab Agro', labelBn: 'আরব এগ্রো', img: '/photos/arab-agro/01.jpg', render: () => <ArabAgroContent /> },
+      { key: 'om-rest', icon: Store, label: 'Restaurant Lazizz Club', labelBn: 'রেস্টুরেন্ট লাজিজ ক্লাব', img: '', render: pending('Restaurant Lazizz Club') },
+      { key: 'om-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
+    ],
+  },
+  {
+    key: 'bd', icon: Globe, label: 'Bangladesh', labelBn: 'বাংলাদেশ', img: '',
+    children: [
+      { key: 'bd-tuhfa', icon: Hotel, label: 'TUHFA Collection', labelBn: 'তোহফা কালেকশন', img: '', render: pending('TUHFA Collection') },
+      { key: 'bd-re', icon: Building2, label: 'Real Estate', labelBn: 'রিয়েল এস্টেট', img: '', render: pending('Real Estate') },
+      { key: 'bd-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
+    ],
+  },
+  {
+    key: 'invest', icon: TrendingUp, label: 'Investment Sector', labelBn: 'ইনভেস্টমেন্ট সেক্টর', img: '/card-investor-sector.webp',
+    render: () => <InvestmentContent />,
+    children: [
+      { key: 'inv-savings', icon: PiggyBank, label: 'Expat Savings Fund', labelBn: 'প্রবাসী সেভিংস ফান্ড', img: '/card-savings-fund.webp', render: () => <SavingsContent /> },
+      { key: 'inv-umrah', icon: Plane, label: 'Umrah B2B', labelBn: 'ওমরাহ B2B', img: '/card-umrah-b2b.webp', render: () => <UmrahContent /> },
+    ],
+  },
+];
+
+type BizSize = 'big' | 'small' | 'header';
+
+function bizName(n: BizNode, lang: string) {
+  return lang === 'bn' ? n.labelBn : n.label;
+}
+
+function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode; size: BizSize; active?: boolean; lang: string; onClick?: () => void }) {
+  const minH = size === 'big' ? 260 : size === 'header' ? 150 : 128;
+  const titleSize = size === 'big' ? '18px' : size === 'header' ? '20px' : '13px';
+  const iconBox = size === 'small' ? 'w-7 h-7' : 'w-9 h-9';
+  const inner = (
+    <div className="biz-card-inner relative overflow-hidden" style={{ borderRadius: '18px', minHeight: `${minH}px`, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <div className="absolute inset-0 z-0">
+        {node.img ? (
+          <img src={node.img} alt="" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
+        )}
+      </div>
+      <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
+      <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.6rem' }}>
+        <div className={`${iconBox} rounded-xl flex items-center justify-center mb-1`} style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A', boxShadow: '0 0 12px rgba(255,214,10,0.3)' }}>
+          <node.icon className={size === 'small' ? 'w-3.5 h-3.5' : 'w-4 h-4'} style={{ color: '#FFD60A' }} />
+        </div>
+        <p className="text-white font-bold leading-tight" style={{ fontSize: titleSize, fontWeight: 700 }}>
+          {bizName(node, lang)}
+        </p>
+        {onClick && (
+          <div
+            className={`w-6 h-6 rounded-full flex items-center justify-center mt-1.5 transition-transform ${active ? 'rotate-90' : ''}`}
+            style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A' }}
+          >
+            <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  if (!onClick) return <div className="business-city-card biz-card">{inner}</div>;
+  return (
+    <button onClick={onClick} className={`business-city-card biz-card w-full text-left ${active ? 'biz-card-active' : ''}`} style={{ padding: 0 }}>
+      {inner}
+    </button>
+  );
+}
+
+function BizHeader({ node, lang, onBack, open, onToggle }: { node: BizNode; lang: string; onBack: () => void; open?: boolean; onToggle?: () => void }) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(255,214,10,0.6)', boxShadow: '0 0 18px rgba(255,214,10,0.2)' }}>
+      {node.img && <img src={node.img} alt="" className="absolute inset-0 w-full h-full object-cover" />}
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.97) 0%, rgba(11,11,13,0.85) 60%, rgba(11,11,13,0.65) 100%)' }} />
+      <div className="relative z-10 flex items-center gap-3 p-3 md:p-4">
+        <button onClick={onBack} aria-label="Back" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
+          <ArrowLeft className="w-4 h-4" style={{ color: '#FFD60A' }} />
+        </button>
+        <button onClick={onBack} className="flex-1 min-w-0 text-left">
+          <p className="text-white font-bold text-base md:text-xl leading-tight truncate">{bizName(node, lang)}</p>
+        </button>
+        {onToggle && (
+          <button onClick={onToggle} aria-label="Toggle" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
+            <ChevronDown className={`w-4 h-4 transition-transform ${open ? '' : '-rotate-90'}`} style={{ color: '#FFD60A' }} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const BACK_LABEL: Record<string, string> = { en: 'Back', bn: 'পেছনে', ar: 'رجوع' };
+
+function BusinessCityPanel() {
+  const { t, lang } = useApp();
+  // path: folders opened so far (the last one is shown as the heading)
+  // leafKey: an item whose details are open alone
+  // listOpen: whether the heading's sub-folders are shown
+  const [path, setPath] = useState<BizNode[]>([]);
+  const [leafKey, setLeafKey] = useState<string | null>(null);
+  const [listOpen, setListOpen] = useState(true);
+
+  const header = path.length ? path[path.length - 1] : null;
+  const parentList: BizNode[] = path.length >= 2 ? path[path.length - 2].children ?? [] : BUSINESS_CITY_TREE;
+  const childList: BizNode[] = header ? header.children ?? [] : [];
+  const leaf = leafKey ? childList.find((n) => n.key === leafKey) ?? null : null;
+  const siblings = header ? parentList.filter((n) => n.key !== header.key) : [];
+
+  const goUp = () => {
+    setLeafKey(null);
+    setListOpen(true);
+    setPath(path.slice(0, -1));
+  };
+
+  const openChild = (child: BizNode) => {
+    if (child.children && child.children.length > 0) {
+      setPath([...path, child]);
+      setLeafKey(null);
+      setListOpen(true);
+    } else {
+      setLeafKey(child.key);
+    }
+  };
+
+  const openSibling = (node: BizNode) => {
+    setPath([...path.slice(0, -1), node]);
+    setLeafKey(null);
+    setListOpen(true);
+  };
+
+  const backLabel = BACK_LABEL[lang] ?? BACK_LABEL.en;
 
   return (
     <div className="biz-panel">
       <div className="biz-panel-inner p-4 md:p-5 relative overflow-hidden">
-        {/* Background image */}
         <div className="absolute inset-0 z-0 opacity-[0.06]">
           <img src="/business-city-bg.webp" alt="" className="w-full h-full object-cover" style={{ filter: 'sepia(0.4) brightness(1.1)' }} />
         </div>
         <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(17,17,20,0.4) 0%, transparent 30%, transparent 70%, rgba(17,17,20,0.5) 100%)' }} />
         <div className="relative z-10">
-          {/* Header — centered */}
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(250,247,241,0.7)', border: '1px solid rgba(255,214,10,0.30)' }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,214,10,0.35)' }}>
                 <Briefcase className="w-4 h-4 biz-accent" />
               </div>
-              <div>
-                <h2 className="biz-glow text-xl font-bold tracking-tight lux-serif">{t('businessCity')}</h2>
-              </div>
+              <h2 className="biz-glow text-xl font-bold tracking-tight lux-serif">{t('businessCity')}</h2>
             </div>
           </div>
 
-          {/* Category Grid — 6 image cards, 3 cols on desktop */}
-          <div className="business-city-grid grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3 mb-4">
-            {categories.map((cat, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveCat(activeCat === i ? null : i)}
-                className={`business-city-card biz-card ${activeCat === i ? 'biz-card-active' : ''}`}
-              >
+          {!header && (
+            <div className="grid grid-cols-2 gap-2.5 md:gap-3">
+              {BUSINESS_CITY_TREE.map((node) => (
+                <BizTile key={node.key} node={node} size="big" lang={lang} onClick={() => openSibling(node)} />
+              ))}
+            </div>
+          )}
+
+          {header && leaf && (
+            /* Only this item is shown: its heading and its details */
+            <div className="flex flex-col gap-3">
+              <BizHeader node={leaf} lang={lang} onBack={() => setLeafKey(null)} />
+              <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' }}>
+                {leaf.render ? leaf.render() : null}
+              </div>
+            </div>
+          )}
+
+          {header && !leaf && (
+            <div className="flex flex-col gap-3">
+              <BizHeader
+                node={header}
+                lang={lang}
+                onBack={goUp}
+                open={listOpen}
+                onToggle={childList.length > 0 ? () => setListOpen(!listOpen) : undefined}
+              />
+
+              {header.render && (
+                <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' }}>
+                  {header.render()}
+                </div>
+              )}
+
+              {listOpen && childList.length > 0 && (
                 <div
-                  className="biz-card-inner relative overflow-hidden cursor-pointer"
-                  style={{
-                    borderRadius: '20px',
-                    minHeight: '175px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    padding: 0,
-                  }}
+                  className="rounded-2xl p-2.5 md:p-3"
+                  style={{ background: 'linear-gradient(160deg, rgba(255,214,10,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(11,11,13,0.9) 100%)', border: '1px dashed rgba(255,214,10,0.5)' }}
                 >
-                  {/* Full background image */}
-                  <div className="absolute inset-0 z-0">
-                    {cat.img ? (
-                      <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
-                    )}
-                  </div>
-
-                  {/* Dark gradient overlay on lower portion */}
-                  <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(15,12,8,0.85) 40%, rgba(10,8,5,0.98) 100%)' }} />
-
-                  {/* Bottom content section */}
-                  <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.75rem' }}>
-                    {/* Floating gold badge icon */}
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center mb-1.5"
-                      style={{
-                        background: 'rgba(18,12,8,0.9)',
-                        border: '1.5px solid #FFD60A',
-                        boxShadow: '0 0 12px rgba(255,214,10,0.3)',
-                      }}
-                    >
-                      <cat.icon className="w-4.5 h-4.5" style={{ color: '#FFD60A' }} />
-                    </div>
-
-                    {/* Title */}
-                    <p className="text-white font-bold text-[15px] md:text-base leading-tight mb-0.5" style={{ fontSize: '16px', fontWeight: 700 }}>
-                      {cat.label}
-                    </p>
-                    <p className="text-white/60 text-[0.62rem] mb-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
-                      {cat.labelBn}
-                    </p>
-
-                    {/* Golden circular arrow button */}
-                    <div
-                      className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform ${activeCat === i ? 'rotate-90' : ''}`}
-                      style={{
-                        background: 'rgba(18,12,8,0.8)',
-                        border: '1.5px solid #FFD60A',
-                        boxShadow: '0 0 8px rgba(255,214,10,0.2)',
-                      }}
-                    >
-                      <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
-                    </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {childList.map((child) => (
+                      <BizTile key={child.key} node={child} size="small" lang={lang} onClick={() => openChild(child)} />
+                    ))}
                   </div>
                 </div>
-              </button>
-            ))}
-          </div>
+              )}
 
-          {/* Active Category Content */}
-          {activeCat === 0 && <RealEstateContent />}
-          {activeCat === 1 && <LicenseContent />}
-          {activeCat === 2 && <UmrahContent />}
-          {activeCat === 3 && <ITContent />}
-          {activeCat === 4 && <SavingsContent />}
-          {activeCat === 5 && <InvestmentContent />}
-          {activeCat === 6 && <PendingContent title="Oman Project" />}
-          {activeCat === 7 && <ArabAgroContent />}
-          {activeCat === 8 && <PendingContent title="Bangladesh Project" />}
-
-          {activeCat === null && (
-            <div className="text-center py-8 sage text-sm">Select a category to explore</div>
+              {siblings.length > 0 && (
+                <div className="mt-6 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div className="grid grid-cols-2 gap-3 md:gap-4 opacity-90">
+                    {siblings.map((node) => (
+                      <BizTile
+                        key={node.key}
+                        node={node}
+                        size={path.length === 1 ? 'big' : 'small'}
+                        lang={lang}
+                        onClick={() => openSibling(node)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -387,22 +511,19 @@ function ChairmanProfile() {
 
               <div className="section-divider mb-8" />
 
-              {/* Official Holdings Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Official Holdings: three small cards in one row on every screen */}
+              <div className="grid grid-cols-3 gap-2 md:gap-4">
                 {holdings.map((h, i) => (
-                  <div key={i} className="beam-small">
-                    <div className="beam-small-inner chairman-icon-btn p-4 text-center">
-                      <div className="chairman-icon w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(13,48,38,0.9)', border: '1.5px solid rgba(255,214,10,0.45)' }}>
-                        <Award className="w-5 h-5" style={{ color: '#FFD60A' }} />
+                  <div key={i} className="beam-small min-w-0">
+                    <div className="beam-small-inner chairman-icon-btn p-2 md:p-4 text-center">
+                      <div className="chairman-icon w-7 h-7 md:w-10 md:h-10 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: 'rgba(13,48,38,0.9)', border: '1px solid rgba(255,214,10,0.45)' }}>
+                        <Award className="w-3.5 h-3.5 md:w-5 md:h-5" style={{ color: '#FFD60A' }} />
                       </div>
-                      <div className="chairman-holding-badge inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full mb-2">
-                        <span className="text-[0.6rem] tracking-wider">CHAIRMAN</span>
-                      </div>
-                      <h4 className="lux-body text-sm font-semibold">{h.name}</h4>
-                      <p className="sage text-[0.65rem] mt-0.5">{h.region}</p>
-                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="youtube-btn mt-3 inline-flex">
-                        <Youtube className="w-4 h-4" />
-                        <span>Watch Presentation</span>
+                      <h4 className="lux-body text-[0.6rem] md:text-sm font-semibold leading-tight">{h.name}</h4>
+                      <p className="sage text-[0.55rem] md:text-[0.65rem] mt-0.5">{h.region}</p>
+                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="youtube-btn mt-1.5 inline-flex" style={{ padding: '.2rem .4rem', fontSize: '.55rem', gap: '.25rem' }}>
+                        <Youtube className="w-3 h-3 md:w-4 md:h-4" />
+                        <span>YouTube</span>
                       </a>
                     </div>
                   </div>

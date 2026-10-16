@@ -83,7 +83,7 @@ export default function AdminPage() {
             <div className="w-16 h-16 rounded-full border border-yellow-500/25 flex items-center justify-center mx-auto mb-4">
               <Lock className="w-7 h-7 text-[#9A7820]" />
             </div>
-            <h1 className="font-serif text-3xl text-[#2A2520] mb-2">{t('adminLogin')}</h1>
+            <h1 className="font-serif text-3xl text-[#F5E6B8] mb-2">{t('adminLogin')}</h1>
             <div className="section-divider" />
           </div>
           <div className="neon-card p-8">
@@ -112,7 +112,7 @@ export default function AdminPage() {
               />
               <button type="submit" className="btn-gold w-full">{t('signIn')}</button>
             </form>
-            <p className="text-center text-[#2A2520]/35 text-xs mt-4">
+            <p className="text-center text-[#F5E6B8] text-xs mt-4">
               Authorized personnel only. All actions are logged.
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function AdminPage() {
     <div className="pt-24 pb-20 animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="font-serif text-3xl md:text-4xl text-[#2A2520]">{t('adminPanel')}</h1>
+          <h1 className="font-serif text-3xl md:text-4xl text-[#F5E6B8]">{t('adminPanel')}</h1>
         </div>
 
         {error && (
@@ -176,15 +176,15 @@ export default function AdminPage() {
                   <div key={p.id} className="neon-card p-4 flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1">
-                        <h3 className="text-[#2A2520] font-medium">{p.name}</h3>
+                        <h3 className="text-[#F5E6B8] font-medium">{p.name}</h3>
                         <span className={`badge ${
                           p.status_badge === 'available' ? 'badge-gold' :
                           p.status_badge === 'upcoming' ? 'badge-blue' :
                           p.status_badge === 'sold_out' ? 'badge-red' : 'badge-green'
                         } text-[0.6rem]`}>{p.status_badge}</span>
-                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-[#9A7820]" /> : <EyeOff className="w-3.5 h-3.5 text-[#2A2520]/35" />}
+                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-[#9A7820]" /> : <EyeOff className="w-3.5 h-3.5 text-[#F5E6B8]" />}
                       </div>
-                      <p className="text-[#2A2520]/45 text-sm">{p.city}, {p.country} · {p.category} · {p.available_units}/{p.total_units} units</p>
+                      <p className="text-[#F5E6B8] text-sm">{p.city}, {p.country} · {p.category} · {p.available_units}/{p.total_units} units</p>
                     </div>
                     <div className="flex gap-2">
                       <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-yellow-500/20 text-[#9A7820] hover:bg-yellow-500/10 transition-all">
@@ -222,15 +222,15 @@ export default function AdminPage() {
             ) : investors.length === 0 ? (
               <div className="neon-card p-8 text-center">
                 <Users className="w-12 h-12 text-[#9A7820]/40 mx-auto mb-3" />
-                <p className="text-[#2A2520]/45">No investors yet. Create one to get started.</p>
+                <p className="text-[#F5E6B8]">No investors yet. Create one to get started.</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {investors.map((inv) => (
                   <div key={inv.id} className="neon-card p-4 flex items-center justify-between">
                     <div>
-                      <h3 className="text-[#2A2520] font-medium">{inv.full_name}</h3>
-                      <p className="text-[#2A2520]/45 text-sm">{inv.investor_code} · {inv.email}</p>
+                      <h3 className="text-[#F5E6B8] font-medium">{inv.full_name}</h3>
+                      <p className="text-[#F5E6B8] text-sm">{inv.investor_code} · {inv.email}</p>
                       {'user_id' in inv && (inv as Record<string, unknown>).user_id ? (
                         <span className="badge badge-green text-[0.6rem] mt-1 inline-block">Linked to auth</span>
                       ) : (
@@ -267,7 +267,7 @@ export default function AdminPage() {
             ) : investments.length === 0 ? (
               <div className="neon-card p-8 text-center">
                 <Link2 className="w-12 h-12 text-[#9A7820]/40 mx-auto mb-3" />
-                <p className="text-[#2A2520]/45">No investments assigned yet.</p>
+                <p className="text-[#F5E6B8]">No investments assigned yet.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -275,8 +275,8 @@ export default function AdminPage() {
                   <div key={inv.id} className="neon-card p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div>
-                        <h3 className="text-[#2A2520] font-medium">{inv.project_name}</h3>
-                        <p className="text-[#2A2520]/45 text-sm">
+                        <h3 className="text-[#F5E6B8] font-medium">{inv.project_name}</h3>
+                        <p className="text-[#F5E6B8] text-sm">
                           {inv.investors?.full_name} ({inv.investors?.investor_code}) · {inv.investors?.email}
                         </p>
                       </div>
@@ -284,20 +284,20 @@ export default function AdminPage() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mt-2">
                       <div>
-                        <p className="text-[#2A2520]/35 text-xs">Investment</p>
-                        <p className="text-[#2A2520]/70">{inv.currency} {inv.investment_amount.toLocaleString()}</p>
+                        <p className="text-[#F5E6B8] text-xs">Investment</p>
+                        <p className="text-[#F5E6B8]">{inv.currency} {inv.investment_amount.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-[#2A2520]/35 text-xs">Paid</p>
-                        <p className="text-[#2A2520]/70">{inv.currency} {inv.paid_amount.toLocaleString()}</p>
+                        <p className="text-[#F5E6B8] text-xs">Paid</p>
+                        <p className="text-[#F5E6B8]">{inv.currency} {inv.paid_amount.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-[#2A2520]/35 text-xs">Due</p>
-                        <p className="text-[#2A2520]/70">{inv.currency} {inv.due_amount.toLocaleString()}</p>
+                        <p className="text-[#F5E6B8] text-xs">Due</p>
+                        <p className="text-[#F5E6B8]">{inv.currency} {inv.due_amount.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-[#2A2520]/35 text-xs">Next Installment</p>
-                        <p className="text-[#2A2520]/70">{inv.next_installment_date || 'N/A'}</p>
+                        <p className="text-[#F5E6B8] text-xs">Next Installment</p>
+                        <p className="text-[#F5E6B8]">{inv.next_installment_date || 'N/A'}</p>
                       </div>
                     </div>
                   </div>
@@ -379,8 +379,8 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
       <div className="neon-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-serif text-2xl text-[#2A2520]">{project ? t('editProject') : t('addProject')}</h2>
-          <button onClick={onClose} className="text-[#2A2520]/45 hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
+          <h2 className="font-serif text-2xl text-[#F5E6B8]">{project ? t('editProject') : t('addProject')}</h2>
+          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -421,24 +421,24 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
           </div>
 
           <div>
-            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Description</label>
+            <label className="block text-white text-sm mb-1.5 font-medium">Description</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="input-luxury" />
           </div>
           <div>
-            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Ownership Info</label>
+            <label className="block text-white text-sm mb-1.5 font-medium">Ownership Info</label>
             <input type="text" value={form.ownership_info} onChange={(e) => setForm({ ...form, ownership_info: e.target.value })} className="input-luxury" />
           </div>
           <div>
-            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Installment Plan</label>
+            <label className="block text-white text-sm mb-1.5 font-medium">Installment Plan</label>
             <input type="text" value={form.installment_plan} onChange={(e) => setForm({ ...form, installment_plan: e.target.value })} className="input-luxury" />
           </div>
 
           <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2 text-[#2A2520]/55 text-sm cursor-pointer">
+            <label className="flex items-center gap-2 text-[#F5E6B8] text-sm cursor-pointer">
               <input type="checkbox" checked={form.is_public} onChange={(e) => setForm({ ...form, is_public: e.target.checked })} className="accent-gold-600" />
               {t('isPublic')}
             </label>
-            <label className="flex items-center gap-2 text-[#2A2520]/55 text-sm cursor-pointer">
+            <label className="flex items-center gap-2 text-[#F5E6B8] text-sm cursor-pointer">
               <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} className="accent-gold-600" />
               Featured
             </label>
@@ -503,8 +503,8 @@ function InvestorForm({ onClose, onSaved }: { onClose: () => void; onSaved: () =
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
       <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-serif text-2xl text-[#2A2520]">Add Investor</h2>
-          <button onClick={onClose} className="text-[#2A2520]/45 hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
+          <h2 className="font-serif text-2xl text-[#F5E6B8]">Add Investor</h2>
+          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -612,10 +612,10 @@ function InvestmentForm({ investors, projects, onClose, onSaved }: {
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
       <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-serif text-2xl text-[#2A2520] flex items-center gap-2">
+          <h2 className="font-serif text-2xl text-[#F5E6B8] flex items-center gap-2">
             <Link2 className="w-5 h-5 text-[#9A7820]" /> Assign Investment
           </h2>
-          <button onClick={onClose} className="text-[#2A2520]/45 hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -627,7 +627,7 @@ function InvestmentForm({ investors, projects, onClose, onSaved }: {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Investor selector */}
           <div>
-            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Select Investor</label>
+            <label className="block text-white text-sm mb-1.5 font-medium">Select Investor</label>
             <select
               value={form.investor_id}
               onChange={(e) => setForm({ ...form, investor_id: e.target.value })}
@@ -645,7 +645,7 @@ function InvestmentForm({ investors, projects, onClose, onSaved }: {
 
           {/* Project selector */}
           <div>
-            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Select Project (optional)</label>
+            <label className="block text-white text-sm mb-1.5 font-medium">Select Project (optional)</label>
             <select
               value={form.project_id}
               onChange={(e) => setForm({ ...form, project_id: e.target.value })}
@@ -699,7 +699,7 @@ function Field({ label, value, onChange, type = 'text', required }: {
 }) {
   return (
     <div>
-      <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">{label}</label>
+      <label className="block text-white text-sm mb-1.5 font-medium">{label}</label>
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} className="input-luxury text-sm" />
     </div>
   );
@@ -713,7 +713,7 @@ function SelectField({ label, value, onChange, options }: {
 }) {
   return (
     <div>
-      <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">{label}</label>
+      <label className="block text-white text-sm mb-1.5 font-medium">{label}</label>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="input-luxury text-sm">
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>

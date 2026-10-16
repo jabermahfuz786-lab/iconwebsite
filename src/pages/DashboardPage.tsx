@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { CalendarPlus, Bell, FileText, UserCheck } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { CalendarPlus, FileText, UserCheck } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { supabase } from '@/lib/supabase';
-import type { Investor, InvestmentDocument, InvestorNotice, InvestorMeeting } from '@/types';
+import type { Investor, InvestmentDocument, InvestorMeeting } from '@/types';
 import {
-  fetchOverview, fetchProjects, fetchDividends,
-  type Overview, type PortalProject, type Dividend,
+  fetchOverview, fetchProjects, fetchDividends, fetchCatalog,
+  type Overview, type PortalProject, type Dividend, type CatalogProject,
 } from '@/lib/portal';
 import { usePortalText } from '@/lib/portalText';
 import OverviewCards from '@/components/portal/OverviewCards';
 import ProjectCard from '@/components/portal/ProjectCard';
 import ProjectDetailView from '@/components/portal/ProjectDetailView';
 import DividendTable from '@/components/portal/DividendTable';
+import OtherProjectsStrip from '@/components/portal/OtherProjectsStrip';
 
 function DetailRow({ label, value, wide }: { label: string; value?: string | null; wide?: boolean }) {
   const { t } = usePortalText();
@@ -30,10 +31,10 @@ export default function DashboardPage() {
   const [ready, setReady] = useState(false);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [projects, setProjects] = useState<PortalProject[]>([]);
+  const [catalog, setCatalog] = useState<CatalogProject[]>([]);
   const [dividends, setDividends] = useState<Dividend[]>([]);
   const [investor, setInvestor] = useState<Investor | null>(null);
   const [documents, setDocuments] = useState<InvestmentDocument[]>([]);
-  const [notices, setNotices] = useState<InvestorNotice[]>([]);
   const [meetings, setMeetings] = useState<InvestorMeeting[]>([]);
   const [viewId, setViewId] = useState<string | null>(null);
 
@@ -45,21 +46,21 @@ export default function DashboardPage() {
   const [mSent, setMSent] = useState(false);
 
   const loadAll = useCallback(async () => {
-    const [ov, pr, dv, inv, docs, nots, mtgs] = await Promise.all([
+    const [ov, pr, cat, dv, inv, docs, mtgs] = await Promise.all([
       fetchOverview(),
       fetchProjects(),
+      fetchCatalog(),
       fetchDividends(),
       supabase.from('investors').select('*').maybeSingle(),
       supabase.from('investment_documents').select('*').order('created_at', { ascending: false }),
-      supabase.from('investor_notices').select('*').order('created_at', { ascending: false }).limit(10),
       supabase.from('investor_meetings').select('*').order('created_at', { ascending: false }),
     ]);
     setOverview(ov);
     setProjects(pr);
+    setCatalog(cat);
     setDividends(dv);
     setInvestor((inv.data as Investor | null) ?? null);
     setDocuments((docs.data as InvestmentDocument[]) ?? []);
-    setNotices((nots.data as InvestorNotice[]) ?? []);
     setMeetings((mtgs.data as InvestorMeeting[]) ?? []);
     setReady(true);
   }, []);
@@ -74,6 +75,12 @@ export default function DashboardPage() {
       await loadAll();
     })();
   }, [navigate, loadAll]);
+
+  // Projects the investor is NOT in, for the slim strip.
+  const others = useMemo(() => {
+    const held = new Set(projects.map((p) => p.id));
+    return catalog.filter((c) => !held.has(c.id));
+  }, [catalog, projects]);
 
   const submitMeeting = async (e: FormEvent) => {
     e.preventDefault();
@@ -106,14 +113,16 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="portal-page">
+    <div className="portal-page portal-fade">
       <div className="portal-hello">
         <p className="portal-small">{t('welcome')}</p>
         <h1>{overview.full_name}</h1>
-        <span className="portal-pill">{overview.investor_code}</span>
+        <span className="portal-pill open">{overview.investor_code}</span>
       </div>
 
       <OverviewCards overview={overview} />
+
+      {!viewId && <OtherProjectsStrip projects={others} />}
 
       <h2 className="portal-h2">
         {t('myProjects')} ({projects.length})
@@ -129,37 +138,37 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {!viewId && investor && (
-        <section className="glass portal-section" style={{ marginTop: 16 }}>
-          <h3><UserCheck size={16} /> {t('myDetails')}</h3>
-          <p className="portal-small" style={{ marginBottom: 12 }}>{t('myDetailsNote')}</p>
-          {investor.photo_url && (
-            <img src={investor.photo_url} alt={t('passportPhoto')} style={{ width: 110, borderRadius: 8, marginBottom: 12 }} />
-          )}
-          <div className="portal-details">
-            <DetailRow label={t('fullName')} value={investor.full_name} />
-            <DetailRow label={t('firstName')} value={investor.first_name} />
-            <DetailRow label={t('lastName')} value={investor.last_name} />
-            <DetailRow label={t('fatherName')} value={investor.father_name} />
-            <DetailRow label={t('passportNo')} value={investor.nid_pass} />
-            <DetailRow label={t('address')} value={investor.permanent_address} wide />
-            <DetailRow label={t('investorId')} value={investor.investor_code} />
-            <DetailRow label={t('email')} value={investor.email} />
-            <DetailRow label={t('mobile')} value={investor.phone} />
-          </div>
-          <h3 style={{ marginTop: 16 }}>{t('nomineeTitle')}</h3>
-          <div className="portal-details">
-            <DetailRow label={t('fullName')} value={investor.nominee_name} />
-            <DetailRow label={t('nomineeFather')} value={investor.nominee_father_name} />
-            <DetailRow label={t('nomineePassport')} value={investor.nominee_pass} />
-            <DetailRow label={t('nomineeAddress')} value={investor.nominee_address} wide />
-            <DetailRow label={t('nomineePhone')} value={investor.nominee_phone} />
-          </div>
-        </section>
-      )}
-
       {!viewId && (
         <>
+          <section className="glass portal-section" style={{ marginTop: 22 }}>
+            <h3>{t('myDetails')}</h3>
+            <p className="portal-small" style={{ marginBottom: 12 }}>{t('myDetailsNote')}</p>
+            <div className="portal-details-top">
+              {investor?.photo_url && (
+                <img src={investor.photo_url} alt={t('passportPhoto')} className="portal-photo" />
+              )}
+              <div className="portal-details">
+                <DetailRow label={t('fullName')} value={investor?.full_name} />
+                <DetailRow label={t('firstName')} value={investor?.first_name} />
+                <DetailRow label={t('lastName')} value={investor?.last_name} />
+                <DetailRow label={t('fatherName')} value={investor?.father_name} />
+                <DetailRow label={t('passportNo')} value={investor?.nid_pass} />
+                <DetailRow label={t('address')} value={investor?.permanent_address} wide />
+                <DetailRow label={t('investorId')} value={investor?.investor_code} />
+                <DetailRow label={t('email')} value={investor?.email} />
+                <DetailRow label={t('mobile')} value={investor?.phone} />
+              </div>
+            </div>
+            <h3 style={{ marginTop: 18 }}><UserCheck size={16} /> {t('nomineeTitle')}</h3>
+            <div className="portal-details">
+              <DetailRow label={t('fullName')} value={investor?.nominee_name} />
+              <DetailRow label={t('nomineeFather')} value={investor?.nominee_father_name} />
+              <DetailRow label={t('nomineePassport')} value={investor?.nominee_pass} />
+              <DetailRow label={t('nomineeAddress')} value={investor?.nominee_address} wide />
+              <DetailRow label={t('nomineePhone')} value={investor?.nominee_phone} />
+            </div>
+          </section>
+
           <div className="portal-two" style={{ marginTop: 16 }}>
             <DividendTable rows={dividends} />
 
@@ -174,56 +183,31 @@ export default function DashboardPage() {
             </section>
           </div>
 
-          <div className="portal-two" style={{ marginTop: 16 }}>
-            <section className="glass portal-section">
-              <h3><Bell size={16} /> {t('notices')}</h3>
-              {notices.length === 0 && <p className="portal-small">{t('noNotices')}</p>}
-              {notices.map((n) => (
-                <div key={n.id} className="portal-notice">
-                  <strong>{n.title}</strong>
-                  <p className="portal-pre">{n.body}</p>
-                  <span className="portal-small">{new Date(n.created_at).toLocaleDateString('en-GB')}</span>
+          <section className="glass portal-section" style={{ marginTop: 16 }}>
+            <h3><CalendarPlus size={16} /> {t('meeting')}</h3>
+            {mSent && <p className="portal-ok">{t('meetingSent')}</p>}
+            {mShow ? (
+              <form onSubmit={submitMeeting} className="portal-form">
+                <input type="date" className="portal-input" value={mDate} onChange={(e) => setMDate(e.target.value)} required aria-label={t('meetingDate')} />
+                <input type="time" className="portal-input" value={mTime} onChange={(e) => setMTime(e.target.value)} required aria-label={t('meetingTime')} />
+                <input className="portal-input" placeholder={t('meetingTopic')} value={mTopic} onChange={(e) => setMTopic(e.target.value)} required />
+                <textarea className="portal-input" placeholder={t('meetingNotes')} value={mNotes} onChange={(e) => setMNotes(e.target.value)} rows={2} />
+                <div className="portal-row" style={{ gap: 8 }}>
+                  <button type="submit" className="portal-btn">{t('meetingSend')}</button>
+                  <button type="button" className="portal-btn-ghost" onClick={() => setMShow(false)}>{t('cancel')}</button>
                 </div>
-              ))}
-            </section>
-
-            <div>
-              {investor?.nominee_name && (
-                <section className="glass portal-section">
-                  <h3><UserCheck size={16} /> {t('nominee')}</h3>
-                  <p>{t('nomineeName')}: {investor.nominee_name}</p>
-                  {investor.nominee_relation && <p>{t('nomineeRelation')}: {investor.nominee_relation}</p>}
-                </section>
-              )}
-
-              <section className="glass portal-section">
-                <h3><CalendarPlus size={16} /> {t('meeting')}</h3>
-                {mSent && <p className="portal-ok">{t('meetingSent')}</p>}
-                {mShow ? (
-                  <form onSubmit={submitMeeting} className="portal-form">
-                    <input type="date" className="portal-input" value={mDate} onChange={(e) => setMDate(e.target.value)} required aria-label={t('meetingDate')} />
-                    <input type="time" className="portal-input" value={mTime} onChange={(e) => setMTime(e.target.value)} required aria-label={t('meetingTime')} />
-                    <input className="portal-input" placeholder={t('meetingTopic')} value={mTopic} onChange={(e) => setMTopic(e.target.value)} required />
-                    <textarea className="portal-input" placeholder={t('meetingNotes')} value={mNotes} onChange={(e) => setMNotes(e.target.value)} rows={2} />
-                    <div className="portal-row" style={{ gap: 8 }}>
-                      <button type="submit" className="portal-btn">{t('meetingSend')}</button>
-                      <button type="button" className="portal-btn-ghost" onClick={() => setMShow(false)}>{t('cancel')}</button>
-                    </div>
-                  </form>
-                ) : (
-                  <button type="button" className="portal-btn" onClick={() => setMShow(true)}>{t('meetingOpen')}</button>
-                )}
-                {meetings.map((m) => (
-                  <div key={m.id} className="portal-small" style={{ marginTop: 8 }}>
-                    {m.requested_date} · {m.requested_time} · {m.topic} · {m.status === 'pending' ? t('pending') : t('confirmed')}
-                  </div>
-                ))}
-              </section>
-            </div>
-          </div>
+              </form>
+            ) : (
+              <button type="button" className="portal-btn" onClick={() => setMShow(true)}>{t('meetingOpen')}</button>
+            )}
+            {meetings.map((m) => (
+              <div key={m.id} className="portal-small" style={{ marginTop: 8 }}>
+                {m.requested_date} · {m.requested_time} · {m.topic} · {m.status === 'pending' ? t('pending') : t('confirmed')}
+              </div>
+            ))}
+          </section>
         </>
       )}
-
     </div>
   );
 }

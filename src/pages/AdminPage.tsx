@@ -421,15 +421,15 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
           </div>
 
           <div>
-            <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">Description</label>
+            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Description</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="input-luxury" />
           </div>
           <div>
-            <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">Ownership Info</label>
+            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Ownership Info</label>
             <input type="text" value={form.ownership_info} onChange={(e) => setForm({ ...form, ownership_info: e.target.value })} className="input-luxury" />
           </div>
           <div>
-            <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">Installment Plan</label>
+            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Installment Plan</label>
             <input type="text" value={form.installment_plan} onChange={(e) => setForm({ ...form, installment_plan: e.target.value })} className="input-luxury" />
           </div>
 
@@ -627,7 +627,7 @@ function InvestmentForm({ investors, projects, onClose, onSaved }: {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Investor selector */}
           <div>
-            <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">Select Investor</label>
+            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Select Investor</label>
             <select
               value={form.investor_id}
               onChange={(e) => setForm({ ...form, investor_id: e.target.value })}
@@ -645,7 +645,7 @@ function InvestmentForm({ investors, projects, onClose, onSaved }: {
 
           {/* Project selector */}
           <div>
-            <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">Select Project (optional)</label>
+            <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">Select Project (optional)</label>
             <select
               value={form.project_id}
               onChange={(e) => setForm({ ...form, project_id: e.target.value })}
@@ -699,7 +699,7 @@ function Field({ label, value, onChange, type = 'text', required }: {
 }) {
   return (
     <div>
-      <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">{label}</label>
+      <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">{label}</label>
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} className="input-luxury text-sm" />
     </div>
   );
@@ -713,7 +713,7 @@ function SelectField({ label, value, onChange, options }: {
 }) {
   return (
     <div>
-      <label className="block text-[#2A2520]/45 text-xs mb-1.5 uppercase tracking-wider">{label}</label>
+      <label className="block text-[#F5E6B8] text-sm mb-1.5 font-medium">{label}</label>
       <select value={value} onChange={(e) => onChange(e.target.value)} className="input-luxury text-sm">
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>{opt.label}</option>

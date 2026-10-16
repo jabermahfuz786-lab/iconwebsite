@@ -106,3 +106,23 @@ export async function fetchProjectDetail(projectId: string): Promise<ProjectDeta
   if (error || !data) return 'error';
   return data as ProjectDetail;
 }
+
+export type CatalogProject = {
+  id: string;
+  slug: string;
+  name_bn: string;
+  name_en: string;
+  sector_bn: string;
+  sector_en: string;
+  image_url: string | null;
+  sort_order: number;
+  status: ProjectStatus | null;
+  progress_percent: number | null;
+};
+
+// All company projects (names and status only, no amounts). Used for the slim "other projects" strip.
+export async function fetchCatalog(): Promise<CatalogProject[]> {
+  const { data, error } = await supabase.rpc('portal_all_projects');
+  if (error || !data) return [];
+  return data as CatalogProject[];
+}

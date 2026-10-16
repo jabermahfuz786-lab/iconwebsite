@@ -81,7 +81,7 @@ export default function AdminPage() {
         <div className="max-w-md mx-auto px-4 w-full">
           <div className="text-center mb-8">
             <div className="w-16 h-16 rounded-full border border-yellow-500/25 flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-7 h-7 text-[#9A7820]" />
+              <Lock className="w-7 h-7 text-[#FFD60A]" />
             </div>
             <h1 className="font-serif text-3xl text-[#F5E6B8] mb-2">{t('adminLogin')}</h1>
             <div className="section-divider" />
@@ -182,12 +182,12 @@ export default function AdminPage() {
                           p.status_badge === 'upcoming' ? 'badge-blue' :
                           p.status_badge === 'sold_out' ? 'badge-red' : 'badge-green'
                         } text-[0.6rem]`}>{p.status_badge}</span>
-                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-[#9A7820]" /> : <EyeOff className="w-3.5 h-3.5 text-[#F5E6B8]" />}
+                        {p.is_public ? <Eye className="w-3.5 h-3.5 text-[#FFD60A]" /> : <EyeOff className="w-3.5 h-3.5 text-[#F5E6B8]" />}
                       </div>
                       <p className="text-[#F5E6B8] text-sm">{p.city}, {p.country} · {p.category} · {p.available_units}/{p.total_units} units</p>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-yellow-500/20 text-[#9A7820] hover:bg-yellow-500/10 transition-all">
+                      <button onClick={() => { setEditingProject(p); setShowProjectForm(true); }} className="p-2 rounded-lg border border-yellow-500/20 text-[#FFD60A] hover:bg-yellow-500/10 transition-all">
                         <Pencil className="w-4 h-4" />
                       </button>
                     </div>
@@ -221,7 +221,7 @@ export default function AdminPage() {
               <div className="neon-card h-64 skeleton" />
             ) : investors.length === 0 ? (
               <div className="neon-card p-8 text-center">
-                <Users className="w-12 h-12 text-[#9A7820]/40 mx-auto mb-3" />
+                <Users className="w-12 h-12 text-[#FFD60A]/40 mx-auto mb-3" />
                 <p className="text-[#F5E6B8]">No investors yet. Create one to get started.</p>
               </div>
             ) : (
@@ -266,7 +266,7 @@ export default function AdminPage() {
               <div className="neon-card h-64 skeleton" />
             ) : investments.length === 0 ? (
               <div className="neon-card p-8 text-center">
-                <Link2 className="w-12 h-12 text-[#9A7820]/40 mx-auto mb-3" />
+                <Link2 className="w-12 h-12 text-[#FFD60A]/40 mx-auto mb-3" />
                 <p className="text-[#F5E6B8]">No investments assigned yet.</p>
               </div>
             ) : (
@@ -381,7 +381,7 @@ function ProjectForm({ project, onClose, onSaved }: { project: Project | null; o
       <div className="neon-card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-2xl text-[#F5E6B8]">{project ? t('editProject') : t('addProject')}</h2>
-          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#FFD60A]"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -513,7 +513,7 @@ function InvestorForm({ onClose, onSaved }: { onClose: () => void; onSaved: () =
       <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-2xl text-[#F5E6B8]">Add Investor</h2>
-          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#FFD60A]"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (
@@ -622,9 +622,9 @@ function InvestmentForm({ investors, projects, onClose, onSaved }: {
       <div className="neon-card max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-2xl text-[#F5E6B8] flex items-center gap-2">
-            <Link2 className="w-5 h-5 text-[#9A7820]" /> Assign Investment
+            <Link2 className="w-5 h-5 text-[#FFD60A]" /> Assign Investment
           </h2>
-          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#9A7820]"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="text-[#F5E6B8] hover:text-[#FFD60A]"><X className="w-5 h-5" /></button>
         </div>
 
         {error && (

@@ -55,9 +55,9 @@ export function InquiryModal({ open, onClose, title, inquiryType, whatsappMsg, f
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(42,37,32,0.3)', backdropFilter: 'blur(6px)' }}>
-      <div className="relative w-full max-w-md rounded-2xl overflow-hidden" style={{ background: 'rgba(250,247,241,0.95)', border: '1px solid rgba(184,144,58,0.4)', boxShadow: '0 12px 40px rgba(184,144,58,0.12), inset 0 0 15px rgba(184,144,58,0.06)' }}>
-        <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: 'rgba(184,144,58,0.12)' }}>
-          <h3 className="text-lg font-bold lux-serif" style={{ color: '#9A7820' }}>{title}</h3>
+      <div className="relative w-full max-w-md rounded-2xl overflow-hidden" style={{ background: 'rgba(250,247,241,0.95)', border: '1px solid rgba(255,214,10,0.4)', boxShadow: '0 12px 40px rgba(255,214,10,0.12), inset 0 0 15px rgba(255,214,10,0.06)' }}>
+        <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: 'rgba(255,214,10,0.12)' }}>
+          <h3 className="text-lg font-bold lux-serif" style={{ color: '#FFD60A' }}>{title}</h3>
           <button onClick={onClose} className="text-[#2A2520]/40 hover:text-[#2A2520] transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -65,8 +65,8 @@ export function InquiryModal({ open, onClose, title, inquiryType, whatsappMsg, f
 
         {done ? (
           <div className="p-8 text-center">
-            <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(184,144,58,0.10)', border: '1px solid rgba(184,144,58,0.3)' }}>
-              <Send className="w-7 h-7" style={{ color: '#9A7820' }} />
+            <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(255,214,10,0.10)', border: '1px solid rgba(255,214,10,0.3)' }}>
+              <Send className="w-7 h-7" style={{ color: '#FFD60A' }} />
             </div>
             <p className="text-[#2A2520]/80 text-sm">{t('submitted')}</p>
           </div>

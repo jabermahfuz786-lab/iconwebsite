@@ -28,8 +28,11 @@ Deno.serve(async (req: Request) => {
     });
 
     const url = new URL(req.url);
-    const path = url.pathname.replace("/functions/v1/admin-api", "");
-    const segments = path.split("/").filter(Boolean);
+    // Works whether the runtime gives the full path (/functions/v1/admin-api/whoami)
+    // or only the part after the function name (/whoami).
+    const allSegments = url.pathname.split("/").filter(Boolean);
+    const fnIndex = allSegments.indexOf("admin-api");
+    const segments = fnIndex >= 0 ? allSegments.slice(fnIndex + 1) : allSegments;
     const resource = segments[0] || "";
 
     // Admin auth: caller must send a signed-in user's access token whose user is in admin_users.

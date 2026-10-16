@@ -41,12 +41,12 @@ export default function AdminPage() {
     e.preventDefault();
     setError('');
     const result = await signInAdmin(adminEmail, adminKey);
-    if (result === 'ok') {
+    if (result.status === 'ok') {
       setAuthed(true);
-    } else if (result === 'not_admin') {
+    } else if (result.status === 'not_admin') {
       setError('This account does not have admin access.');
     } else {
-      setError('Email or password is incorrect.');
+      setError(result.message);
     }
   };
 

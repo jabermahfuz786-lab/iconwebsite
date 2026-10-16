@@ -48,10 +48,34 @@ export async function checkAdminSession(): Promise<boolean> {
   }
 }
 
-export async function signInAdmin(email: string, password: string): Promise<'ok' | 'bad_credentials' | 'not_admin'> {
+export type AdminSignInResult =
+  | { status: 'ok' }
+  | { status: 'not_admin' }
+  | { status: 'error'; message: string };
+
+/** Turns a Supabase auth error into a message the admin can act on. */
+function authErrorMessage(error: { message?: string; code?: string }): string {
+  const code = error.code ?? '';
+  const msg = (error.message ?? '').toLowerCase();
+  if (code === 'invalid_credentials' || msg.includes('invalid login credentials')) {
+    return 'ইমেইল বা পাসওয়ার্ড ভুল। পাসওয়ার্ড কপি-পেস্ট করলে আগে-পিছের স্পেস মুছে দিন।';
+  }
+  if (code === 'email_not_confirmed' || msg.includes('email not confirmed')) {
+    return 'ইমেইল এখনো যাচাই হয়নি। Supabase-এ email_confirmed_at সেট করুন।';
+  }
+  if (code === 'over_request_rate_limit' || msg.includes('rate limit')) {
+    return 'অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।';
+  }
+  return error.message || 'লগইন ব্যর্থ হয়েছে।';
+}
+
+export async function signInAdmin(email: string, password: string): Promise<AdminSignInResult> {
   const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-  if (error) return 'bad_credentials';
-  if (await checkAdminSession()) return 'ok';
+  if (error) return { status: 'error', message: authErrorMessage(error) };
+
+  if (await checkAdminSession()) return { status: 'ok' };
+
+  // Signed in, but the user is not in admin_users: sign out so no half-session stays.
   await supabase.auth.signOut();
-  return 'not_admin';
+  return { status: 'not_admin' };
 }

@@ -26,7 +26,7 @@ export default function PropertyCard({ property, onInquire }: PropertyCardProps)
         ${isHovered ? 'border-yellow-500/60 shadow-2xl shadow-yellow-500/20' : 'shadow-xl'}`}
         style={{
           boxShadow: isHovered
-            ? '0 0 40px rgba(234, 179, 8, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+            ? '0 0 40px rgba(255,214,10, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
             : '0 0 20px rgba(13, 148, 136, 0.2), inset 0 1px 0 rgba(255,255,255,0.05)',
         }}
       />
@@ -156,7 +156,7 @@ export default function PropertyCard({ property, onInquire }: PropertyCardProps)
       <div
         className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
-          backgroundImage: `conic-gradient(from 0deg, transparent, rgba(234, 179, 8, 0.3), transparent 50%)`,
+          backgroundImage: `conic-gradient(from 0deg, transparent, rgba(255,214,10, 0.3), transparent 50%)`,
         }}
       />
     </div>

@@ -53,9 +53,9 @@ export default function Header() {
           scrolled ? 'py-2' : 'py-3'
         }`}
         style={{
-          background: scrolled ? 'linear-gradient(180deg, rgba(6,20,18,0.92), rgba(8,28,25,0.86))' : 'transparent',
+          background: scrolled ? 'linear-gradient(180deg, rgba(11,11,13,0.92), rgba(8,28,25,0.86))' : 'transparent',
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(184,144,58,0.35)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255,214,10,0.35)' : 'none',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
@@ -71,7 +71,7 @@ export default function Header() {
                 <ChevronDown className={`w-3 h-3 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
               </button>
               {langOpen && (
-                <div className="absolute top-full mt-2 left-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: 'linear-gradient(180deg, rgba(8,28,25,0.97), rgba(6,20,18,0.97))', backdropFilter: 'blur(16px)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '16px', boxShadow: '0 8px 30px rgba(184,144,58,0.08), 0 0 20px rgba(212,175,55,0.10)' }}>
+                <div className="absolute top-full mt-2 left-0 py-2 min-w-[120px] animate-fade-in z-50" style={{ background: 'linear-gradient(180deg, rgba(8,28,25,0.97), rgba(11,11,13,0.97))', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,214,10,0.4)', borderRadius: '16px', boxShadow: '0 8px 30px rgba(255,214,10,0.08), 0 0 20px rgba(255,214,10,0.10)' }}>
                   {languages.map((l) => (
                     <button
                       key={l.code}
@@ -107,7 +107,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'linear-gradient(180deg, rgba(6,20,18,0.97), rgba(8,28,25,0.95))', backdropFilter: 'blur(16px)' }}>
+        <div className="fixed inset-0 z-30 pt-16 animate-fade-in" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.97), rgba(8,28,25,0.95))', backdropFilter: 'blur(16px)' }}>
           <nav className="flex flex-col items-center gap-5 mt-8">
             {navItems.map((item) => (
               <button key={item.path} onClick={() => { handleNav(item.path); }} className={`nav-link text-lg ${isActive(item.path) ? 'active' : ''}`}>

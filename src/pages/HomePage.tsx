@@ -105,15 +105,10 @@ function AchievementsSection() {
 function HeroBanner() {
   const { t } = useApp();
   const slides = [
-    { url: '/hero-makkah-drone.webp', alt: 'Aerial drone view of Makkah at golden hour' },
-    { url: '/hero-madinah-drone.webp', alt: 'Aerial drone view of Madinah at dusk' },
-    { url: '/hero-agro-drone.webp', alt: 'Aerial drone view of agricultural farmland at sunrise' },
-    { url: '/hero-business-drone.webp', alt: 'Aerial drone view of modern business district at night' },
-    { url: '/hero-kaaba-drone.webp', alt: 'Aerial drone view of pilgrims at the Kaaba' },
-    { url: '/achievement-hotels-umrah.webp', alt: 'Umrah B2B and Makkah hotel operations' },
-    { url: '/achievement-oman-agro.webp', alt: 'Oman agriculture and date palm agro farm' },
-    { url: '/achievement-licenses.webp', alt: 'Investor licenses and corporate deals' },
-    { url: '/achievement-makkah-growth.webp', alt: 'Real estate portfolio and investment growth' },
+    { url: '/photos/hero-makkah-window.webp', alt: 'Makkah skyline through a window at sunrise' },
+    { url: '/photos/hero-madinah-land.webp', alt: 'Illuminated land plot in Madinah at night' },
+    { url: '/photos/hero-office.webp', alt: 'ICON office and consultation desk' },
+    { url: '/photos/hero-cr-desk.webp', alt: 'Signing a business registration document' },
   ];
   const [slide, setSlide] = useState(0);
 

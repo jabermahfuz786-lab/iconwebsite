@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import {
   ChevronDown, ChevronRight,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
   DollarSign, Briefcase, Globe, Star, Award, Crown, Youtube,
   PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical, Sprout, Landmark,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import {
   RealEstateContent, LicenseContent, UmrahContent, ITContent,
@@ -206,35 +207,140 @@ function HeroBanner() {
 // ============================================================
 // BUSINESS CITY — 9 category cards
 // ============================================================
+type BizNode = {
+  key: string;
+  icon: LucideIcon;
+  label: string;
+  labelBn: string;
+  img?: string;
+  render?: () => ReactNode;
+  children?: BizNode[];
+};
+
+const pending = (title: string) => () => <PendingContent title={title} />;
+
+const BUSINESS_CITY_TREE: BizNode[] = [
+  {
+    key: 'saudi', icon: Building2, label: 'Saudi Arabia', labelBn: 'সৌদি আরবিয়া', img: '/card-real-estate.webp',
+    children: [
+      { key: 'sa-re', icon: Building2, label: 'Real Estate', labelBn: 'রিয়েল এস্টেট', img: '/card-real-estate.webp', render: () => <RealEstateContent /> },
+      { key: 'sa-lic', icon: Shield, label: 'Investor License', labelBn: 'ইনভেস্টর লাইসেন্স', img: '/card-investor-license.webp', render: () => <LicenseContent /> },
+      { key: 'sa-umrah', icon: Plane, label: 'Umrah B2B', labelBn: 'ওমরাহ B2B', img: '/card-umrah-b2b.webp', render: () => <UmrahContent /> },
+      { key: 'sa-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
+    ],
+  },
+  {
+    key: 'oman', icon: Landmark, label: 'Oman', labelBn: 'ওমান', img: '/photos/arab-agro/01.jpg',
+    children: [
+      {
+        key: 'om-re', icon: Building2, label: 'Oman Real Estate', labelBn: 'ওমান রিয়েল এস্টেট', img: '/photos/arab-agro/02.jpg',
+        children: [
+          { key: 'om-s33', icon: Building2, label: 'S33 Project', labelBn: 'S33 প্রজেক্ট', img: '', render: pending('S33 Project') },
+        ],
+      },
+      { key: 'om-agro', icon: Sprout, label: 'Arab Agro', labelBn: 'আরব এগ্রো', img: '/photos/arab-agro/01.jpg', render: () => <ArabAgroContent /> },
+      { key: 'om-rest', icon: Store, label: 'Restaurant Lazizz Club', labelBn: 'রেস্টুরেন্ট লাজিজ ক্লাব', img: '', render: pending('Restaurant Lazizz Club') },
+      { key: 'om-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
+    ],
+  },
+  {
+    key: 'bd', icon: Globe, label: 'Bangladesh', labelBn: 'বাংলাদেশ', img: '',
+    children: [
+      {
+        key: 'bd-tuhfa', icon: Hotel, label: 'TUHFA Collection', labelBn: 'তোহফা কালেকশন', img: '',
+        children: [
+          { key: 'bd-kuakata', icon: Building2, label: 'Kuakata Real Estate', labelBn: 'কুয়াকাটা রিয়েল এস্টেট', img: '', render: pending('Kuakata Real Estate') },
+        ],
+      },
+      { key: 'bd-re', icon: Building2, label: 'Real Estate', labelBn: 'রিয়েল এস্টেট', img: '', render: pending('Real Estate') },
+      { key: 'bd-it', icon: Code2, label: 'IT Sector', labelBn: 'IT সেক্টর', img: '/card-it-sector.webp', render: () => <ITContent /> },
+    ],
+  },
+  {
+    key: 'invest', icon: TrendingUp, label: 'Investment Sector', labelBn: 'ইনভেস্টমেন্ট সেক্টর', img: '/card-investor-sector.webp',
+    render: () => <InvestmentContent />,
+    children: [
+      { key: 'inv-savings', icon: PiggyBank, label: 'Expat Savings Fund', labelBn: 'প্রবাসী সেভিংস ফান্ড', img: '/card-savings-fund.webp', render: () => <SavingsContent /> },
+      { key: 'inv-umrah', icon: Plane, label: 'Umrah B2B', labelBn: 'ওমরাহ B2B', img: '/card-umrah-b2b.webp', render: () => <UmrahContent /> },
+    ],
+  },
+];
+
+function BizCardGrid({ nodes, big = false }: { nodes: BizNode[]; big?: boolean }) {
+  const [active, setActive] = useState<number | null>(null);
+  const current = active !== null ? nodes[active] : null;
+
+  return (
+    <div>
+      <div className={`grid grid-cols-2 ${nodes.length === 3 ? 'md:grid-cols-3' : ''} gap-2.5 md:gap-3 mb-4`}>
+        {nodes.map((node, i) => (
+          <button
+            key={node.key}
+            onClick={() => setActive(active === i ? null : i)}
+            className={`business-city-card biz-card ${active === i ? 'biz-card-active' : ''}`}
+          >
+            <div
+              className="biz-card-inner relative overflow-hidden cursor-pointer"
+              style={{ borderRadius: '20px', minHeight: big ? '260px' : '175px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 0 }}
+            >
+              <div className="absolute inset-0 z-0">
+                {node.img ? (
+                  <img src={node.img} alt={node.label} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
+                )}
+              </div>
+              <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
+              <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.75rem' }}>
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center mb-1.5"
+                  style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A', boxShadow: '0 0 12px rgba(255,214,10,0.3)' }}
+                >
+                  <node.icon className="w-4 h-4" style={{ color: '#FFD60A' }} />
+                </div>
+                <p className="text-white font-bold leading-tight mb-0.5" style={{ fontSize: big ? '18px' : '16px', fontWeight: 700 }}>
+                  {node.label}
+                </p>
+                <p className="text-white/60 text-[0.62rem] mb-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
+                  {node.labelBn}
+                </p>
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform ${active === i ? 'rotate-90' : ''}`}
+                  style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A', boxShadow: '0 0 8px rgba(255,214,10,0.2)' }}
+                >
+                  <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
+                </div>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {current && (
+        <div className="animate-fade-in">
+          {current.render && current.render()}
+          {current.children && <div className={current.render ? 'mt-6' : ''}><BizCardGrid nodes={current.children} /></div>}
+          {!current.render && !current.children && <div className="text-center py-8 sage text-sm">Select a category to explore</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function BusinessCityPanel() {
   const { t } = useApp();
-  const [activeCat, setActiveCat] = useState<number | null>(null);
-
-  const categories = [
-    { icon: Building2, label: t('catRealEstate'), labelBn: t('catRealEstateBn'), img: '/card-real-estate.webp' },
-    { icon: Shield, label: t('catLicense'), labelBn: t('catLicenseBn'), img: '/card-investor-license.webp' },
-    { icon: Plane, label: t('catUmrah'), labelBn: t('catUmrahBn'), img: '/card-umrah-b2b.webp' },
-    { icon: Code2, label: t('catIT'), labelBn: t('catITBn'), img: '/card-it-sector.webp' },
-    { icon: PiggyBank, label: t('catSavings'), labelBn: t('catSavingsBn'), img: '/card-savings-fund.webp' },
-    { icon: TrendingUp, label: t('catInvestment'), labelBn: t('catInvestmentBn'), img: '/card-investor-sector.webp' },
-    { icon: Landmark, label: 'Oman Project', labelBn: 'ওমান প্রজেক্ট', img: '' },
-    { icon: Sprout, label: 'Arab Agro', labelBn: 'আরব এগ্রো', img: '/photos/arab-agro/01.jpg' },
-    { icon: Globe, label: 'Bangladesh Project', labelBn: 'বাংলাদেশ প্রজেক্ট', img: '' },
-  ];
 
   return (
     <div className="biz-panel">
       <div className="biz-panel-inner p-4 md:p-5 relative overflow-hidden">
-        {/* Background image */}
         <div className="absolute inset-0 z-0 opacity-[0.06]">
           <img src="/business-city-bg.webp" alt="" className="w-full h-full object-cover" style={{ filter: 'sepia(0.4) brightness(1.1)' }} />
         </div>
         <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(17,17,20,0.4) 0%, transparent 30%, transparent 70%, rgba(17,17,20,0.5) 100%)' }} />
         <div className="relative z-10">
-          {/* Header — centered */}
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(250,247,241,0.7)', border: '1px solid rgba(255,214,10,0.30)' }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,214,10,0.35)' }}>
                 <Briefcase className="w-4 h-4 biz-accent" />
               </div>
               <div>
@@ -243,90 +349,7 @@ function BusinessCityPanel() {
             </div>
           </div>
 
-          {/* Category Grid — 6 image cards, 3 cols on desktop */}
-          <div className="business-city-grid grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-3 mb-4">
-            {categories.map((cat, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveCat(activeCat === i ? null : i)}
-                className={`business-city-card biz-card ${activeCat === i ? 'biz-card-active' : ''}`}
-              >
-                <div
-                  className="biz-card-inner relative overflow-hidden cursor-pointer"
-                  style={{
-                    borderRadius: '20px',
-                    minHeight: '175px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    padding: 0,
-                  }}
-                >
-                  {/* Full background image */}
-                  <div className="absolute inset-0 z-0">
-                    {cat.img ? (
-                      <img src={cat.img} alt={cat.label} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
-                    )}
-                  </div>
-
-                  {/* Dark gradient overlay on lower portion */}
-                  <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(15,12,8,0.85) 40%, rgba(10,8,5,0.98) 100%)' }} />
-
-                  {/* Bottom content section */}
-                  <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.75rem' }}>
-                    {/* Floating gold badge icon */}
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center mb-1.5"
-                      style={{
-                        background: 'rgba(18,12,8,0.9)',
-                        border: '1.5px solid #FFD60A',
-                        boxShadow: '0 0 12px rgba(255,214,10,0.3)',
-                      }}
-                    >
-                      <cat.icon className="w-4.5 h-4.5" style={{ color: '#FFD60A' }} />
-                    </div>
-
-                    {/* Title */}
-                    <p className="text-white font-bold text-[15px] md:text-base leading-tight mb-0.5" style={{ fontSize: '16px', fontWeight: 700 }}>
-                      {cat.label}
-                    </p>
-                    <p className="text-white/60 text-[0.62rem] mb-1" style={{ fontFamily: 'Hind Siliguri, sans-serif' }}>
-                      {cat.labelBn}
-                    </p>
-
-                    {/* Golden circular arrow button */}
-                    <div
-                      className={`w-6 h-6 rounded-full flex items-center justify-center transition-transform ${activeCat === i ? 'rotate-90' : ''}`}
-                      style={{
-                        background: 'rgba(18,12,8,0.8)',
-                        border: '1.5px solid #FFD60A',
-                        boxShadow: '0 0 8px rgba(255,214,10,0.2)',
-                      }}
-                    >
-                      <ChevronRight className="w-3 h-3" style={{ color: '#FFD60A' }} />
-                    </div>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Active Category Content */}
-          {activeCat === 0 && <RealEstateContent />}
-          {activeCat === 1 && <LicenseContent />}
-          {activeCat === 2 && <UmrahContent />}
-          {activeCat === 3 && <ITContent />}
-          {activeCat === 4 && <SavingsContent />}
-          {activeCat === 5 && <InvestmentContent />}
-          {activeCat === 6 && <PendingContent title="Oman Project" />}
-          {activeCat === 7 && <ArabAgroContent />}
-          {activeCat === 8 && <PendingContent title="Bangladesh Project" />}
-
-          {activeCat === null && (
-            <div className="text-center py-8 sage text-sm">Select a category to explore</div>
-          )}
+          <BizCardGrid nodes={BUSINESS_CITY_TREE} big />
         </div>
       </div>
     </div>

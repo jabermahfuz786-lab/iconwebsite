@@ -1,14 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { ShieldCheck, Send, KeyRound, Briefcase } from 'lucide-react';
-import { adminGet, adminPost, ADMIN_PASSWORD } from '@/lib/adminApi';
+import { adminGet, adminPost, checkAdminSession, signInAdmin } from '@/lib/adminApi';
 
 type InvestorRow = { id: string; email: string; investor_code: string; full_name: string };
 type ProjectRow = { id: string; name_en: string; name_bn: string; sort_order: number };
 
-const SESSION_KEY = 'my-icon-admin';
 
 export default function AdminPortalPage() {
-  const [authed, setAuthed] = useState(sessionStorage.getItem(SESSION_KEY) === 'true');
+  const [authed, setAuthed] = useState(false);
+  const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [loginErr, setLoginErr] = useState('');
   const [investors, setInvestors] = useState<InvestorRow[]>([]);
@@ -55,14 +55,17 @@ export default function AdminPortalPage() {
     }
   };
 
-  const login = (e: FormEvent) => {
+  useEffect(() => {
+    checkAdminSession().then((ok) => { if (ok) setAuthed(true); });
+  }, []);
+
+  const login = async (e: FormEvent) => {
     e.preventDefault();
-    if (pw === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, 'true');
-      setAuthed(true);
-    } else {
-      setLoginErr('Invalid admin password');
-    }
+    setLoginErr('');
+    const result = await signInAdmin(email, pw);
+    if (result === 'ok') setAuthed(true);
+    else if (result === 'not_admin') setLoginErr('This account does not have admin access.');
+    else setLoginErr('Email or password is incorrect.');
   };
 
   const submitPin = (e: FormEvent) => {
@@ -103,7 +106,8 @@ export default function AdminPortalPage() {
       <div className="container" style={{ maxWidth: 380, paddingTop: 96 }}>
         <form className="neon-card p-8" onSubmit={login}>
           <h2 style={{ marginTop: 0 }}>Admin — Investor Portal</h2>
-          <input type="password" className="input-luxury" placeholder="Admin password" value={pw} onChange={(e) => setPw(e.target.value)} />
+          <input type="email" className="input-luxury" placeholder="Admin email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" className="input-luxury" placeholder="Password" value={pw} onChange={(e) => setPw(e.target.value)} required />
           {loginErr && <p className="text-sm" style={{ color: '#c0392b' }}>{loginErr}</p>}
           <button type="submit" className="btn-gold w-full mt-3">Enter</button>
         </form>

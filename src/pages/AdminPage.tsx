@@ -2,44 +2,19 @@ import { useState, useEffect } from 'react';
 import { Lock, Building, Users, Plus, Pencil, Trash2, X, Save, Eye, EyeOff, AlertCircle, UserPlus, Link2, DollarSign } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { supabase } from '@/lib/supabase';
+import { adminRequest, adminGet as adminGetApi, checkAdminSession, signInAdmin } from '@/lib/adminApi';
 import type { Project, Investor, Investment, ProjectCategory, PropertyType, ConstructionStatus, PaymentType, EngagementType, Currency, StatusBadge } from '@/types';
 
 type Tab = 'projects' | 'investors' | 'investments';
 
-const ADMIN_PASSWORD = 'myicon-admin-2024';
-const EDGE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-api`;
 
 async function adminFetch(resource: string, options: RequestInit = {}) {
-  const body = options.body ? JSON.parse(options.body as string) : {};
-  const res = await fetch(`${EDGE_URL}/${resource}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      ...options.headers,
-    },
-    body: JSON.stringify({ ...body, _admin_password: ADMIN_PASSWORD }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
-  }
-  return res.json();
+  const payload = options.body ? JSON.parse(options.body as string) : undefined;
+  return adminRequest(resource, options.method || 'POST', payload);
 }
 
 async function adminGet(resource: string) {
-  const res = await fetch(`${EDGE_URL}/${resource}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-      'X-Admin-Password': ADMIN_PASSWORD,
-    },
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
-  }
-  return res.json();
+  return adminGetApi(resource);
 }
 
 interface AdminInvestment extends Investment {
@@ -49,6 +24,7 @@ interface AdminInvestment extends Investment {
 export default function AdminPage() {
   const { t } = useApp();
   const [authed, setAuthed] = useState(false);
+  const [adminEmail, setAdminEmail] = useState('');
   const [adminKey, setAdminKey] = useState('');
   const [tab, setTab] = useState<Tab>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
@@ -61,20 +37,21 @@ export default function AdminPage() {
   const [showInvestmentForm, setShowInvestmentForm] = useState(false);
   const [error, setError] = useState('');
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminKey === ADMIN_PASSWORD) {
+    setError('');
+    const result = await signInAdmin(adminEmail, adminKey);
+    if (result === 'ok') {
       setAuthed(true);
-      sessionStorage.setItem('my-icon-admin', 'true');
+    } else if (result === 'not_admin') {
+      setError('This account does not have admin access.');
     } else {
-      setError('Invalid admin password');
+      setError('Email or password is incorrect.');
     }
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem('my-icon-admin') === 'true') {
-      setAuthed(true);
-    }
+    checkAdminSession().then((ok) => { if (ok) setAuthed(true); });
   }, []);
 
   const loadData = async () => {
@@ -117,13 +94,21 @@ export default function AdminPage() {
             )}
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <input
-                type="password"
-                value={adminKey}
-                onChange={(e) => setAdminKey(e.target.value)}
-                placeholder="Admin Password"
+                type="email"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                placeholder="Admin email"
                 required
                 className="input-luxury"
                 autoFocus
+              />
+              <input
+                type="password"
+                value={adminKey}
+                onChange={(e) => setAdminKey(e.target.value)}
+                placeholder="Password"
+                required
+                className="input-luxury"
               />
               <button type="submit" className="btn-gold w-full">{t('signIn')}</button>
             </form>

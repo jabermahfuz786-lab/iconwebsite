@@ -8,6 +8,21 @@ Supabase → SQL Editor:
 
 1. Already applied earlier: the `2026…` migrations in `supabase/migrations/`.
 2. `supabase/migrations/20261016120000_investor_portal_v2.sql`
+3. `supabase/migrations/20261016130000_admin_users.sql`
+4. Make yourself an admin (replace the email):
+
+   ```sql
+   insert into public.admin_users (user_id)
+   select id from auth.users where email = 'you@example.com';
+   ```
+
+5. Deploy the edge function (required — the old shared-password version must be replaced):
+
+   ```
+   supabase functions deploy admin-api
+   ```
+
+Admin pages (`/admin`, `/admin/portal`) now sign in with an admin account from `admin_users`.
 
 This creates the 8 portal projects, per-project PIN storage (hashed), dividends,
 project updates/files, and the RPC functions the portal uses.
@@ -51,6 +66,6 @@ Table Editor (not visible to investors directly; the portal reads them only afte
 - Project details, updates and files are only returned by `portal_project_detail()`,
   which requires the project to be unlocked for that investor.
 - Wrong PIN 5 times → 15 minute lock.
-- **Admin password is currently in client code** (`src/lib/adminApi.ts`, `AdminPage.tsx`)
-  and in `supabase/functions/admin-api`. Anyone who can view the site source can use it.
-  Replace it with a Supabase Auth admin role check before real investor data goes live.
+- Admin access = signed-in user listed in `admin_users`. The old shared admin password
+  is removed from the code; it stops working once `admin-api` is redeployed.
+  The old literal is still in git history, so do not reuse it anywhere.

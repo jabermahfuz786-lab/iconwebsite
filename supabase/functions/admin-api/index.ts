@@ -3,10 +3,9 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey, X-Admin-Password",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const ADMIN_PASSWORD = "myicon-admin-2024";
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -33,12 +32,29 @@ Deno.serve(async (req: Request) => {
     const segments = path.split("/").filter(Boolean);
     const resource = segments[0] || "";
 
-    // Admin auth check
+    // Admin auth: caller must send a signed-in user's access token whose user is in admin_users.
     const authHeader = req.headers.get("Authorization") || "";
+    const token = authHeader.replace(/^Bearer\s+/i, "");
     const body = req.method === "POST" || req.method === "PUT" ? await req.json().catch(() => ({})) : {};
-    const adminToken = body._admin_password || req.headers.get("X-Admin-Password") || authHeader.replace("Bearer ", "");
-    if (adminToken !== ADMIN_PASSWORD) {
+    if (!token) {
       return jsonResponse({ error: "Unauthorized" }, 401);
+    }
+    const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+    if (userErr || !userData?.user) {
+      return jsonResponse({ error: "Unauthorized" }, 401);
+    }
+    const { data: adminRow } = await supabase
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", userData.user.id)
+      .maybeSingle();
+    if (!adminRow) {
+      return jsonResponse({ error: "Forbidden" }, 403);
+    }
+
+    // GET /whoami — lets the admin pages check the session
+    if (req.method === "GET" && resource === "whoami") {
+      return jsonResponse({ ok: true, user_id: userData.user.id });
     }
 
     // GET /investors — list all investors for the dropdown

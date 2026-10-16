@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { ShieldCheck, Send, Briefcase } from 'lucide-react';
+import { ShieldCheck, Send, Briefcase, UserPlus, Megaphone } from 'lucide-react';
 import { adminGet, adminPost, checkAdminSession, signInAdmin } from '@/lib/adminApi';
 
 type InvestorRow = { id: string; email: string; investor_code: string; full_name: string };
@@ -25,6 +25,20 @@ export default function AdminPortalPage() {
   const [invAmount, setInvAmount] = useState('');
   const [invCurrency, setInvCurrency] = useState('USD');
   const [invReturn, setInvReturn] = useState('');
+
+  const emptyInvestor = {
+    email: '', investor_code: '', full_name: '', phone: '', membership_level: '',
+    father_name: '', mother_name: '', permanent_address: '', nid_pass: '', photo_url: '',
+    nominee_name: '', nominee_father_name: '', nominee_mother_name: '', nominee_pass: '',
+    nominee_address: '', nominee_phone: '', nominee_relation: '',
+  };
+  const [newInv, setNewInv] = useState<typeof emptyInvestor>(emptyInvestor);
+  const [createdPassword, setCreatedPassword] = useState<string | null>(null);
+
+  const [updProject, setUpdProject] = useState('');
+  const [updTitle, setUpdTitle] = useState('');
+  const [updBody, setUpdBody] = useState('');
+  const [updImage, setUpdImage] = useState('');
 
   useEffect(() => {
     if (!authed) return;
@@ -63,6 +77,43 @@ export default function AdminPortalPage() {
     if (result.status === 'ok') setAuthed(true);
     else if (result.status === 'not_admin') setLoginErr('This account does not have admin access.');
     else setLoginErr(result.message);
+  };
+
+  const invField = (key: keyof typeof emptyInvestor, label: string, required = false) => (
+    <div className="grid gap-1" key={key}>
+      <label className="text-sm opacity-80">{label}{required ? ' *' : ''}</label>
+      <input
+        className="input-luxury"
+        value={newInv[key]}
+        onChange={(e) => setNewInv({ ...newInv, [key]: e.target.value })}
+        required={required}
+      />
+    </div>
+  );
+
+  const submitNewInvestor = (e: FormEvent) => {
+    e.preventDefault();
+    setCreatedPassword(null);
+    run(async () => {
+      const res = await adminPost<{ password: string }>('investors', newInv);
+      setCreatedPassword(res.password);
+      setNewInv(emptyInvestor);
+      const list = await adminGet<{ investors: InvestorRow[] }>('investors');
+      setInvestors(list.investors ?? []);
+    }, 'ইনভেস্টর তৈরি হয়েছে। নিচের পাসওয়ার্ডটি কপি করে ইনভেস্টরকে দিন।');
+  };
+
+  const submitUpdate = (e: FormEvent) => {
+    e.preventDefault();
+    run(async () => {
+      await adminPost('project-updates', {
+        investor_project_id: updProject,
+        title: updTitle,
+        body: updBody,
+        image_url: updImage || null,
+      });
+      setUpdTitle(''); setUpdBody(''); setUpdImage('');
+    }, 'আপডেট পোস্ট হয়েছে। প্রজেক্টের সব ইনভেস্টর এটা দেখতে পাবে।');
   };
 
   const submitBroadcast = (e: FormEvent) => {
@@ -112,6 +163,59 @@ export default function AdminPortalPage() {
       {msg && (
         <p className="text-sm mb-4" style={{ color: msg.ok ? '#15803d' : '#c0392b' }}>{msg.text}</p>
       )}
+
+      <section className="neon-card p-6 mb-6">
+        <h3 className="flex items-center gap-2"><UserPlus size={16} /> নতুন ইনভেস্টর এন্ট্রি (শুধু অ্যাডমিনের জন্য)</h3>
+        <form onSubmit={submitNewInvestor} className="grid gap-3 mt-3">
+          <div className="grid grid-cols-2 gap-3">
+            {invField('full_name', 'ইনভেস্টরের নাম', true)}
+            {invField('investor_code', 'ইনভেস্টর কোড / সিরিয়াল (যেমন S33-01)', true)}
+            {invField('email', 'ইমেইল (লগইনের জন্য)', true)}
+            {invField('phone', 'অফিসিয়াল মোবাইল')}
+            {invField('father_name', 'বাবার নাম')}
+            {invField('mother_name', 'মায়ের নাম')}
+            {invField('permanent_address', 'স্থায়ী ঠিকানা')}
+            {invField('nid_pass', 'NID / PASS নম্বর')}
+            {invField('photo_url', 'ছবির লিংক')}
+            {invField('membership_level', 'সদস্যপদ (যেমন VIP Platinum)')}
+          </div>
+          <p className="text-sm opacity-80 mt-2">নমিনির তথ্য</p>
+          <div className="grid grid-cols-2 gap-3">
+            {invField('nominee_name', 'নমিনির নাম')}
+            {invField('nominee_relation', 'নমিনির সম্পর্ক')}
+            {invField('nominee_father_name', 'নমিনির বাবার নাম')}
+            {invField('nominee_mother_name', 'নমিনির মায়ের নাম')}
+            {invField('nominee_pass', 'নমিনির PASS নম্বর')}
+            {invField('nominee_phone', 'নমিনির মোবাইল')}
+            {invField('nominee_address', 'নমিনির ঠিকানা')}
+          </div>
+          <button type="submit" className="btn-gold">ইনভেস্টর সেভ করুন ও পাসওয়ার্ড বানান</button>
+        </form>
+        {createdPassword && (
+          <div className="mt-4 p-4 rounded border border-yellow-600">
+            <p className="text-sm">এই পাসওয়ার্ডটি আর দেখানো হবে না। কপি করে ইনভেস্টরকে দিন:</p>
+            <p className="text-lg font-mono mt-2 select-all">{createdPassword}</p>
+          </div>
+        )}
+      </section>
+
+      <section className="neon-card p-6 mb-6">
+        <h3 className="flex items-center gap-2"><Megaphone size={16} /> প্রজেক্টে নতুন আপডেট পোস্ট</h3>
+        <form onSubmit={submitUpdate} className="grid gap-3 mt-3">
+          <label className="text-sm opacity-80">১. কোন প্রজেক্টের আপডেট</label>
+          <select className="input-luxury" value={updProject} onChange={(e) => setUpdProject(e.target.value)} required>
+            <option value="">প্রজেক্ট বেছে নিন</option>
+            {projects.map((p) => <option key={p.id} value={p.id}>{label(p)}</option>)}
+          </select>
+          <label className="text-sm opacity-80">২. আপডেটের শিরোনাম</label>
+          <input className="input-luxury" placeholder="যেমন: নির্মাণ কাজ শুরু হয়েছে" value={updTitle} onChange={(e) => setUpdTitle(e.target.value)} required />
+          <label className="text-sm opacity-80">৩. বিস্তারিত</label>
+          <textarea className="input-luxury" rows={4} placeholder="আপডেটের বিবরণ লিখুন" value={updBody} onChange={(e) => setUpdBody(e.target.value)} />
+          <label className="text-sm opacity-80">৪. ছবির লিংক (ঐচ্ছিক)</label>
+          <input className="input-luxury" placeholder="https://..." value={updImage} onChange={(e) => setUpdImage(e.target.value)} />
+          <button type="submit" className="btn-gold">আপডেট পোস্ট করুন</button>
+        </form>
+      </section>
 
       <section className="neon-card p-6 mb-6">
         <h3 className="flex items-center gap-2"><Briefcase size={16} /> Add investment to a portal project</h3>

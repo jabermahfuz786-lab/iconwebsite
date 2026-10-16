@@ -7,6 +7,13 @@ const corsHeaders = {
 };
 
 
+// Readable random password (no 0/O, 1/l/I confusion).
+function makePassword(len: number): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+  const bytes = crypto.getRandomValues(new Uint8Array(len));
+  return Array.from(bytes, (b) => chars[b % chars.length]).join("");
+}
+
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -95,10 +102,18 @@ Deno.serve(async (req: Request) => {
 
     // POST /investors — create a new investor + auth user
     if (req.method === "POST" && resource === "investors") {
-      const { email, password, investor_code, full_name, phone, country, nominee_name, nominee_relation, nominee_phone, membership_level } = body;
-      if (!email || !password || !investor_code || !full_name) {
+      const {
+        email, investor_code, full_name, phone, country, membership_level,
+        father_name, mother_name, permanent_address, nid_pass, photo_url,
+        nominee_name, nominee_father_name, nominee_mother_name, nominee_pass,
+        nominee_address, nominee_phone, nominee_relation,
+      } = body;
+      if (!email || !investor_code || !full_name) {
         return jsonResponse({ error: "Missing required fields" }, 400);
       }
+
+      // Random password, generated here and shown to the admin once. Not the investor code.
+      const password = makePassword(12);
 
       // Create auth user
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
@@ -117,10 +132,19 @@ Deno.serve(async (req: Request) => {
           full_name,
           phone: phone || null,
           country: country || null,
-          nominee_name: nominee_name || null,
-          nominee_relation: nominee_relation || null,
-          nominee_phone: nominee_phone || null,
           membership_level: membership_level || null,
+          father_name: father_name || null,
+          mother_name: mother_name || null,
+          permanent_address: permanent_address || null,
+          nid_pass: nid_pass || null,
+          photo_url: photo_url || null,
+          nominee_name: nominee_name || null,
+          nominee_father_name: nominee_father_name || null,
+          nominee_mother_name: nominee_mother_name || null,
+          nominee_pass: nominee_pass || null,
+          nominee_address: nominee_address || null,
+          nominee_phone: nominee_phone || null,
+          nominee_relation: nominee_relation || null,
           is_active: true,
           user_id: authData.user.id,
         })
@@ -132,7 +156,38 @@ Deno.serve(async (req: Request) => {
         return jsonResponse({ error: invError.message }, 500);
       }
 
-      return jsonResponse({ investor: invData }, 201);
+      return jsonResponse({ investor: invData, password }, 201);
+    }
+
+    // POST /project-updates — post an update to one portal project; holders get a notice too
+    if (req.method === "POST" && resource === "project-updates") {
+      const { investor_project_id, title, body: text, image_url } = body;
+      if (!investor_project_id || !title) {
+        return jsonResponse({ error: "Missing investor_project_id or title" }, 400);
+      }
+
+      const { data: upd, error: updError } = await supabase
+        .from("investor_project_updates")
+        .insert({
+          project_id: investor_project_id,
+          title,
+          body: text || "",
+          image_url: image_url || null,
+        })
+        .select()
+        .single();
+      if (updError) return jsonResponse({ error: updError.message }, 500);
+
+      // Notice for all holders of this project (investor_id null = holders of investor_project_id)
+      const { error: noticeError } = await supabase.from("investor_notices").insert({
+        investor_id: null,
+        investor_project_id,
+        title: `নতুন আপডেট: ${title}`,
+        body: text || "",
+      });
+      if (noticeError) return jsonResponse({ update: upd, notice_error: noticeError.message }, 201);
+
+      return jsonResponse({ update: upd }, 201);
     }
 
     // POST /investments — create and assign an investment to an investor
@@ -152,6 +207,8 @@ Deno.serve(async (req: Request) => {
         status,
         investor_project_id,
         expected_return_pct,
+        share_quantity,
+        share_price,
       } = body;
 
       if (!investor_id || !project_name) {
@@ -184,6 +241,8 @@ Deno.serve(async (req: Request) => {
           status: status || "active",
           investor_project_id: investor_project_id || null,
           expected_return_pct: expected_return_pct ?? null,
+          share_quantity: share_quantity ?? null,
+          share_price: share_price ?? null,
         })
         .select()
         .single();

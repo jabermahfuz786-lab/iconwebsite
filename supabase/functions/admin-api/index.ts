@@ -103,7 +103,7 @@ Deno.serve(async (req: Request) => {
     // POST /investors — create a new investor + auth user
     if (req.method === "POST" && resource === "investors") {
       const {
-        email, investor_code, full_name, phone, country, membership_level,
+        email, investor_code, full_name, first_name, last_name, phone, country, membership_level,
         father_name, mother_name, permanent_address, nid_pass, photo_url,
         nominee_name, nominee_father_name, nominee_mother_name, nominee_pass,
         nominee_address, nominee_phone, nominee_relation,
@@ -130,6 +130,8 @@ Deno.serve(async (req: Request) => {
           email,
           investor_code,
           full_name,
+          first_name: first_name || null,
+          last_name: last_name || null,
           phone: phone || null,
           country: country || null,
           membership_level: membership_level || null,

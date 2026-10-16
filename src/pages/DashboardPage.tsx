@@ -13,6 +13,16 @@ import ProjectCard from '@/components/portal/ProjectCard';
 import ProjectDetailView from '@/components/portal/ProjectDetailView';
 import DividendTable from '@/components/portal/DividendTable';
 
+function DetailRow({ label, value, wide }: { label: string; value?: string | null; wide?: boolean }) {
+  const { t } = usePortalText();
+  return (
+    <div className="portal-detail" style={wide ? { gridColumn: '1 / -1' } : undefined}>
+      <span className="portal-small">{label}</span>
+      <div>{value || t('notProvided')}</div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { navigate } = useApp();
   const { t } = usePortalText();
@@ -117,6 +127,35 @@ export default function DashboardPage() {
             <ProjectCard key={p.id} project={p} onView={() => setViewId(p.id)} />
           ))}
         </div>
+      )}
+
+      {!viewId && investor && (
+        <section className="glass portal-section" style={{ marginTop: 16 }}>
+          <h3><UserCheck size={16} /> {t('myDetails')}</h3>
+          <p className="portal-small" style={{ marginBottom: 12 }}>{t('myDetailsNote')}</p>
+          {investor.photo_url && (
+            <img src={investor.photo_url} alt={t('passportPhoto')} style={{ width: 110, borderRadius: 8, marginBottom: 12 }} />
+          )}
+          <div className="portal-details">
+            <DetailRow label={t('fullName')} value={investor.full_name} />
+            <DetailRow label={t('firstName')} value={investor.first_name} />
+            <DetailRow label={t('lastName')} value={investor.last_name} />
+            <DetailRow label={t('fatherName')} value={investor.father_name} />
+            <DetailRow label={t('passportNo')} value={investor.nid_pass} />
+            <DetailRow label={t('address')} value={investor.permanent_address} wide />
+            <DetailRow label={t('investorId')} value={investor.investor_code} />
+            <DetailRow label={t('email')} value={investor.email} />
+            <DetailRow label={t('mobile')} value={investor.phone} />
+          </div>
+          <h3 style={{ marginTop: 16 }}>{t('nomineeTitle')}</h3>
+          <div className="portal-details">
+            <DetailRow label={t('fullName')} value={investor.nominee_name} />
+            <DetailRow label={t('nomineeFather')} value={investor.nominee_father_name} />
+            <DetailRow label={t('nomineePassport')} value={investor.nominee_pass} />
+            <DetailRow label={t('nomineeAddress')} value={investor.nominee_address} wide />
+            <DetailRow label={t('nomineePhone')} value={investor.nominee_phone} />
+          </div>
+        </section>
       )}
 
       {!viewId && (

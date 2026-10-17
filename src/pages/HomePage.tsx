@@ -142,13 +142,15 @@ function HeroBanner() {
           </div>
         ))}
         {/* Dark heavy overlay for luxury aesthetic */}
-        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.1) 0%, rgba(11,11,13,0.05) 50%, rgba(11,11,13,0.6) 100%)' }} />
-        {/* Brush edges: the picture melts into the page colour at the sides, top and bottom */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, #0B0B0D 0%, rgba(11,11,13,0) 14%, rgba(11,11,13,0) 86%, #0B0B0D 100%)' }} />
-        <div className="absolute inset-x-0 top-0 h-1/4 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 100%)' }} />
-        {/* Bottom brush: fades into the lit tone of the Achievements section below, so there is no seam */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(20,20,23,0) 0%, rgba(20,20,23,0.75) 55%, #17171A 100%)' }} />
+        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.05) 0%, rgba(11,11,13,0) 60%, rgba(11,11,13,0.3) 100%)' }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(255,214,10,0.06), transparent 70%)' }} />
+        {/* Brush edges: a soft melt into the page colour, only at the very edges so the picture stays full size */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
+        <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />
+        {/* Bottom brush: melts the picture into the page colour below it */}
+        <div className="absolute inset-x-0 bottom-0 h-[28%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, rgba(11,11,13,0.7) 60%, #0B0B0D 100%)' }} />
+        {/* Rising water droplets, same as the rest of the site */}
+        <ParticleLayer count={22} />
         {/* Light band that runs across the banner */}
         <div className="hero-sheen-track absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <div className="hero-sheen" />

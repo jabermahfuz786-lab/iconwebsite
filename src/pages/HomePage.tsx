@@ -119,6 +119,8 @@ function AchievementsSection() {
 const HERO_SLIDES = [
   { desktop: '/photos/hero-desktop.webp', mobile: '/photos/hero-mobile.webp' },
   { desktop: '/photos/hero-desktop-2.webp', mobile: '/photos/hero-mobile-2.webp' },
+  // Slide 3: one picture for both phones and desktop (the phone crop comes from the square box)
+  { desktop: '/photos/hero-desktop-3.webp', mobile: '/photos/hero-desktop-3.webp' },
 ];
 
 function HeroBanner() {
@@ -131,7 +133,7 @@ function HeroBanner() {
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
-      {/* Background pictures: slide 1 shows first, then slide 2 after 3 seconds, and so on. Phones get the mobile picture. */}
+      {/* Background pictures: slide 1 shows first, then slide 2 after 3 seconds, then slide 3, and so on. Phones get the mobile picture. */}
       <div className="absolute inset-0 z-0">
         {HERO_SLIDES.map((sl, i) => (
           <picture

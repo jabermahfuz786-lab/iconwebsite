@@ -9,6 +9,7 @@ import InvestorLoginPage from '@/pages/InvestorLoginPage';
 import DashboardPage from '@/pages/DashboardPage';
 import AdminPage from '@/pages/AdminPage';
 import ContentAdminPage from '@/pages/ContentAdminPage';
+import ContentPage from '@/pages/ContentPage';
 
 const PORTAL_ROUTES = ['/investor-login', '/dashboard'];
 
@@ -19,6 +20,7 @@ function Router() {
     if (route === '/' || route === '') return <HomePage />;
     if (route === '/investor-login') return <InvestorLoginPage />;
     if (route === '/dashboard') return <DashboardPage />;
+    if (route === '/content') return <ContentPage />;
     if (route === '/admin') return <AdminPage />;
     if (route === '/admin/content') return <ContentAdminPage />;
     if (route === '/admin/portal') return <AdminPortalPage />;

@@ -124,7 +124,7 @@ function HeroBanner() {
   };
 
   return (
-    <section className="hero-dark relative flex items-center justify-center overflow-hidden" style={{ minHeight: '50vh', maxHeight: '75vh' }}>
+    <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: '50vh', maxHeight: '75vh' }}>
       {/* Slideshow background */}
       <div className="absolute inset-0 z-0">
         {slides.map((s, i) => (

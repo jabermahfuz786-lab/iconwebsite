@@ -541,11 +541,20 @@ body::before { background: radial-gradient(circle at 30% 20%, rgba(212,175,55,.0
 .site-light .achievements-grid .achievement-card-inner { background: #0B2545 !important; }
 .site-light .achievements-grid .achievement-card-border::after { background: #0B2545 !important; }
 
-/* Section backgrounds that were pure black: give the off-white base back */
+/* Dark showcase sections become navy trust surfaces; their light text is restored */
 .site-light .achievements-section,
 .site-light .biz-city-section,
-.site-light .chairman-section { background: #F8F9FA !important; }
-.site-light .biz-city-heading { color: #0B2545 !important; text-shadow: none !important; }
+.site-light .chairman-section { background: #0B2545 !important; color: #F5F1E8; }
+.site-light .achievements-section .lux-body,
+.site-light .biz-city-section .lux-body,
+.site-light .chairman-section .lux-body { color: #F5F1E8 !important; }
+.site-light .achievements-section .sage,
+.site-light .biz-city-section .sage,
+.site-light .chairman-section .sage { color: #C9D2DC !important; }
+.site-light .achievements-section .turmeric-glow,
+.site-light .biz-city-section .turmeric-glow,
+.site-light .chairman-section .turmeric-glow { background: linear-gradient(180deg,#F2D675 0%,#D4AF37 55%,#A87825 100%) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+.site-light .biz-city-heading { color: #FFFFFF !important; text-shadow: 0 0 20px rgba(212,175,55,0.3) !important; }
 
 /* Gold is for CTAs: navy text on gold for legible contrast */
 .site-light .btn-gold { background: #D4AF37 !important; color: #0B2545 !important; box-shadow: 0 4px 16px rgba(212,175,55,.3) !important; }
@@ -553,3 +562,8 @@ body::before { background: radial-gradient(circle at 30% 20%, rgba(212,175,55,.0
 .site-light .btn-outline,
 .site-light .btn-outline-gold { color: #0B2545 !important; border-color: #0B2545 !important; background: transparent !important; }
 .site-light .site-header .btn-outline { color: #D4AF37 !important; border-color: rgba(212,175,55,.6) !important; background: rgba(212,175,55,.06) !important; }
+
+/* Hero keeps its dark photo background, so its text stays light */
+.site-light .hero-dark .lux-body,
+.site-light .hero-dark .sage { color: #F5F1E8 !important; }
+.site-light .hero-dark .turmeric-glow { background: linear-gradient(180deg,#F2D675 0%,#D4AF37 55%,#A87825 100%) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important; }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Globe, ChevronDown, Lock } from 'lucide-react';
+import { Globe, ChevronDown } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import type { Language } from '@/types';
 import { checkAdminSession } from '@/lib/adminApi';
@@ -105,9 +105,6 @@ export default function Header() {
                 {item.label}
               </button>
             ))}
-            <button onClick={() => navigate('/investor-login')} className="app-chip app-chip-gold">
-              <Lock className="w-3 h-3" /> VIP Access
-            </button>
           </nav>
 
           {/* Desktop: nav + VIP Access on the right */}
@@ -119,9 +116,6 @@ export default function Header() {
                 </button>
               ))}
             </nav>
-            <button onClick={() => navigate('/investor-login')} className="btn-outline text-xs inline-flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5" /> VIP Access
-            </button>
           </div>
         </div>
       </div>

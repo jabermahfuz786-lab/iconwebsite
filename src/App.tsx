@@ -35,7 +35,7 @@ function Router() {
   }
 
   return (
-    <div className="site-light min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">{renderPage()}</main>
       <Footer />

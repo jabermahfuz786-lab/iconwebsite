@@ -146,7 +146,8 @@ function HeroBanner() {
         {/* Brush edges: the picture melts into the page colour at the sides, top and bottom */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, #0B0B0D 0%, rgba(11,11,13,0) 14%, rgba(11,11,13,0) 86%, #0B0B0D 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-1/4 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 100%)' }} />
-        <div className="absolute inset-x-0 bottom-0 h-2/5 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, #0B0B0D 100%)' }} />
+        {/* Bottom brush: fades into the lit tone of the Achievements section below, so there is no seam */}
+        <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(20,20,23,0) 0%, rgba(20,20,23,0.75) 55%, #17171A 100%)' }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(255,214,10,0.06), transparent 70%)' }} />
         {/* Light band that runs across the banner */}
         <div className="hero-sheen-track absolute inset-0 z-0 pointer-events-none overflow-hidden">

@@ -30,13 +30,6 @@ const FIELDS: Field[] = [
   { key: 'photo_url', label: 'ছবির লিংক', wide: true },
 ];
 
-// Shows only the last 4 characters of a sensitive value.
-function maskValue(v: unknown): string {
-  const s = v == null ? '' : String(v);
-  if (!s) return '';
-  return s.length <= 4 ? '••••' : '•••• ' + s.slice(-4);
-}
-
 function readField(inv: Investor, key: string): string {
   const v = (inv as unknown as Record<string, unknown>)[key];
   return v == null ? '' : String(v);
@@ -59,7 +52,7 @@ export function InvestorEditModal({
 
   useEffect(() => {
     const init: Record<string, string> = {};
-    for (const f of FIELDS) init[f.key] = f.sensitive ? '' : readField(investor, f.key);
+    for (const f of FIELDS) init[f.key] = readField(investor, f.key);
     setValues(init);
     setActive(Boolean((investor as unknown as Record<string, unknown>).is_active));
   }, [investor]);
@@ -73,8 +66,6 @@ export function InvestorEditModal({
     const payload: Record<string, unknown> = { is_active: active, updated_at: new Date().toISOString() };
     for (const f of FIELDS) {
       const raw = (values[f.key] ?? '').trim();
-      // Sensitive fields: an empty box means "keep the current value".
-      if (f.sensitive && raw === '') continue;
       payload[f.key] = raw === '' ? null : raw;
     }
 
@@ -113,12 +104,8 @@ export function InvestorEditModal({
               <input
                 className="portal-input"
                 value={values[f.key] ?? ''}
-                placeholder={f.sensitive ? (maskValue(readField(investor, f.key)) || 'এখনো নেই') : ''}
                 onChange={(e) => setValues((prev) => ({ ...prev, [f.key]: e.target.value }))}
               />
-              {f.sensitive && (
-                <span className="portal-small">খালি রাখলে বর্তমান মান থাকবে।</span>
-              )}
             </label>
           ))}
         </div>

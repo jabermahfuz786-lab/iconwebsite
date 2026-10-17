@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
-import { CalendarPlus, FileText, UserCheck } from 'lucide-react';
+import { CalendarPlus, FileText, Pencil, UserCheck } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { supabase } from '@/lib/supabase';
+import { checkAdminSession } from '@/lib/adminApi';
+import { AdminInvestorsPanel, InvestorEditModal } from '@/components/portal/AdminInvestorEditor';
 import type { Investor, InvestmentDocument, InvestorMeeting } from '@/types';
 import {
   fetchOverview, fetchProjects, fetchDividends, fetchCatalog,
@@ -37,6 +39,14 @@ export default function DashboardPage() {
   const [documents, setDocuments] = useState<InvestmentDocument[]>([]);
   const [meetings, setMeetings] = useState<InvestorMeeting[]>([]);
   const [viewId, setViewId] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editingSelf, setEditingSelf] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    checkAdminSession().then((ok) => { if (alive) setIsAdmin(ok); });
+    return () => { alive = false; };
+  }, []);
 
   const [mDate, setMDate] = useState('');
   const [mTime, setMTime] = useState('');
@@ -108,6 +118,7 @@ export default function DashboardPage() {
         <button type="button" className="portal-btn-ghost" onClick={() => supabase.auth.signOut().then(() => navigate('/investor-login'))}>
           {t('logout')}
         </button>
+        {isAdmin && <AdminInvestorsPanel />}
       </div>
     );
   }
@@ -141,7 +152,14 @@ export default function DashboardPage() {
       {!viewId && (
         <>
           <section className="glass portal-section" style={{ marginTop: 22 }}>
-            <h3>{t('myDetails')}</h3>
+            <h3 className="portal-row" style={{ justifyContent: 'space-between' }}>
+              <span>{t('myDetails')}</span>
+              {isAdmin && investor && (
+                <button type="button" className="portal-btn-ghost" onClick={() => setEditingSelf(true)} aria-label="এডিট">
+                  <Pencil size={16} />
+                </button>
+              )}
+            </h3>
             <p className="portal-small" style={{ marginBottom: 12 }}>{t('myDetailsNote')}</p>
             <div className="portal-details-top">
               {investor?.photo_url && (
@@ -206,7 +224,17 @@ export default function DashboardPage() {
               </div>
             ))}
           </section>
+
+          {isAdmin && <AdminInvestorsPanel />}
         </>
+      )}
+
+      {editingSelf && investor && (
+        <InvestorEditModal
+          investor={investor}
+          onClose={() => setEditingSelf(false)}
+          onSaved={() => { loadAll(); }}
+        />
       )}
     </div>
   );

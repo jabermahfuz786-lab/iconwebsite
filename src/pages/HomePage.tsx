@@ -117,12 +117,8 @@ function AchievementsSection() {
 // HERO BANNER — compact max 75vh, reduced bg opacity
 // ============================================================
 function HeroBanner() {
-  const { t } = useApp();
   const slides = [
-    { url: '/photos/hero-makkah-window.webp', alt: 'Makkah skyline through a window at sunrise' },
-    { url: '/photos/hero-madinah-land.webp', alt: 'Illuminated land plot in Madinah at night' },
-    { url: '/photos/hero-office.webp', alt: 'ICON office and consultation desk' },
-    { url: '/photos/hero-cr-desk.webp', alt: 'Signing a business registration document' },
+    { url: '/photos/hero-main.webp', alt: 'ICON banner' },
   ];
   const [slide, setSlide] = useState(0);
 
@@ -130,10 +126,6 @@ function HeroBanner() {
     const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5000);
     return () => clearInterval(id);
   }, [slides.length]);
-
-  const scrollToBusinessCity = () => {
-    document.getElementById('dual-columns')?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: '50vh', maxHeight: '75vh' }}>
@@ -143,21 +135,18 @@ function HeroBanner() {
           <div
             key={i}
             className="absolute inset-0 transition-opacity duration-1000"
-            style={{ opacity: i === slide ? 0.6 : 0 }}
+            style={{ opacity: i === slide ? 1 : 0 }}
           >
             <img src={s.url} alt={s.alt} className="w-full h-full object-cover" />
           </div>
         ))}
         {/* Dark heavy overlay for luxury aesthetic */}
-        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.48) 0%, rgba(11,11,13,0.64) 52%, rgba(11,11,13,0.9) 100%)' }} />
+        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.1) 0%, rgba(11,11,13,0.05) 55%, rgba(11,11,13,0.55) 100%)' }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(255,214,10,0.06), transparent 70%)' }} />
-        {/* ICON light sweep effect — slow and subtle */}
-        <div className="absolute inset-0 z-0" style={{
-          background: 'linear-gradient(110deg, transparent 35%, rgba(255,214,10,0.03) 48%, rgba(243,229,171,0.05) 50%, rgba(255,214,10,0.03) 52%, transparent 65%)',
-          backgroundSize: '300% 100%',
-          animation: 'iconSweep 14s ease-in-out infinite',
-        }} />
-        <style>{`@keyframes iconSweep { 0%, 100% { background-position: 200% 0; } 50% { background-position: -100% 0; } }`}</style>
+        {/* Light band that runs across the banner */}
+        <div className="hero-sheen-track absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="hero-sheen" />
+        </div>
       </div>
 
       {/* Slide dots */}
@@ -175,42 +164,9 @@ function HeroBanner() {
         ))}
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 pt-24 pb-10 text-center">
-        {/* Title */}
-        <h1 className="lux-serif text-4xl md:text-6xl font-black mb-2 tracking-tight leading-none turmeric-glow" style={{ textShadow: '0 0 30px rgba(255,214,10,0.15), 0 0 60px rgba(255,214,10,0.08)' }}>
-          {t('heroTitle')}
-        </h1>
-        <p className="text-lg md:text-xl mb-4 font-bold" style={{ fontFamily: 'Hind Siliguri, sans-serif', color: '#FFD60A', textShadow: '0 0 16px rgba(255,214,10,0.10)' }}>
-          {t('heroTitleBn')}
-        </p>
-
-        {/* Country badge (below the title) */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(11,11,13,0.82)', border: '1px solid #FFD60A', boxShadow: '0 0 14px rgba(255,214,10,0.25)', backdropFilter: 'blur(12px)' }}>
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#FFD60A' }} />
-          <span className="text-xs font-semibold tracking-wider" style={{ color: '#FFD60A' }}>{t('heroBadge')}</span>
-        </div>
-
-        {/* Divider */}
-        <div className="section-divider mb-5" />
-
-        {/* Subtitle */}
-        <p className="lux-body text-sm md:text-base max-w-2xl mx-auto mb-6 leading-relaxed opacity-80 font-medium">
-          {t('heroSubtitle')}
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <button onClick={scrollToBusinessCity} className="btn-gold inline-flex items-center gap-2">
-            <Briefcase className="w-4 h-4" /> {t('heroCta1')}
-          </button>
-        </div>
-
-        {/* Scroll hint */}
-        <div className="mt-8 flex flex-col items-center gap-1" style={{ color: '#8A8275' }}>
-          <span className="text-[0.65rem] tracking-[0.2em] uppercase">Scroll</span>
-          <ChevronDown className="w-4 h-4 animate-bounce" />
-        </div>
+      {/* Banner text: only the word ICON */}
+      <div className="relative z-10 text-center px-4">
+        <h1 className="lux-serif text-6xl md:text-8xl font-black tracking-[0.12em] turmeric-glow">ICON</h1>
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import {
-  ChevronDown, ChevronRight,
+  ChevronDown, ChevronRight, Lock,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
   DollarSign, Briefcase, Globe, Star, Award, Crown, Youtube,
   PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical, Sprout, Landmark,
@@ -12,6 +12,18 @@ import {
   SavingsContent, InvestmentContent,
 } from '@/components/BusinessSections';
 import { ArabAgroContent, PendingContent } from '@/components/AgroProjects';
+import { InvestorLoginForm } from '@/pages/InvestorLoginPage';
+
+// The investor login form, placed inside the Investment Sector box (its own portal colours, no full-page height)
+function InvestorLoginEmbed() {
+  return (
+    <div className="portal-theme" style={{ minHeight: 0, background: 'transparent' }}>
+      <div style={{ maxWidth: 400, margin: '0 auto' }}>
+        <InvestorLoginForm />
+      </div>
+    </div>
+  );
+}
 
 
 
@@ -253,8 +265,9 @@ const BUSINESS_CITY_TREE: BizNode[] = [
   },
   {
     key: 'invest', icon: TrendingUp, label: 'Investment Sector', labelBn: 'ইনভেস্টমেন্ট সেক্টর', img: '/card-investor-sector.webp',
-    render: () => <InvestmentContent />,
     children: [
+      { key: 'inv-login', icon: Lock, label: 'Investor Login', labelBn: 'ইনভেস্টর লগ ইন', img: '/card-investor-sector.webp', render: () => <InvestorLoginEmbed /> },
+      { key: 'inv-opps', icon: Briefcase, label: 'Investment Opportunities', labelBn: 'ইনভেস্টমেন্ট সুযোগসমূহ', img: '/card-investor-sector.webp', render: () => <InvestmentContent /> },
       { key: 'inv-savings', icon: PiggyBank, label: 'Expat Savings Fund', labelBn: 'প্রবাসী সেভিংস ফান্ড', img: '/card-savings-fund.webp', render: () => <SavingsContent /> },
       { key: 'inv-umrah', icon: Plane, label: 'Umrah B2B', labelBn: 'ওমরাহ B2B', img: '/card-umrah-b2b.webp', render: () => <UmrahContent /> },
     ],
@@ -307,7 +320,7 @@ function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode;
   );
 }
 
-// Thin full-width bar that replaces a sector's big tile once it is open.
+// Full-width bar. Closed: it opens its folder. Open: it sits on top and closes it.
 function BizBar({ node, lang, open, onClick }: { node: BizNode; lang: string; open: boolean; onClick: () => void }) {
   return (
     <button onClick={onClick} className="relative w-full overflow-hidden rounded-xl text-left" style={{ border: '1px solid rgba(255,214,10,0.6)', boxShadow: '0 0 14px rgba(255,214,10,0.2)' }}>
@@ -327,65 +340,57 @@ function BizBar({ node, lang, open, onClick }: { node: BizNode; lang: string; op
 }
 
 type BizOpenMap = Record<string, boolean>;
+type BizSetOpen = (node: BizNode, value: boolean) => void;
 
 const SECTOR_BOX_STYLE = { background: 'linear-gradient(160deg, rgba(255,214,10,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(11,11,13,0.9) 100%)', border: '1px dashed rgba(255,214,10,0.5)' };
 const DETAIL_STYLE = { maxHeight: '70vh', background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' };
 
-// Each sector is one full-width block stacked under the previous one.
-// Open: the sector becomes a thin bar, and its folders sit below it in the same box.
-// Sub-folders open in place inside that box; nothing from another sector moves.
-function BizBranch({ node, lang, depth, openMap, setOpen }: { node: BizNode; lang: string; depth: number; openMap: BizOpenMap; setOpen: (key: string, value: boolean) => void }) {
-  const isOpen = !!openMap[node.key];
+// An open folder: its bar on top, then one of three things:
+// - its open sub-folder (bar + that sub-folder's content; the other sub-folders are hidden),
+// - its sub-folder tiles (2 per row), or
+// - its details (inside this box, so nothing below it shows through).
+function BizExpanded({ node, lang, openMap, setOpen }: { node: BizNode; lang: string; openMap: BizOpenMap; setOpen: BizSetOpen }) {
   const kids = node.children ?? [];
-  const hasKids = kids.length > 0;
-  const toggle = () => setOpen(node.key, !isOpen);
-
-  if (depth === 0) {
-    if (!isOpen) return <BizTile node={node} size="big" lang={lang} onClick={toggle} />;
-    return (
-      <div className="animate-fade-in rounded-2xl p-2 md:p-2.5 flex flex-col gap-2 min-w-0" style={SECTOR_BOX_STYLE}>
-        <BizBar node={node} lang={lang} open onClick={toggle} />
-        {hasKids && (
-          <div className="grid grid-cols-2 gap-2">
-            {kids.map((child) => (
-              <BizBranch key={child.key} node={child} lang={lang} depth={depth + 1} openMap={openMap} setOpen={setOpen} />
-            ))}
-          </div>
-        )}
-        {!hasKids && node.render && (
-          /* Details stay inside the sector box, so chairman and footer never show inside it */
-          <div className="animate-fade-in rounded-2xl p-3 md:p-4 overflow-y-auto" style={DETAIL_STYLE}>
-            {node.render()}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Sub-folder: a small tile in the sector's grid; when open it spans both columns
+  const activeKid = kids.find((k) => openMap[k.key]);
   return (
-    <div className={`flex flex-col gap-2 min-w-0 ${isOpen ? 'col-span-2' : ''}`}>
-      <BizTile node={node} size="small" lang={lang} onClick={toggle} />
-      {isOpen && node.render && !hasKids && (
+    <>
+      <BizBar node={node} lang={lang} open onClick={() => setOpen(node, false)} />
+      {activeKid && <BizExpanded node={activeKid} lang={lang} openMap={openMap} setOpen={setOpen} />}
+      {!activeKid && kids.length > 0 && (
+        <div className="grid grid-cols-2 gap-2">
+          {kids.map((child) => (
+            <BizTile key={child.key} node={child} size="small" lang={lang} onClick={() => setOpen(child, true)} />
+          ))}
+        </div>
+      )}
+      {!activeKid && kids.length === 0 && node.render && (
         <div className="animate-fade-in rounded-2xl p-3 md:p-4 overflow-y-auto" style={DETAIL_STYLE}>
           {node.render()}
         </div>
       )}
-      {isOpen && hasKids && (
-        <div className="animate-fade-in flex flex-col gap-2">
-          {kids.map((child) => (
-            <BizBranch key={child.key} node={child} lang={lang} depth={depth + 1} openMap={openMap} setOpen={setOpen} />
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
+}
+
+// All folder keys under a node, so closing a folder also closes anything open inside it.
+function descendantKeys(node: BizNode): string[] {
+  return (node.children ?? []).flatMap((c) => [c.key, ...descendantKeys(c)]);
 }
 
 function BusinessCityPanel() {
   const { t, lang } = useApp();
   const [openMap, setOpenMap] = useState<BizOpenMap>({});
-  const setOpen = (key: string, value: boolean) => setOpenMap((m) => ({ ...m, [key]: value }));
+  const setOpen: BizSetOpen = (node, value) =>
+    setOpenMap((m) => {
+      const next = { ...m, [node.key]: value };
+      if (!value) for (const k of descendantKeys(node)) next[k] = false;
+      return next;
+    });
+
+  // Nothing open: the four sectors sit side by side in their usual 2×2 places.
+  // Something open: each sector is a full-width row in the same fixed order.
+  // An open sector shows its bar and folders in one box; a closed one shows a thin bar.
+  const anyOpen = BUSINESS_CITY_TREE.some((n) => openMap[n.key]);
 
   return (
     <div className="biz-panel">
@@ -404,12 +409,25 @@ function BusinessCityPanel() {
             </div>
           </div>
 
-          {/* One sector per row, stacked vertically: opening one never moves the others */}
-          <div className="flex flex-col gap-3 md:gap-4">
-            {BUSINESS_CITY_TREE.map((node) => (
-              <BizBranch key={node.key} node={node} lang={lang} depth={0} openMap={openMap} setOpen={setOpen} />
-            ))}
-          </div>
+          {anyOpen ? (
+            <div className="flex flex-col gap-3 md:gap-4">
+              {BUSINESS_CITY_TREE.map((node) =>
+                openMap[node.key] ? (
+                  <div key={node.key} className="animate-fade-in rounded-2xl p-2 md:p-2.5 flex flex-col gap-2 min-w-0" style={SECTOR_BOX_STYLE}>
+                    <BizExpanded node={node} lang={lang} openMap={openMap} setOpen={setOpen} />
+                  </div>
+                ) : (
+                  <BizBar key={node.key} node={node} lang={lang} open={false} onClick={() => setOpen(node, true)} />
+                ),
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2.5 md:gap-3">
+              {BUSINESS_CITY_TREE.map((node) => (
+                <BizTile key={node.key} node={node} size="big" lang={lang} onClick={() => setOpen(node, true)} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

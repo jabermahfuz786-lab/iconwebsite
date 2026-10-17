@@ -54,13 +54,13 @@ export default function Header() {
         borderBottom: scrolled ? '1px solid rgba(255,214,10,0.35)' : 'none',
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Left: Language Switcher */}
-          <div ref={langRef} className="relative z-10 flex-1">
+      <div className="max-w-7xl mx-auto px-3 lg:px-8">
+        <div className="flex items-center gap-2 lg:justify-between">
+          {/* Language Switcher (left, same line on phones) */}
+          <div ref={langRef} className="relative z-10 shrink-0 lg:flex-1">
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1.5 transition-colors text-sm sage hover:text-turmeric"
+              className="flex items-center gap-1 transition-colors text-sm sage hover:text-turmeric"
             >
               <Globe className="w-4 h-4" />
               <span className="font-medium hidden sm:inline">{languages.find((l) => l.code === lang)?.label || 'EN'}</span>
@@ -81,32 +81,32 @@ export default function Header() {
             )}
           </div>
 
-          {/* Right: Desktop Nav + VIP Access (desktop only; phones use the row below) */}
-          <div className="flex-1 flex items-center justify-end gap-5">
-            <nav className="hidden lg:flex items-center gap-6">
+          {/* Phones: all menu buttons on this same line, small, scroll sideways only if they do not fit */}
+          <nav className="app-chip-row lg:hidden flex-1 min-w-0">
+            {navItems.map((item) => (
+              <button key={item.path} onClick={() => navigate(item.path)} className={`app-chip ${isActive(item.path) ? 'active' : ''}`}>
+                {item.label}
+              </button>
+            ))}
+            <button onClick={() => navigate('/investor-login')} className="app-chip app-chip-gold">
+              <Lock className="w-3 h-3" /> VIP Access
+            </button>
+          </nav>
+
+          {/* Desktop: nav + VIP Access on the right */}
+          <div className="hidden lg:flex flex-1 items-center justify-end gap-5">
+            <nav className="flex items-center gap-6">
               {navItems.map((item) => (
                 <button key={item.path} onClick={() => navigate(item.path)} className={`nav-link ${isActive(item.path) ? 'active' : ''}`}>
                   {item.label}
                 </button>
               ))}
             </nav>
-            <button onClick={() => navigate('/investor-login')} className="hidden lg:inline-flex btn-outline text-xs items-center gap-1.5">
+            <button onClick={() => navigate('/investor-login')} className="btn-outline text-xs inline-flex items-center gap-1.5">
               <Lock className="w-3.5 h-3.5" /> VIP Access
             </button>
           </div>
         </div>
-
-        {/* Phones: app-style row of menu buttons, always visible, swipe sideways if needed */}
-        <nav className="app-chip-row lg:hidden">
-          {navItems.map((item) => (
-            <button key={item.path} onClick={() => navigate(item.path)} className={`app-chip ${isActive(item.path) ? 'active' : ''}`}>
-              {item.label}
-            </button>
-          ))}
-          <button onClick={() => navigate('/investor-login')} className="app-chip app-chip-gold">
-            <Lock className="w-3.5 h-3.5" /> VIP Access
-          </button>
-        </nav>
       </div>
     </header>
   );

@@ -116,6 +116,16 @@ function AchievementsSection() {
 // ============================================================
 // HERO BANNER — compact max 75vh, reduced bg opacity
 // ============================================================
+// One hero picture: the portrait version on phones, the wide version on desktop
+function HeroPicture({ src }: { src: { desktop: string; mobile: string } }) {
+  return (
+    <picture className="absolute inset-0 block w-full h-full">
+      <source media="(max-width: 767px)" srcSet={src.mobile} />
+      <img src={src.desktop} alt="ICON" className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
+    </picture>
+  );
+}
+
 const HERO_SLIDES = [
   { desktop: '/photos/hero-desktop.webp', mobile: '/photos/hero-mobile.webp' },
   { desktop: '/photos/hero-desktop-2.webp', mobile: '/photos/hero-mobile-2.webp' },
@@ -125,27 +135,37 @@ const HERO_SLIDES = [
 ];
 
 function HeroBanner() {
+  const count = HERO_SLIDES.length;
   const [slide, setSlide] = useState(0);
+  const [ticks, setTicks] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setSlide((n) => (n + 1) % HERO_SLIDES.length), 3000);
+    // Every 3 seconds the next picture is wiped in by the light band (1.6s), then waits for the next change
+    const id = setInterval(() => {
+      setSlide((n) => (n + 1) % count);
+      setTicks((t) => t + 1);
+    }, 3000);
     return () => clearInterval(id);
-  }, []);
+  }, [count]);
+  const previous = (slide - 1 + count) % count;
 
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
-      {/* Background pictures: slide 1 shows first, then slide 2 after 3 seconds, then slide 3, then slide 4, and so on. Phones get the mobile picture. */}
+      {/* Background pictures. The previous picture stays underneath; the new one is wiped in by the light band. */}
       <div className="absolute inset-0 z-0">
-        {HERO_SLIDES.map((sl, i) => (
-          <picture
-            key={i}
-            className="absolute inset-0 block w-full h-full transition-opacity duration-1000"
-            style={{ opacity: i === slide ? 1 : 0 }}
-          >
-            <source media="(max-width: 767px)" srcSet={sl.mobile} />
-            <img src={sl.desktop} alt="ICON" className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
-          </picture>
-        ))}
+        <HeroPicture src={HERO_SLIDES[previous]} />
+        <div
+          key={`top-${slide}`}
+          className="hero-wipe-layer"
+          style={ticks > 0 ? { animation: 'heroWipe 1.6s cubic-bezier(.45,0,.2,1) both' } : undefined}
+        >
+          <HeroPicture src={HERO_SLIDES[slide]} />
+        </div>
+        <div
+          key={`band-${slide}`}
+          className="hero-band"
+          style={ticks > 0 ? { animation: 'heroBand 1.6s cubic-bezier(.45,0,.2,1) both' } : { display: 'none' }}
+        />
         {/* Brush edges: a soft melt into the page colour, only at the very edges so the picture stays full size */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />
@@ -153,10 +173,6 @@ function HeroBanner() {
         <div className="hero-bottom-brush" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '38%', pointerEvents: 'none', background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, rgba(11,11,13,0.8) 50%, #0B0B0D 100%)' }} />
         {/* Rising water droplets, same as the rest of the site */}
         <ParticleLayer count={22} />
-        {/* Light band that runs across the banner */}
-        <div className="hero-sheen-track absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="hero-sheen" />
-        </div>
       </div>
 
       {/* Banner text: only the word ICON, small, top-left under the language switch */}

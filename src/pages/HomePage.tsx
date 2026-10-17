@@ -124,14 +124,14 @@ const HERO_SLIDES = [
 function HeroBanner() {
   const [slide, setSlide] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setSlide((n) => (n + 1) % HERO_SLIDES.length), 5000);
+    const id = setInterval(() => setSlide((n) => (n + 1) % HERO_SLIDES.length), 3000);
     return () => clearInterval(id);
   }, []);
 
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
-      {/* Background pictures: slide 1 shows first, then slide 2 after 5 seconds, and so on. Phones get the mobile picture. */}
+      {/* Background pictures: slide 1 shows first, then slide 2 after 3 seconds, and so on. Phones get the mobile picture. */}
       <div className="absolute inset-0 z-0">
         {HERO_SLIDES.map((sl, i) => (
           <picture

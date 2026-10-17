@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import {
-  ChevronDown, ChevronRight, ArrowLeft,
+  ChevronDown, ChevronRight,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
   DollarSign, Briefcase, Globe, Star, Award, Crown, Youtube,
   PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical, Sprout, Landmark,
@@ -307,54 +307,75 @@ function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode;
   );
 }
 
-function BizHeader({ node, lang, onBack, open, onToggle }: { node: BizNode; lang: string; onBack: () => void; open?: boolean; onToggle?: () => void }) {
+// Thin full-width bar that replaces a sector's big tile once it is open.
+function BizBar({ node, lang, open, onClick }: { node: BizNode; lang: string; open: boolean; onClick: () => void }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(255,214,10,0.6)', boxShadow: '0 0 18px rgba(255,214,10,0.2)' }}>
+    <button onClick={onClick} className="relative w-full overflow-hidden rounded-xl text-left" style={{ border: '1px solid rgba(255,214,10,0.6)', boxShadow: '0 0 14px rgba(255,214,10,0.2)' }}>
       {node.img && <img src={node.img} alt="" className="absolute inset-0 w-full h-full object-cover" />}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.97) 0%, rgba(11,11,13,0.85) 60%, rgba(11,11,13,0.65) 100%)' }} />
-      <div className="relative z-10 flex items-center gap-3 p-3 md:p-4">
-        <button onClick={onBack} aria-label="Back" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
-          <ArrowLeft className="w-4 h-4" style={{ color: '#FFD60A' }} />
-        </button>
-        <button onClick={onBack} className="flex-1 min-w-0 text-left">
-          <p className="text-white font-bold text-base md:text-xl leading-tight truncate">{bizName(node, lang)}</p>
-        </button>
-        {onToggle && (
-          <button onClick={onToggle} aria-label="Toggle" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
-            <ChevronDown className={`w-4 h-4 transition-transform ${open ? '' : '-rotate-90'}`} style={{ color: '#FFD60A' }} />
-          </button>
-        )}
+      <div className="relative z-10 flex items-center gap-3 px-3 py-2.5 md:px-4">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #FFD60A' }}>
+          <node.icon className="w-3.5 h-3.5" style={{ color: '#FFD60A' }} />
+        </div>
+        <p className="flex-1 min-w-0 text-white font-bold text-base md:text-lg leading-tight truncate">{bizName(node, lang)}</p>
+        <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #FFD60A' }}>
+          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? '' : '-rotate-90'}`} style={{ color: '#FFD60A' }} />
+        </div>
       </div>
-    </div>
+    </button>
   );
 }
 
-const BACK_LABEL: Record<string, string> = { en: 'Back', bn: 'পেছনে', ar: 'رجوع' };
-
 type BizOpenMap = Record<string, boolean>;
 
-// One folder: its tile opens in place. Its sub-folders and details appear
-// directly below it, inside its own column. Other folders stay where they are.
+const SECTOR_BOX_STYLE = { background: 'linear-gradient(160deg, rgba(255,214,10,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(11,11,13,0.9) 100%)', border: '1px dashed rgba(255,214,10,0.5)' };
+const DETAIL_STYLE = { maxHeight: '70vh', background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' };
+
+// Each sector is one full-width block stacked under the previous one.
+// Open: the sector becomes a thin bar, and its folders sit below it in the same box.
+// Sub-folders open in place inside that box; nothing from another sector moves.
 function BizBranch({ node, lang, depth, openMap, setOpen }: { node: BizNode; lang: string; depth: number; openMap: BizOpenMap; setOpen: (key: string, value: boolean) => void }) {
   const isOpen = !!openMap[node.key];
   const kids = node.children ?? [];
   const hasKids = kids.length > 0;
-  return (
-    <div className="flex flex-col gap-2 min-w-0">
-      <BizTile node={node} size={depth === 0 ? 'big' : 'small'} lang={lang} onClick={() => setOpen(node.key, !isOpen)} />
-      {isOpen && node.render && !hasKids && (
-        /* Details stay inside their own box, so nothing below (chairman, footer) shows through */
-        <div className="animate-fade-in rounded-2xl p-3 md:p-4 overflow-y-auto" style={{ maxHeight: '70vh', background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(255,214,10,0.3)' }}>
-          {node.render()}
-        </div>
-      )}
-      {isOpen && hasKids && (
-        <div className="animate-fade-in rounded-2xl p-2 md:p-2.5" style={{ background: 'linear-gradient(160deg, rgba(255,214,10,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(11,11,13,0.9) 100%)', border: '1px dashed rgba(255,214,10,0.5)' }}>
-          <div className={depth === 0 ? 'grid grid-cols-2 gap-2' : 'flex flex-col gap-2'}>
+  const toggle = () => setOpen(node.key, !isOpen);
+
+  if (depth === 0) {
+    if (!isOpen) return <BizTile node={node} size="big" lang={lang} onClick={toggle} />;
+    return (
+      <div className="animate-fade-in rounded-2xl p-2 md:p-2.5 flex flex-col gap-2 min-w-0" style={SECTOR_BOX_STYLE}>
+        <BizBar node={node} lang={lang} open onClick={toggle} />
+        {hasKids && (
+          <div className="grid grid-cols-2 gap-2">
             {kids.map((child) => (
               <BizBranch key={child.key} node={child} lang={lang} depth={depth + 1} openMap={openMap} setOpen={setOpen} />
             ))}
           </div>
+        )}
+        {!hasKids && node.render && (
+          /* Details stay inside the sector box, so chairman and footer never show inside it */
+          <div className="animate-fade-in rounded-2xl p-3 md:p-4 overflow-y-auto" style={DETAIL_STYLE}>
+            {node.render()}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Sub-folder: a small tile in the sector's grid; when open it spans both columns
+  return (
+    <div className={`flex flex-col gap-2 min-w-0 ${isOpen ? 'col-span-2' : ''}`}>
+      <BizTile node={node} size="small" lang={lang} onClick={toggle} />
+      {isOpen && node.render && !hasKids && (
+        <div className="animate-fade-in rounded-2xl p-3 md:p-4 overflow-y-auto" style={DETAIL_STYLE}>
+          {node.render()}
+        </div>
+      )}
+      {isOpen && hasKids && (
+        <div className="animate-fade-in flex flex-col gap-2">
+          {kids.map((child) => (
+            <BizBranch key={child.key} node={child} lang={lang} depth={depth + 1} openMap={openMap} setOpen={setOpen} />
+          ))}
         </div>
       )}
     </div>
@@ -383,8 +404,8 @@ function BusinessCityPanel() {
             </div>
           </div>
 
-          {/* items-start: opening one sector never moves the others */}
-          <div className="grid grid-cols-2 gap-2.5 md:gap-3 items-start">
+          {/* One sector per row, stacked vertically: opening one never moves the others */}
+          <div className="flex flex-col gap-3 md:gap-4">
             {BUSINESS_CITY_TREE.map((node) => (
               <BizBranch key={node.key} node={node} lang={lang} depth={0} openMap={openMap} setOpen={setOpen} />
             ))}

@@ -86,7 +86,7 @@ function AchievementsSection() {
             <div key={i} className="beam-small ach-float achievement-card-border" style={{ animationDelay: `${i * 0.3}s` }}>
               <div className="beam-small-inner achievement-card-inner p-2.5 text-center relative overflow-hidden">
                 <div className="relative z-10">
-                  <div className="achievement-icon w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: 'rgba(15,44,42,0.85)', border: '1px solid rgba(212,175,55,0.35)' }}>
+                  <div className="achievement-icon w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: 'rgba(21,59,59,0.85)', border: '1px solid rgba(212,175,55,0.35)' }}>
                     <a.icon className="w-4 h-4" style={{ color: '#D4AF37' }} />
                   </div>
                   <p className="turmeric-glow text-base font-extrabold mb-0.5 leading-none">{a.value}</p>
@@ -137,7 +137,7 @@ function HeroBanner() {
           </div>
         ))}
         {/* Dark heavy overlay for luxury aesthetic */}
-        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.48) 0%, rgba(11,11,13,0.64) 52%, rgba(11,11,13,0.9) 100%)' }} />
+        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(14,43,43,0.48) 0%, rgba(14,43,43,0.64) 52%, rgba(14,43,43,0.9) 100%)' }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(212,175,55,0.06), transparent 70%)' }} />
         {/* ICON light sweep effect — slow and subtle */}
         <div className="absolute inset-0 z-0" style={{
@@ -174,7 +174,7 @@ function HeroBanner() {
         </p>
 
         {/* Country badge (below the title) */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(11,11,13,0.82)', border: '1px solid #D4AF37', boxShadow: '0 0 14px rgba(212,175,55,0.25)', backdropFilter: 'blur(12px)' }}>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5 animate-fade-in" style={{ background: 'rgba(14,43,43,0.82)', border: '1px solid #D4AF37', boxShadow: '0 0 14px rgba(212,175,55,0.25)', backdropFilter: 'blur(12px)' }}>
           <Sparkles className="w-3.5 h-3.5" style={{ color: '#D4AF37' }} />
           <span className="text-xs font-semibold tracking-wider" style={{ color: '#D4AF37' }}>{t('heroBadge')}</span>
         </div>
@@ -277,12 +277,12 @@ function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode;
         {node.img ? (
           <img src={node.img} alt="" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0B0B0D 60%,#2A2410 100%)' }} />
+          <div className="w-full h-full" style={{ background: 'linear-gradient(135deg,#17171B 0%,#0E2B2B 60%,#2A2410 100%)' }} />
         )}
       </div>
-      <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(11,11,13,0.85) 45%, rgba(11,11,13,0.98) 100%)' }} />
+      <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(14,43,43,0.85) 45%, rgba(14,43,43,0.98) 100%)' }} />
       <div className="relative z-10 p-2 md:p-2.5 flex flex-col items-center text-center" style={{ paddingTop: '0.6rem' }}>
-        <div className={`${iconBox} rounded-xl flex items-center justify-center mb-1`} style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #D4AF37', boxShadow: '0 0 12px rgba(212,175,55,0.3)' }}>
+        <div className={`${iconBox} rounded-xl flex items-center justify-center mb-1`} style={{ background: 'rgba(14,43,43,0.9)', border: '1.5px solid #D4AF37', boxShadow: '0 0 12px rgba(212,175,55,0.3)' }}>
           <node.icon className={size === 'small' ? 'w-3.5 h-3.5' : 'w-4 h-4'} style={{ color: '#D4AF37' }} />
         </div>
         <p className="text-white font-bold leading-tight" style={{ fontSize: titleSize, fontWeight: 700 }}>
@@ -291,7 +291,7 @@ function BizTile({ node, size, active = false, lang, onClick }: { node: BizNode;
         {onClick && (
           <div
             className={`w-6 h-6 rounded-full flex items-center justify-center mt-1.5 transition-transform ${active ? 'rotate-90' : ''}`}
-            style={{ background: 'rgba(11,11,13,0.8)', border: '1.5px solid #D4AF37' }}
+            style={{ background: 'rgba(14,43,43,0.8)', border: '1.5px solid #D4AF37' }}
           >
             <ChevronRight className="w-3 h-3" style={{ color: '#D4AF37' }} />
           </div>
@@ -311,16 +311,16 @@ function BizHeader({ node, lang, onBack, open, onToggle }: { node: BizNode; lang
   return (
     <div className="relative overflow-hidden rounded-2xl" style={{ border: '1px solid rgba(212,175,55,0.6)', boxShadow: '0 0 18px rgba(212,175,55,0.2)' }}>
       {node.img && <img src={node.img} alt="" className="absolute inset-0 w-full h-full object-cover" />}
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.97) 0%, rgba(11,11,13,0.85) 60%, rgba(11,11,13,0.65) 100%)' }} />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(14,43,43,0.97) 0%, rgba(14,43,43,0.85) 60%, rgba(14,43,43,0.65) 100%)' }} />
       <div className="relative z-10 flex items-center gap-3 p-3 md:p-4">
-        <button onClick={onBack} aria-label="Back" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #D4AF37' }}>
+        <button onClick={onBack} aria-label="Back" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(14,43,43,0.9)', border: '1.5px solid #D4AF37' }}>
           <ArrowLeft className="w-4 h-4" style={{ color: '#D4AF37' }} />
         </button>
         <button onClick={onBack} className="flex-1 min-w-0 text-left">
           <p className="text-white font-bold text-base md:text-xl leading-tight truncate">{bizName(node, lang)}</p>
         </button>
         {onToggle && (
-          <button onClick={onToggle} aria-label="Toggle" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(11,11,13,0.9)', border: '1.5px solid #D4AF37' }}>
+          <button onClick={onToggle} aria-label="Toggle" className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(14,43,43,0.9)', border: '1.5px solid #D4AF37' }}>
             <ChevronDown className={`w-4 h-4 transition-transform ${open ? '' : '-rotate-90'}`} style={{ color: '#D4AF37' }} />
           </button>
         )}
@@ -376,7 +376,7 @@ function BusinessCityPanel() {
         <div className="absolute inset-0 z-0 opacity-[0.06]">
           <img src="/business-city-bg.webp" alt="" className="w-full h-full object-cover" style={{ filter: 'sepia(0.4) brightness(1.1)' }} />
         </div>
-        <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(17,17,20,0.4) 0%, transparent 30%, transparent 70%, rgba(17,17,20,0.5) 100%)' }} />
+        <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(21,59,59,0.4) 0%, transparent 30%, transparent 70%, rgba(21,59,59,0.5) 100%)' }} />
         <div className="relative z-10">
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-3">
@@ -399,7 +399,7 @@ function BusinessCityPanel() {
             /* Only this item is shown: its heading and its details */
             <div className="flex flex-col gap-3">
               <BizHeader node={leaf} lang={lang} onBack={() => setLeafKey(null)} />
-              <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(212,175,55,0.3)' }}>
+              <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(14,43,43,0.9)', border: '1px solid rgba(212,175,55,0.3)' }}>
                 {leaf.render ? leaf.render() : null}
               </div>
             </div>
@@ -416,7 +416,7 @@ function BusinessCityPanel() {
               />
 
               {header.render && (
-                <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(11,11,13,0.9)', border: '1px solid rgba(212,175,55,0.3)' }}>
+                <div className="animate-fade-in rounded-2xl p-3 md:p-4" style={{ background: 'rgba(14,43,43,0.9)', border: '1px solid rgba(212,175,55,0.3)' }}>
                   {header.render()}
                 </div>
               )}
@@ -424,7 +424,7 @@ function BusinessCityPanel() {
               {listOpen && childList.length > 0 && (
                 <div
                   className="rounded-2xl p-2.5 md:p-3"
-                  style={{ background: 'linear-gradient(160deg, rgba(212,175,55,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(11,11,13,0.9) 100%)', border: '1px dashed rgba(212,175,55,0.5)' }}
+                  style={{ background: 'linear-gradient(160deg, rgba(212,175,55,0.14) 0%, rgba(40,34,12,0.7) 55%, rgba(14,43,43,0.9) 100%)', border: '1px dashed rgba(212,175,55,0.5)' }}
                 >
                   <div className="grid grid-cols-2 gap-2">
                     {childList.map((child) => (
@@ -474,7 +474,7 @@ function ChairmanProfile() {
         <div className="beam-panel">
           <div className="beam-panel-inner chairman-panel relative overflow-hidden">
             {/* Background overlay — stays behind all content */}
-            <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0, background: 'linear-gradient(180deg, rgba(17,17,20,0.3) 0%, transparent 30%, transparent 70%, rgba(17,17,20,0.4) 100%)' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0, background: 'linear-gradient(180deg, rgba(21,59,59,0.3) 0%, transparent 30%, transparent 70%, rgba(21,59,59,0.4) 100%)' }} />
 
             {/* All content sits above background at z-10 */}
             <div className="chairman-content relative" style={{ zIndex: 10, position: 'relative', display: 'block', clear: 'both' }}>
@@ -516,7 +516,7 @@ function ChairmanProfile() {
                 {holdings.map((h, i) => (
                   <div key={i} className="beam-small min-w-0">
                     <div className="beam-small-inner chairman-icon-btn p-2 md:p-4 text-center">
-                      <div className="chairman-icon w-7 h-7 md:w-10 md:h-10 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: 'rgba(13,48,38,0.9)', border: '1px solid rgba(212,175,55,0.45)' }}>
+                      <div className="chairman-icon w-7 h-7 md:w-10 md:h-10 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ background: 'rgba(21,59,59,0.9)', border: '1px solid rgba(212,175,55,0.45)' }}>
                         <Award className="w-3.5 h-3.5 md:w-5 md:h-5" style={{ color: '#D4AF37' }} />
                       </div>
                       <h4 className="lux-body text-[0.6rem] md:text-sm font-semibold leading-tight">{h.name}</h4>

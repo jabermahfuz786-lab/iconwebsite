@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Lock, Building, Users, Plus, Pencil, Trash2, X, Save, Eye, EyeOff, AlertCircle, UserPlus, Link2, DollarSign } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { supabase } from '@/lib/supabase';
+import WebsiteEditor from '@/components/portal/WebsiteEditor';
 import { adminRequest, adminGet as adminGetApi, checkAdminSession, signInAdmin } from '@/lib/adminApi';
 import type { Project, Investor, Investment, ProjectCategory, PropertyType, ConstructionStatus, PaymentType, EngagementType, Currency, StatusBadge } from '@/types';
 
-type Tab = 'projects' | 'investors' | 'investments';
+type Tab = 'projects' | 'investors' | 'investments' | 'website';
 
 
 async function adminFetch(resource: string, options: RequestInit = {}) {
@@ -155,7 +156,15 @@ export default function AdminPage() {
           >
             <Link2 className="w-4 h-4" /> Assign Investments
           </button>
+          <button
+            onClick={() => setTab('website')}
+            className={`tab-btn flex items-center gap-2 ${tab === 'website' ? 'active' : ''}`}
+          >
+            <Building className="w-4 h-4" /> ওয়েবসাইট এডিটর
+          </button>
         </div>
+
+        {tab === 'website' && <WebsiteEditor />}
 
         {tab === 'projects' && (
           <div>

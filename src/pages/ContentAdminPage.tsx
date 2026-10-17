@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2, X, Save, AlertCircle, Search, ImageIcon } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { checkAdminSession } from '@/lib/adminApi';
+import { useApp } from '@/context/AppContext';
 
 interface ContentItem {
   id: string;
@@ -31,6 +33,20 @@ export default function ContentAdminPage() {
   const [form, setForm] = useState<FormData>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [adminChecked, setAdminChecked] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { navigate } = useApp();
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const ok = await checkAdminSession();
+      if (!alive) return;
+      setIsAdmin(ok);
+      setAdminChecked(true);
+    })();
+    return () => { alive = false; };
+  }, []);
 
   const loadItems = useCallback(async () => {
     setLoading(true);
@@ -133,6 +149,21 @@ export default function ContentAdminPage() {
     if (price == null) return '—';
     return `$${price.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
   };
+
+  if (!adminChecked) {
+    return <div className="pt-24 pb-20 max-w-5xl mx-auto px-4"><div className="ca-card h-48 skeleton" /></div>;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="pt-24 pb-20 animate-fade-in">
+        <div className="max-w-md mx-auto px-4 text-center">
+          <p className="mb-4" style={{ color: '#FFD60A' }}>এই পেজ শুধু অনুমোদিত অ্যাডমিনদের জন্য।</p>
+          <button onClick={() => navigate('/admin')} className="ca-btn-primary text-sm">অ্যাডমিন লগইনে যান</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-24 pb-20 animate-fade-in">

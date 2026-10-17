@@ -129,7 +129,7 @@ function HeroBanner() {
 
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
-    <section className="relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
+    <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
       {/* Slideshow background */}
       <div className="absolute inset-0 z-0">
         {slides.map((s, i) => (
@@ -148,7 +148,7 @@ function HeroBanner() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />
         {/* Bottom brush: melts the picture into the page colour below it */}
-        <div className="absolute inset-x-0 bottom-0 h-[28%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, rgba(11,11,13,0.7) 60%, #0B0B0D 100%)' }} />
+        <div className="hero-bottom-brush absolute inset-x-0 bottom-0 h-[28%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, rgba(11,11,13,0.7) 60%, #0B0B0D 100%)' }} />
         {/* Rising water droplets, same as the rest of the site */}
         <ParticleLayer count={22} />
         {/* Light band that runs across the banner */}

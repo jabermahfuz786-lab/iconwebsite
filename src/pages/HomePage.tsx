@@ -168,7 +168,7 @@ function HeroBanner() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />
         {/* Bottom brush: melts the picture fully into the page colour (inline, so it always applies) */}
-        <div className="hero-bottom-brush" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '38%', pointerEvents: 'none', background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, rgba(11,11,13,0.8) 50%, #0B0B0D 100%)' }} />
+        <div className="hero-bottom-brush" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '28%', pointerEvents: 'none', background: 'linear-gradient(180deg, rgba(11,11,13,0) 0%, rgba(11,11,13,0.8) 50%, #0B0B0D 100%)' }} />
         {/* Rising water droplets, same as the rest of the site */}
         <ParticleLayer count={22} />
       </div>

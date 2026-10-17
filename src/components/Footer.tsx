@@ -33,7 +33,7 @@ export default function Footer() {
               {[
                 { label: t('home'), path: '/' },
                 { label: t('investorLogin'), path: '/investor-login' },
-                { label: t('admin'), path: '/admin' },
+                { label: 'Content', path: '/content' },
               ].map((link) => (
                 <li key={link.path}>
                   <button

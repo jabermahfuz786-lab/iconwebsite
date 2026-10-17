@@ -2,17 +2,35 @@ import { useState, useEffect, useRef } from 'react';
 import { Globe, ChevronDown, Lock } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import type { Language } from '@/types';
+import { checkAdminSession } from '@/lib/adminApi';
+import { supabase } from '@/lib/supabase';
 
 export default function Header() {
   const { t, lang, setLang, route, navigate } = useApp();
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Admin buttons appear only for a signed-in account listed in admin_users.
+  useEffect(() => {
+    let alive = true;
+    const refresh = async () => {
+      const ok = await checkAdminSession();
+      if (alive) setIsAdmin(ok);
+    };
+    refresh();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => { refresh(); });
+    return () => {
+      alive = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => { setLangOpen(false); }, [route]);
@@ -28,8 +46,12 @@ export default function Header() {
   const navItems = [
     { label: t('home'), path: '/' },
     { label: t('investorLogin'), path: '/investor-login' },
-    { label: t('admin'), path: '/admin' },
-    { label: 'Content', path: '/admin/content' },
+    ...(isAdmin
+      ? [
+          { label: t('admin'), path: '/admin' },
+          { label: 'Content', path: '/admin/content' },
+        ]
+      : []),
   ];
 
   const languages: { code: Language; label: string }[] = [

@@ -530,3 +530,18 @@ body::before { background: radial-gradient(circle at 30% 20%, rgba(255,214,10,.0
   .hero-banner-section picture img { object-position: center top !important; }
   .hero-bottom-brush { height: 14% !important; }
 }
+
+/* Hero: the light band wipes the next picture in as it crosses (both use the same timing) */
+.hero-wipe-layer { position: absolute; inset: 0; clip-path: inset(0 0 0 0); }
+.hero-band {
+  position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%;
+  background: linear-gradient(90deg, rgba(255,236,170,0) 0%, rgba(255,236,170,0.18) 70%, rgba(255,240,190,0.55) 100%);
+  filter: blur(4px); pointer-events: none;
+  transform: translateX(-100%);
+}
+@keyframes heroWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0% 0 0); } }
+@keyframes heroBand { from { transform: translateX(-100%); } to { transform: translateX(233.333%); } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-wipe-layer { animation: none !important; clip-path: none !important; }
+  .hero-band { display: none !important; }
+}

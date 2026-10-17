@@ -137,35 +137,37 @@ const HERO_SLIDES = [
 function HeroBanner() {
   const count = HERO_SLIDES.length;
   const [slide, setSlide] = useState(0);
-  const [ticks, setTicks] = useState(0);
   useEffect(() => {
-    // Every 3 seconds the next picture is wiped in by the light band (1.6s), then waits for the next change
-    const id = setInterval(() => {
-      setSlide((n) => (n + 1) % count);
-      setTicks((t) => t + 1);
-    }, 3000);
+    // One timer, every 3 seconds the next picture fades in
+    const id = setInterval(() => setSlide((n) => (n + 1) % count), 3000);
     return () => clearInterval(id);
+  }, [count]);
+
+  return () => clearInterval(id);
   }, [count]);
   const previous = (slide - 1 + count) % count;
 
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
-      {/* Background pictures. The previous picture stays underneath; the new one is wiped in by the light band. */}
+      {/* Background pictures: all stay mounted; only the opacity changes, so nothing re-appears or flickers */}
       <div className="absolute inset-0 z-0">
-        <HeroPicture src={HERO_SLIDES[previous]} />
-        <div
-          key={`top-${slide}`}
-          className="hero-wipe-layer"
-          style={ticks > 0 ? { animation: 'heroWipe 1.6s cubic-bezier(.45,0,.2,1) both' } : undefined}
-        >
-          <HeroPicture src={HERO_SLIDES[slide]} />
-        </div>
-        <div
-          key={`band-${slide}`}
-          className="hero-band"
-          style={ticks > 0 ? { animation: 'heroBand 1.6s cubic-bezier(.45,0,.2,1) both' } : { display: 'none' }}
-        />
+        {HERO_SLIDES.map((sl, i) => (
+          <div
+            key={i}
+            className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
+            style={{ opacity: i === slide ? 1 : 0 }}
+          >
+            <div
+              className="absolute inset-0 transition-transform duration-[3000ms] ease-out"
+              style={{ transform: i === slide ? 'scale(1)' : 'scale(1.06)' }}
+            >
+              <HeroPicture src={sl} />
+            </div>
+          </div>
+        ))}
+        {/* Light band that sweeps across every 3 seconds */}
+        <div className="hero-band" />
         {/* Brush edges: a soft melt into the page colour, only at the very edges so the picture stays full size */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />

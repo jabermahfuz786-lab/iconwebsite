@@ -13,6 +13,7 @@ import {
 } from '@/components/BusinessSections';
 import { ArabAgroContent, PendingContent } from '@/components/AgroProjects';
 import { InvestorLoginForm } from '@/pages/InvestorLoginPage';
+import { useSiteContent } from '@/lib/siteContent';
 
 // The investor login form, placed inside the Investment Sector box (its own portal colours, no full-page height)
 function InvestorLoginEmbed() {
@@ -137,6 +138,12 @@ const HERO_SLIDES = [
 function HeroBanner() {
   const count = HERO_SLIDES.length;
   const [slide, setSlide] = useState(0);
+  // Pictures set in the website editor win; otherwise the built-in pictures are used.
+  const site = useSiteContent();
+  const heroSlides = HERO_SLIDES.map((sl, i) => ({
+    desktop: site[`hero_desktop_${i + 1}`] || sl.desktop,
+    mobile: site[`hero_mobile_${i + 1}`] || sl.mobile,
+  }));
   useEffect(() => {
     // One timer, every 3 seconds the next picture fades in
     const id = setInterval(() => setSlide((n) => (n + 1) % count), 3000);
@@ -148,7 +155,7 @@ function HeroBanner() {
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
       {/* Background pictures: all stay mounted; only the opacity changes, so nothing re-appears or flickers */}
       <div className="absolute inset-0 z-0">
-        {HERO_SLIDES.map((sl, i) => (
+        {heroSlides.map((sl, i) => (
           <div
             key={i}
             className="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"

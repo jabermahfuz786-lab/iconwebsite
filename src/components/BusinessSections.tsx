@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Building2, Home, FileText, Plane, Code2, Shield,
   DollarSign, Briefcase, Globe, PiggyBank, TrendingUp, Hotel, Store, Wheat, FlaskConical,
-  CheckCircle2, MapPin, Zap, Lock, Handshake, Activity, Clock, XCircle,
+  CheckCircle2, MapPin, Zap, Handshake, Activity, Clock, XCircle,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { whatsappLink } from '@/lib/supabase';
@@ -436,7 +436,7 @@ interface ProjectItem {
 }
 
 export function InvestmentContent() {
-  const { t, navigate } = useApp();
+  const { t } = useApp();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalType, setModalType] = useState('');
@@ -499,20 +499,6 @@ export function InvestmentContent() {
 
   return (
     <div className="animate-fade-in space-y-4">
-      {/* Investor Login Portal — prominent at top */}
-      <div className="beam-small">
-        <div className="beam-small-inner p-5 text-center">
-          <div className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(250,247,241,0.6)', border: '1px solid rgba(255,214,10,0.25)' }}>
-            <Lock className="w-6 h-6" style={{ color: GOLD }} />
-          </div>
-          <h4 className="text-base font-bold mb-1 lux-serif" style={{ color: GOLD }}>Investor Login</h4>
-          <p className="sage text-xs mb-3">Access your secure investor portal to track allocations, payments & agreements</p>
-          <button onClick={() => navigate('/investor-login')} className="btn-dark inline-flex items-center gap-2">
-            <Lock className="w-4 h-4" /> {t('signIn')}
-          </button>
-        </div>
-      </div>
-
       {/* Running / Active Opportunities */}
       <div>
         <div className="flex items-center gap-2 mb-2">

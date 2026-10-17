@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import {
   ChevronDown, ChevronRight, Lock,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
@@ -116,16 +116,33 @@ function AchievementsSection() {
 // ============================================================
 // HERO BANNER — compact max 75vh, reduced bg opacity
 // ============================================================
+const HERO_SLIDES = [
+  { desktop: '/photos/hero-desktop.webp', mobile: '/photos/hero-mobile.webp' },
+  { desktop: '/photos/hero-desktop-2.webp', mobile: '/photos/hero-mobile-2.webp' },
+];
+
 function HeroBanner() {
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setSlide((n) => (n + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
-      {/* Background picture: portrait version on phones, wide version on desktop. Shown at once on entry. */}
+      {/* Background pictures: slide 1 shows first, then slide 2 after 5 seconds, and so on. Phones get the mobile picture. */}
       <div className="absolute inset-0 z-0">
-        <picture className="block w-full h-full">
-          <source media="(max-width: 767px)" srcSet="/photos/hero-mobile.webp" />
-          <img src="/photos/hero-desktop.webp" alt="ICON" className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
-        </picture>
+        {HERO_SLIDES.map((sl, i) => (
+          <picture
+            key={i}
+            className="absolute inset-0 block w-full h-full transition-opacity duration-1000"
+            style={{ opacity: i === slide ? 1 : 0 }}
+          >
+            <source media="(max-width: 767px)" srcSet={sl.mobile} />
+            <img src={sl.desktop} alt="ICON" className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
+          </picture>
+        ))}
         {/* Brush edges: a soft melt into the page colour, only at the very edges so the picture stays full size */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />

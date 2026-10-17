@@ -49,7 +49,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        className={`site-header fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled ? 'py-2' : 'py-3'
         }`}
         style={{

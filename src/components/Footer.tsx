@@ -11,7 +11,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-8 relative z-10" style={{ background: '#0B0B0D', borderTop: '1px solid rgba(212,175,55,0.4)', boxShadow: '0 -1px 12px rgba(212,175,55,0.08)' }}>
+    <footer className="site-footer mt-8 relative z-10" style={{ background: '#0B2545',borderTop: '1px solid rgba(212,175,55,0.4)', boxShadow: '0 -1px 12px rgba(212,175,55,0.08)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>

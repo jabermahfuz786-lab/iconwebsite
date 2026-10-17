@@ -128,7 +128,8 @@ function HeroBanner() {
   }, [slides.length]);
 
   return (
-    <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: '50vh', maxHeight: '75vh' }}>
+    // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
+    <section className="relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
       {/* Slideshow background */}
       <div className="absolute inset-0 z-0">
         {slides.map((s, i) => (
@@ -137,7 +138,7 @@ function HeroBanner() {
             className="absolute inset-0 transition-opacity duration-1000"
             style={{ opacity: i === slide ? 1 : 0 }}
           >
-            <img src={s.url} alt={s.alt} className="w-full h-full object-cover" />
+            <img src={s.url} alt={s.alt} className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
           </div>
         ))}
         {/* Dark heavy overlay for luxury aesthetic */}

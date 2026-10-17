@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   ChevronDown, ChevronRight, Lock,
   Building2, Home, FileText, Plane, Code2, Shield, MapPin, Sparkles,
@@ -117,33 +117,15 @@ function AchievementsSection() {
 // HERO BANNER — compact max 75vh, reduced bg opacity
 // ============================================================
 function HeroBanner() {
-  const slides = [
-    { url: '/photos/hero-main.webp', alt: 'ICON banner' },
-  ];
-  const [slide, setSlide] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5000);
-    return () => clearInterval(id);
-  }, [slides.length]);
-
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
-      {/* Slideshow background */}
+      {/* Background picture: portrait version on phones, wide version on desktop. Shown at once on entry. */}
       <div className="absolute inset-0 z-0">
-        {slides.map((s, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 transition-opacity duration-1000"
-            style={{ opacity: i === slide ? 1 : 0 }}
-          >
-            <img src={s.url} alt={s.alt} className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
-          </div>
-        ))}
-        {/* Dark heavy overlay for luxury aesthetic */}
-        <div className="hero-banner-overlay absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.05) 0%, rgba(11,11,13,0) 60%, rgba(11,11,13,0.3) 100%)' }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle 1200px at 50% 30%, rgba(255,214,10,0.06), transparent 70%)' }} />
+        <picture className="block w-full h-full">
+          <source media="(max-width: 767px)" srcSet="/photos/hero-mobile.webp" />
+          <img src="/photos/hero-desktop.webp" alt="ICON" className="w-full h-full object-cover" style={{ objectPosition: 'center 40%' }} />
+        </picture>
         {/* Brush edges: a soft melt into the page colour, only at the very edges so the picture stays full size */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 7%, rgba(11,11,13,0) 93%, rgba(11,11,13,0.85) 100%)' }} />
         <div className="absolute inset-x-0 top-0 h-[12%] pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(11,11,13,0.6) 0%, rgba(11,11,13,0) 100%)' }} />
@@ -155,21 +137,6 @@ function HeroBanner() {
         <div className="hero-sheen-track absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <div className="hero-sheen" />
         </div>
-      </div>
-
-      {/* Slide dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setSlide(i)}
-            className="h-1.5 rounded-full transition-all"
-            style={{
-              width: i === slide ? 28 : 8,
-              background: i === slide ? '#FFD60A' : 'rgba(42,37,32,0.25)',
-            }}
-          />
-        ))}
       </div>
 
       {/* Banner text: only the word ICON, small, top-left under the language switch */}

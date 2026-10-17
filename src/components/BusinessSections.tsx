@@ -8,7 +8,7 @@ import { useApp } from '@/context/AppContext';
 import { whatsappLink } from '@/lib/supabase';
 import { InquiryModal } from '@/components/InquiryModal';
 
-const GOLD = '#FFD60A';
+const GOLD = '#D4AF37';
 
 // ============================================================
 // REAL ESTATE — Zones, Pricing, Founding Partners, CTA at bottom
@@ -59,7 +59,7 @@ export function RealEstateContent() {
           </div>
           <div className="space-y-1.5">
             {makkahProjects.map((p, i) => (
-              <div key={i} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: 'rgba(255,214,10,0.04)' }}>
+              <div key={i} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: 'rgba(212,175,55,0.04)' }}>
                 <Building2 className="w-3 h-3 shrink-0" style={{ color: GOLD }} />
                 <p className="lux-body text-xs opacity-70">{p}</p>
               </div>
@@ -76,7 +76,7 @@ export function RealEstateContent() {
           </div>
           <div className="space-y-1.5">
             {madinahProjects.map((p, i) => (
-              <div key={i} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: 'rgba(255,214,10,0.04)' }}>
+              <div key={i} className="flex items-center gap-2 p-1.5 rounded-lg" style={{ background: 'rgba(212,175,55,0.04)' }}>
                 <Home className="w-3 h-3 shrink-0" style={{ color: GOLD }} />
                 <p className="lux-body text-xs opacity-70">{p}</p>
               </div>
@@ -138,7 +138,7 @@ export function RealEstateContent() {
             <button key={i} onClick={() => openFpModal(fp.name)} className="text-left beam-small hover:scale-[1.01] transition-transform">
               <div className="beam-small-inner p-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(255,214,10,0.06)', border: '1px solid rgba(255,214,10,0.15)' }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
                     <fp.icon className="w-4 h-4" style={{ color: GOLD }} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -183,7 +183,7 @@ export function RealEstateContent() {
           { key: 'phone', label: t('yourPhone'), type: 'tel', required: true },
         ]}
       >
-        <div className="space-y-2 p-3 rounded-lg" style={{ background: 'rgba(255,214,10,0.04)' }}>
+        <div className="space-y-2 p-3 rounded-lg" style={{ background: 'rgba(212,175,55,0.04)' }}>
           {fpFeatures.map((f, i) => (
             <div key={i} className="flex items-start gap-2">
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: GOLD }} />
@@ -242,18 +242,18 @@ export function LicenseContent() {
       <div className="beam-small"><div className="beam-small-inner p-4">
         <h4 className="text-sm font-bold mb-3" style={{ color: GOLD }}>{t('licFeeStructure')}</h4>
         <div className="space-y-2.5">
-          <div className="flex items-start gap-2 p-2 rounded-lg" style={{ background: 'rgba(255,214,10,0.06)' }}>
+          <div className="flex items-start gap-2 p-2 rounded-lg" style={{ background: 'rgba(212,175,55,0.06)' }}>
             <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" style={{ color: GOLD }} />
             <p className="lux-body text-xs leading-relaxed opacity-80">{t('licGovFee')}</p>
           </div>
-          <div className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'rgba(255,214,10,0.04)' }}>
+          <div className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'rgba(212,175,55,0.04)' }}>
             <div>
               <p className="lux-body text-xs font-semibold">{t('licServiceFee')}</p>
               <p className="sage text-[0.6rem]">{t('licNoHidden')}</p>
             </div>
             <p className="text-sm font-bold" style={{ color: GOLD }}>6,500 SAR</p>
           </div>
-          <div className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'rgba(255,214,10,0.04)' }}>
+          <div className="flex items-center justify-between p-2 rounded-lg" style={{ background: 'rgba(212,175,55,0.04)' }}>
             <div>
               <p className="lux-body text-xs font-semibold">{t('licTradingFee')}</p>
               <p className="sage text-[0.6rem]">{t('licNoHidden')}</p>
@@ -304,7 +304,7 @@ export function UmrahContent() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
         {services.map((s, i) => (
           <div key={i} className="beam-small"><div className="beam-small-inner p-4 flex flex-col items-center gap-2 text-center">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,214,10,0.06)', border: '1px solid rgba(255,214,10,0.15)' }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
               <s.icon className="w-5 h-5" style={{ color: GOLD }} />
             </div>
             <p className="lux-body text-xs font-medium">{s.label}</p>
@@ -351,7 +351,7 @@ export function ITContent() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {services.map((s, i) => (
           <div key={i} className="beam-small"><div className="beam-small-inner p-3 flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(255,214,10,0.06)', border: '1px solid rgba(255,214,10,0.15)' }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
               <s.icon className="w-4 h-4" style={{ color: GOLD }} />
             </div>
             <p className="lux-body text-xs font-medium">{s.label}</p>
@@ -481,7 +481,7 @@ export function InvestmentContent() {
     <button key={p.type} onClick={() => openInquiry(p.name, p.type)} className="text-left beam-small hover:scale-[1.01] transition-transform">
       <div className="beam-small-inner p-3">
         <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(255,214,10,0.06)', border: '1px solid rgba(255,214,10,0.15)' }}>
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
             <p.icon className="w-4 h-4" style={{ color: GOLD }} />
           </div>
           <div className="flex-1 min-w-0">
@@ -502,7 +502,7 @@ export function InvestmentContent() {
       {/* Investor Login Portal — prominent at top */}
       <div className="beam-small">
         <div className="beam-small-inner p-5 text-center">
-          <div className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(250,247,241,0.6)', border: '1px solid rgba(255,214,10,0.25)' }}>
+          <div className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(250,247,241,0.6)', border: '1px solid rgba(212,175,55,0.25)' }}>
             <Lock className="w-6 h-6" style={{ color: GOLD }} />
           </div>
           <h4 className="text-base font-bold mb-1 lux-serif" style={{ color: GOLD }}>Investor Login</h4>

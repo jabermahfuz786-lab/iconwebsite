@@ -11,16 +11,16 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-8 relative z-10" style={{ background: '#0B0B0D', borderTop: '1px solid rgba(255,214,10,0.4)', boxShadow: '0 -1px 12px rgba(255,214,10,0.08)' }}>
+    <footer className="mt-8 relative z-10" style={{ background: '#0B0B0D', borderTop: '1px solid rgba(212,175,55,0.4)', boxShadow: '0 -1px 12px rgba(212,175,55,0.08)' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,214,10,0.1)', border: '1px solid rgba(255,214,10,0.35)' }}>
-                <Sparkles className="w-4 h-4" style={{ color: '#FFD60A' }} />
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.35)' }}>
+                <Sparkles className="w-4 h-4" style={{ color: '#D4AF37' }} />
               </div>
               <div>
-                <div className="font-sans text-lg font-extrabold tracking-tight" style={{ color: '#FFD60A' }}>{t('brandName')}</div>
+                <div className="font-sans text-lg font-extrabold tracking-tight" style={{ color: '#D4AF37' }}>{t('brandName')}</div>
                 <div className="text-[0.55rem] tracking-[0.15em] uppercase" style={{ color: 'rgba(255,255,255,0.5)' }}>{t('brandTagline')}</div>
               </div>
             </div>
@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold mb-3" style={{ color: '#FFD60A' }}>Links</h4>
+            <h4 className="text-sm font-semibold mb-3" style={{ color: '#D4AF37' }}>Links</h4>
             <ul className="space-y-2">
               {[
                 { label: t('home'), path: '/' },
@@ -40,7 +40,7 @@ export default function Footer() {
                     onClick={() => navigate(link.path)}
                     className="text-sm transition-colors"
                     style={{ color: 'rgba(255,255,255,0.7)' }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = '#FFD60A'}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#D4AF37'}
                     onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
                   >
                     {link.label}
@@ -51,11 +51,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold mb-3" style={{ color: '#FFD60A' }}>Offices</h4>
+            <h4 className="text-sm font-semibold mb-3" style={{ color: '#D4AF37' }}>Offices</h4>
             <div className="space-y-3">
               {offices.map((office) => (
                 <div key={office.name} className="text-xs">
-                  <p className="font-medium" style={{ color: '#FFD60A' }}>{office.name}</p>
+                  <p className="font-medium" style={{ color: '#D4AF37' }}>{office.name}</p>
                   <div className="flex items-start gap-1.5 mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
                     <span>{office.address}</span>
@@ -70,7 +70,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-5 text-center" style={{ borderTop: '1px solid rgba(255,214,10,0.15)' }}>
+        <div className="mt-8 pt-5 text-center" style={{ borderTop: '1px solid rgba(212,175,55,0.15)' }}>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>© {new Date().getFullYear()} {t('brandName')}. {t('allRightsReserved')}.</p>
         </div>
       </div>

@@ -140,7 +140,7 @@ export default function ContentAdminPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: '#FFD60A' }}>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: '#D4AF37' }}>
               Content Manager
             </h1>
             <p className="text-sm mt-1" style={{ color: 'rgba(42,37,32,0.45)' }}>
@@ -167,7 +167,7 @@ export default function ContentAdminPage() {
 
         {/* Search */}
         <div className="ca-search-wrap mb-6">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,214,10,0.5)' }} />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(212,175,55,0.5)' }} />
           <input
             type="text"
             value={search}
@@ -182,7 +182,7 @@ export default function ContentAdminPage() {
           <div className="ca-card h-48 skeleton" />
         ) : filtered.length === 0 ? (
           <div className="ca-card p-10 text-center">
-            <ImageIcon className="w-12 h-12 mx-auto mb-3" style={{ color: 'rgba(255,214,10,0.3)' }} />
+            <ImageIcon className="w-12 h-12 mx-auto mb-3" style={{ color: 'rgba(212,175,55,0.3)' }} />
             <p style={{ color: 'rgba(42,37,32,0.4)' }}>
               {search ? 'No items match your search.' : 'No items yet. Click "Add Item" to create one.'}
             </p>
@@ -196,7 +196,7 @@ export default function ContentAdminPage() {
                   {item.image_url ? (
                     <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
                   ) : (
-                    <ImageIcon className="w-10 h-10" style={{ color: 'rgba(255,214,10,0.2)' }} />
+                    <ImageIcon className="w-10 h-10" style={{ color: 'rgba(212,175,55,0.2)' }} />
                   )}
                 </div>
 
@@ -243,10 +243,10 @@ export default function ContentAdminPage() {
 
       {/* Add/Edit Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in" style={{ background: 'rgba(255,214,10, 0.85)', backdropFilter: 'blur(4px)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in" style={{ background: 'rgba(212,175,55, 0.85)', backdropFilter: 'blur(4px)' }}>
           <div className="ca-modal w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold" style={{ color: '#FFD60A' }}>
+              <h2 className="text-xl font-bold" style={{ color: '#D4AF37' }}>
                 {editingId ? 'Edit Item' : 'Add New Item'}
               </h2>
               <button onClick={closeForm} className="ca-close-btn">

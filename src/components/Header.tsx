@@ -46,12 +46,7 @@ export default function Header() {
   const navItems = [
     { label: t('home'), path: '/' },
     { label: t('investorLogin'), path: '/investor-login' },
-    ...(isAdmin
-      ? [
-          { label: t('admin'), path: '/admin' },
-          { label: 'Content', path: '/admin/content' },
-        ]
-      : []),
+    ...(isAdmin ? [{ label: t('admin'), path: '/admin' }] : []),
   ];
 
   const languages: { code: Language; label: string }[] = [

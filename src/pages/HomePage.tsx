@@ -165,9 +165,9 @@ function HeroBanner() {
         ))}
       </div>
 
-      {/* Banner text: only the word ICON */}
-      <div className="relative z-10 text-center px-4">
-        <h1 className="lux-serif text-6xl md:text-8xl font-black tracking-[0.12em] turmeric-glow">ICON</h1>
+      {/* Banner text: only the word ICON, small, top-left under the language switch */}
+      <div className="absolute z-10 top-3 left-4 lg:left-8">
+        <h1 className="lux-serif text-2xl md:text-3xl font-black tracking-[0.12em] turmeric-glow">ICON</h1>
       </div>
     </section>
   );

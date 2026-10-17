@@ -4,6 +4,7 @@ import { useApp } from '@/context/AppContext';
 import { supabase } from '@/lib/supabase';
 import { checkAdminSession } from '@/lib/adminApi';
 import { AdminInvestorsPanel, InvestorEditModal } from '@/components/portal/AdminInvestorEditor';
+import WebsiteEditor from '@/components/portal/WebsiteEditor';
 import type { Investor, InvestmentDocument, InvestorMeeting } from '@/types';
 import {
   fetchOverview, fetchProjects, fetchDividends, fetchCatalog,
@@ -119,6 +120,7 @@ export default function DashboardPage() {
           {t('logout')}
         </button>
         {isAdmin && <AdminInvestorsPanel />}
+        {isAdmin && <WebsiteEditor />}
       </div>
     );
   }
@@ -226,6 +228,7 @@ export default function DashboardPage() {
           </section>
 
           {isAdmin && <AdminInvestorsPanel />}
+          {isAdmin && <WebsiteEditor />}
         </>
       )}
 

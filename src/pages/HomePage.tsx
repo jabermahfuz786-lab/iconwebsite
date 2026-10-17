@@ -143,10 +143,6 @@ function HeroBanner() {
     return () => clearInterval(id);
   }, [count]);
 
-  return () => clearInterval(id);
-  }, [count]);
-  const previous = (slide - 1 + count) % count;
-
   return (
     // Starts below the fixed header (76px) so the menu never sits on the picture; height 72% of screen, 420–820px
     <section className="hero-banner-section relative flex items-center justify-center overflow-hidden" style={{ marginTop: 76, minHeight: 'clamp(420px, 72vh, 820px)' }}>
